@@ -9,13 +9,11 @@
    changer `SITE_URL` en haut du script dans index.html).
 
 ## Le jour de l'expo
-- Ouvrir https://lea-tramati.github.io/portfolio/#expo
-  → démo automatique après 30 s sans activité, les projets s'ouvrent dans le même onglet.
-- Cliquer l'icône en points en haut à droite pour passer en plein écran.
-- Le dossier `photos` contient les photos de la soirée potluck (ambiance + galerie).
-- Ouvrir Intrusion une première fois avant l'arrivée du public (le jeu pèse ~40 Mo).
-- Sans internet : ouvrir directement index.html depuis ce dossier
-  (les vignettes et le teaser sont inclus ; seuls les polices, le QR code et les liens externes ont besoin du réseau).
+- Double-cliquer `../Lancer-portfolio-expo.bat` : le site s'ouvre en plein écran (mode kiosque) en mode expo, et l'ordinateur ne se met plus en veille. Quitter : Alt + F4.
+- Sans internet : `../Lancer-portfolio-hors-ligne.bat` (utilise ce dossier).
+- Après l'expo : `../Retablir-veille.bat` remet la mise en veille.
+- Avant l'arrivée du public : activer « Ne pas déranger » dans Windows (notifications), ouvrir Intrusion une fois, brancher un casque pour le son.
+- Imprimer `../carte-qr-portfolio.pdf` (A5) et `../cartels-portfolio.pdf` (A4, 4 cartels A6 par page, à découper).
 
 ## Lien direct vers un projet
 …/portfolio/#intrusion, #feed-your-head, #robert-wun, #apperture, #kisd-spaces

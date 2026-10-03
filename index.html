@@ -32,6 +32,7 @@
   --mono: "Courier Prime", "Courier New", Courier, monospace;
 }
 [hidden] { display: none !important; }
+body.nocursor, body.nocursor * { cursor: none !important; }
 * { box-sizing: border-box; }
 html, body { height: 100%; }
 body {
@@ -66,7 +67,7 @@ button { font: inherit; color: inherit; }
   transition: background .15s, color .15s, gap .2s;
 }
 .pill:hover, .pill[aria-pressed="true"], .pill.solid { background: var(--ink); color: var(--paper); }
-.pill.solid:hover { background: var(--red); border-color: var(--red); }
+.pill.solid:hover { background: var(--soft); border-color: var(--soft); color: var(--paper); }
 .pill.big { font-size: 15px; padding: 12px 18px 11px; min-height: 46px; }
 .pill.big:hover { gap: 12px; }
 
@@ -131,7 +132,8 @@ nav { display: flex; gap: 6px; }
   font: 800 17px/1.1 var(--sans); color: #fff; text-transform: uppercase; text-align: center;
   background: rgba(17,17,17,.45); opacity: 0; transition: opacity .2s;
 }
-.card:hover .over, .card:focus-visible .over { opacity: 1; }
+.card:hover .shot img, .card:focus-visible .shot img { filter: brightness(.92); }
+.shot img { transition: filter .2s; }
 .card:focus-visible { outline: none; }
 .card:focus-visible .shot, .card.sel .shot { outline: 4px solid var(--focus); outline-offset: 5px; }
 .cap { font: 400 15px/1.3 var(--mono); color: var(--ink); }
@@ -140,26 +142,25 @@ nav { display: flex; gap: 6px; }
 .card .pill { pointer-events: none; }
 .card:hover .pill, .card:focus-visible .pill { background: var(--ink); color: var(--paper); }
 .card.dim { opacity: .1; }
-.card.pulse .shot { animation: pulse 1.6s ease-out; }
-@keyframes pulse { from { box-shadow: 0 0 0 0 rgba(17,17,17,.45); } to { box-shadow: 0 0 0 18px rgba(17,17,17,0); } }
+.card.pulse .pill { animation: nudge 1.4s ease-in-out; }
+@keyframes nudge { 30%, 60% { background: var(--ink); color: var(--paper); } }
 
 .photo {
   position: absolute; left: 0; top: 0; z-index: 1;
   pointer-events: none; will-change: transform;
-  opacity: .5; transition: opacity .5s;
+  opacity: .75; transition: opacity .5s;
 }
-.photo img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; filter: grayscale(.4); }
+.photo img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; filter: grayscale(1) contrast(1.05); }
 body.intro .photo, body.filtered .photo { opacity: .15; }
 body.intro .card { opacity: .25; }
 
 /* Flèches de navigation à l'écran */
 .arrow {
   position: fixed; top: 50%; z-index: 25; transform: translateY(-50%);
-  width: 56px; height: 56px; border-radius: 50%;
-  border: 2px solid var(--ink); background: var(--paper); color: var(--ink);
-  font: 700 24px/1 var(--sans); cursor: pointer;
+  width: 46px; height: 46px; border-radius: 50%;
+  border: 1.5px solid var(--ink); background: var(--paper); color: var(--ink);
+  font: 500 20px/1 var(--sans); cursor: pointer;
   display: grid; place-items: center;
-  box-shadow: 0 6px 20px rgba(0,0,0,.12);
 }
 .arrow:hover { background: var(--ink); color: var(--paper); }
 #goPrev { left: 16px; }
@@ -187,16 +188,17 @@ body:not(.intro) #intro { transform: translate(-50%, -47%); visibility: hidden; 
 #intro .tip { margin: 18px 0 0; font: 400 15px/1.4 var(--mono); color: var(--soft); }
 
 /* ---------- Fiche projet ---------- */
-#focus { position: fixed; inset: 0; z-index: 40; pointer-events: none; visibility: hidden; transition: visibility 0s 1s; }
+#focus { --ink: #F4F4F1; --paper: #111111; --soft: #B8B8B3; --focus: #8FA8FF; color: var(--ink);
+  position: fixed; inset: 0; z-index: 40; pointer-events: none; visibility: hidden; transition: visibility 0s 1s; }
 #focus.on { pointer-events: auto; visibility: visible; transition: none; }
 .flood {
   position: absolute; left: -5%; right: -5%; top: 0; height: 100%;
-  background: var(--c, #F2F2F0);
+  background: #111111;
   transform: translateY(115%);
   transition: transform .9s cubic-bezier(.7,0,.2,1);
 }
 .flood svg { position: absolute; left: 0; bottom: 100%; width: 100%; height: 140px; display: block; }
-.flood svg path { fill: var(--c, #F2F2F0); }
+.flood svg path { fill: #111111; }
 #focus.on .flood { transform: translateY(0); }
 .inner {
   position: absolute; inset: 0; overflow-y: auto;
@@ -208,14 +210,14 @@ body:not(.intro) #intro { transform: translate(-50%, -47%); visibility: hidden; 
 #focus.on .inner { opacity: 1; transition: opacity .5s .55s; }
 .sheet { display: grid; grid-template-columns: auto minmax(0, 400px); align-items: end; gap: 40px; max-width: 100%; }
 .big {
-  display: block; position: relative; cursor: pointer; line-height: 0;
+  display: block; position: relative; cursor: pointer; line-height: 0; background: #fff;
   transform: translateY(24px); transition: transform .7s cubic-bezier(.2,.8,.2,1) .5s;
   box-shadow: 0 30px 60px rgba(0,0,0,.18);
 }
 #focus.on .big { transform: none; }
 .big img { display: block; max-width: min(54vw, 560px); max-height: 66vh; width: auto; height: auto; }
 .info { display: grid; gap: 14px; justify-items: start; }
-.info .k { font: 400 15px/1.3 var(--mono); }
+.info .k { font: 400 15px/1.3 var(--mono); color: var(--soft); }
 .info h2 { margin: 0; font: 800 clamp(36px, 5.2vw, 72px)/.9 var(--sans); letter-spacing: -.04em; text-transform: uppercase; text-wrap: balance; }
 .info p { margin: 0; font-size: 18px; line-height: 1.5; max-width: 36ch; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
@@ -297,10 +299,10 @@ body:not(.intro) #intro { transform: translate(-50%, -47%); visibility: hidden; 
 /* Animations réduites : demandé par le système ou par le bouton Pause */
 @media (prefers-reduced-motion: reduce) {
   .flood, .inner, .big { transition-duration: .01s !important; transition-delay: 0s !important; }
-  #demo::before, .card.pulse .shot { animation: none; }
+  #demo::before, .card.pulse .pill { animation: none; }
 }
 body.still .flood, body.still .inner, body.still .big { transition-duration: .01s !important; transition-delay: 0s !important; }
-body.still .card.pulse .shot { animation: none; }
+body.still .card.pulse .pill { animation: none; }
 </style>
 </head>
 <body>
@@ -491,7 +493,7 @@ const T = {
         pause: "Pause", play: "Animation", pauseLabel: "Mettre en pause les animations", playLabel: "Relancer les animations",
         hl: [["Bonjour", "tout le monde", "je suis Léa!"], ["Portfolio", "img:0"], ["img:1", "à la KISD, Köln", "Erasmus"]],
         tip: "[ Cliquez un projet pour l'ouvrir — ou utilisez les flèches ← → et Entrée ]",
-        hint: "<kbd>←</kbd> <kbd>→</kbd> pour parcourir, <kbd>Entrée</kbd> pour ouvrir, <kbd>Échap</kbd> pour fermer.",
+        hint: "<kbd>←</kbd> <kbd>→</kbd> parcourir · <kbd>Entrée</kbd> ouvrir",
         all: "Tous", filterLabel: "Filtrer les projets",
         groups: { web: "Web", affiche: "Affiches", app: "App", jeu: "Jeu", video: "Vidéo", photo: "Photo" },
         scanSite: "Scanner pour emporter le portfolio", scanProject: "Scanner pour ouvrir ce projet sur votre téléphone",
@@ -511,7 +513,7 @@ const T = {
         pause: "Pause", play: "Motion", pauseLabel: "Pause animations", playLabel: "Resume animations",
         hl: [["Hi", "everyone", "I'm Léa!"], ["Portfolio", "img:0"], ["img:1", "at KISD, Cologne", "Erasmus"]],
         tip: "[ Click a project to open it — or use the ← → arrows and Enter ]",
-        hint: "<kbd>←</kbd> <kbd>→</kbd> to browse, <kbd>Enter</kbd> to open, <kbd>Esc</kbd> to close.",
+        hint: "<kbd>←</kbd> <kbd>→</kbd> browse · <kbd>Enter</kbd> open",
         all: "All", filterLabel: "Filter projects",
         groups: { web: "Web", affiche: "Posters", app: "App", jeu: "Game", video: "Video", photo: "Photo" },
         scanSite: "Scan to take the portfolio with you", scanProject: "Scan to open this project on your phone",
@@ -531,7 +533,7 @@ const T = {
         pause: "Pause", play: "Animation", pauseLabel: "Animationen pausieren", playLabel: "Animationen fortsetzen",
         hl: [["Hallo", "alle zusammen", "ich bin Léa!"], ["Portfolio", "img:0"], ["img:1", "an der KISD, Köln", "Erasmus"]],
         tip: "[ Klicke ein Projekt an — oder nutze die Pfeiltasten ← → und Enter ]",
-        hint: "<kbd>←</kbd> <kbd>→</kbd> zum Blättern, <kbd>Enter</kbd> zum Öffnen, <kbd>Esc</kbd> zum Schließen.",
+        hint: "<kbd>←</kbd> <kbd>→</kbd> blättern · <kbd>Enter</kbd> öffnen",
         all: "Alle", filterLabel: "Projekte filtern",
         groups: { web: "Web", affiche: "Plakate", app: "App", jeu: "Spiel", video: "Video", photo: "Foto" },
         scanSite: "Scannen und das Portfolio mitnehmen", scanProject: "Scannen, um das Projekt auf dem Handy zu öffnen",
@@ -602,25 +604,22 @@ const visible = p => filtre === "all" || p.groupes.includes(filtre);
 /* ═══════════════ Carrousel ═══════════════ */
 const stage = $("stage");
 let items = [], photoItems = [], world = 0, offset = 0, vel = 0, target = null, sel = 0;
-const DRIFT = 0.3;
+const DRIFT = 0.22;
 
 function build() {
   const vw = stage.clientWidth, vh = stage.clientHeight;
   const small = vw < 640;
   const r = rng("disposition");
-  const step = small ? 250 : 330;
-  world = Math.max(N * step, vw + 560);
-  const gap = world / N;
   stage.replaceChildren();
 
+  /* Projets : une seule rangée, même hauteur d'image, centrée verticalement */
+  const H = Math.round(Math.min(vh * (small ? 0.34 : 0.4), small ? 260 : 360));
+  const rowY = Math.round(vh * (small ? 0.36 : 0.33));
+  let x0 = 0;
+  const gapX = small ? 44 : 72;
   items = PROJETS.map((p, i) => {
     const ratio = RATIOS[p.format] || 4 / 3;
-    const base = (small ? 150 : 215) + r() * (small ? 30 : 50);
-    const w = Math.round(base * (ratio < 0.6 ? 0.62 : ratio < 1 ? 0.8 : 1));
-    const h = w / ratio;
-    const avail = vh * (small ? 0.58 : 0.66);
-    const y = Math.max(vh * (small ? 0.2 : 0.14), vh * (small ? 0.2 : 0.16) + (i % 2) * Math.max(0, avail - h - 90) * (0.55 + r() * 0.35));
-
+    const w = Math.round(H * ratio);
     const b = document.createElement("button");
     b.className = "card"; b.type = "button"; b.id = "card-" + p.id;
     b.style.width = w + "px";
@@ -628,9 +627,6 @@ function build() {
     const f = document.createElement("span");
     f.className = "shot";
     f.append(thumb(p, w * 2));
-    const over = document.createElement("span");
-    over.className = "over"; over.setAttribute("aria-hidden", "true"); over.textContent = t("open") + " →";
-    f.append(over);
     const cap = document.createElement("span");
     cap.className = "cap"; cap.setAttribute("aria-hidden", "true");
     cap.innerHTML = '<span class="n"></span> <span></span> <span class="c"></span>';
@@ -656,37 +652,25 @@ function build() {
       b.addEventListener("pointerleave", () => { const v = f.querySelector("video"); if (v) v.replaceWith(thumb(p, w * 2)); });
     }
     stage.append(b);
-    return { el: b, p, i, base: i * gap + r() * gap * 0.15, y, w, h: h + 90, phase: r() * 6.28 };
+    const it = { el: b, p, i, base: x0, y: rowY, w, h: H + 90, phase: 0 };
+    x0 += w + gapX;
+    return it;
   });
+  world = Math.max(x0, vw + 560);
 
-  /* Photos décoratives : petites, en arrière-plan, jamais sur un projet */
-  const boxes = items.map(it => ({ x: it.base - 30, y: it.y - 30, w: it.w + 60, h: it.h + 50 }));
-  const top = vh * (small ? 0.2 : 0.14), bottom = vh * 0.8;
+  /* Photos : un bandeau régulier en haut, comme une planche contact */
+  const ph = small ? 44 : 58, pw = Math.round(ph * 4 / 3), py = Math.round(vh * (small ? 0.2 : 0.15));
+  const per = Math.max(1, Math.floor(world / (pw + 10)));
   photoItems = [];
-  PHOTOS.forEach((src, j) => {
-    if (j % 2) return; // une photo sur deux : les projets restent au premier plan
-    const w = Math.round((small ? 50 : 62) + r() * (small ? 20 : 36));
-    const h = w * 0.75;
-    for (let tries = 0; tries < 40; tries++) {
-      const x = ((j + r()) / PHOTOS.length) * world + (tries ? (r() - 0.5) * gap : 0);
-      const y = top + r() * Math.max(10, bottom - top - h);
-      const box = { x: x - 10, y: y - 10, w: w + 20, h: h + 20 };
-      const hit = boxes.some(o => {
-        const dx = mod(box.x - o.x + world / 2, world) - world / 2;
-        return dx < o.w && -dx < box.w && box.y < o.y + o.h && o.y < box.y + box.h;
-      });
-      if (hit) continue;
-      boxes.push(box);
-      const el = document.createElement("div");
-      el.className = "photo"; el.setAttribute("aria-hidden", "true");
-      el.style.width = w + "px";
-      const img = new Image(); img.src = src; img.alt = ""; img.draggable = false; img.decoding = "async";
-      el.append(img);
-      stage.prepend(el);
-      photoItems.push({ el, base: x, y, w, h, phase: r() * 6.28 });
-      break;
-    }
-  });
+  for (let j = 0; j < per; j++) {
+    const el = document.createElement("div");
+    el.className = "photo"; el.setAttribute("aria-hidden", "true");
+    el.style.width = pw + "px";
+    const img = new Image(); img.src = PHOTOS[j % PHOTOS.length]; img.alt = ""; img.draggable = false; img.decoding = "async"; img.loading = "lazy";
+    el.append(img);
+    stage.prepend(el);
+    photoItems.push({ el, base: j * (world / per), y: Math.min(py, rowY - ph - 24), w: pw, h: ph, phase: 0 });
+  }
   applyFilter();
   markSel();
   place();
@@ -696,9 +680,8 @@ let mx = 0, my = 0, tmx = 0, tmy = 0;
 function position(it, now) {
   const x = mod(it.base - offset, world) - 280;
   it.x = x;
-  const bob = still ? 0 : Math.sin(now * 0.0007 + it.phase) * 5;
-  it.sx = x + mx * 14;
-  it.sy = it.y + bob + my * 8;
+  it.sx = x;
+  it.sy = it.y;
   it.el.style.transform = `translate3d(${it.sx.toFixed(1)}px, ${it.sy.toFixed(1)}px, 0)`;
 }
 function place() {
@@ -1084,7 +1067,7 @@ function startDemo() {
   demoIndex = -1;
   unzoom(); closeAbout(); closeFocus(); filtre = "all"; renderFilters(); applyFilter();
   showIntro();
-  demoTimer = setTimeout(demoStep, 7000);
+  demoTimer = setTimeout(demoStep, 5000);
 }
 function demoStep() {
   unzoom(); hideIntro();
@@ -1110,6 +1093,8 @@ function activity(e) {
   idleTimer = setTimeout(startDemo, IDLE_SECONDS * 1000);
 }
 if (EXPO) {
+  let cur;
+  addEventListener("pointermove", () => { document.body.classList.remove("nocursor"); clearTimeout(cur); cur = setTimeout(() => document.body.classList.add("nocursor"), 3000); }, { passive: true });
   ["pointerdown", "keydown", "wheel", "touchstart"].forEach(ev => addEventListener(ev, activity, { capture: true, passive: false }));
   activity();
 }
@@ -1181,7 +1166,7 @@ addEventListener("keydown", e => {
 
 /* ═══════════════ Démarrage ═══════════════ */
 applyLang();
-if (!location.hash || EXPO) { showIntro(); setTimeout(() => { if (!demoOn) hideIntro(); }, 7000); }
+if (!location.hash || EXPO) { showIntro(); setTimeout(() => { if (!demoOn) hideIntro(); }, 4500); }
 let rs;
 addEventListener("resize", () => { clearTimeout(rs); rs = setTimeout(build, 150); });
 requestAnimationFrame(tick);
