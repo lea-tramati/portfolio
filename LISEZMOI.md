@@ -19,7 +19,7 @@
 …/portfolio/#intrusion, #feed-your-head, #robert-wun, #apperture, #kisd-spaces
 
 ## Réglages en haut du script (index.html)
-- `PORTRAIT` : chemin d'une photo de vous pour « À propos » (ex. "vignettes/portrait.jpg").
+- `PORTRAIT` : chemin d'une photo de vous pour « À propos » (ex. "vignettes/portrait.webp").
 - `CONTACT` : { label: "@votre.insta", href: "https://instagram.com/votre.insta" } pour afficher un contact.
 - Images de processus : ajouter `process: ["vignettes/croquis.jpg"]` à un projet.
 

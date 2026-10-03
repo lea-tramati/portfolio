@@ -15,6 +15,7 @@
 <meta name="theme-color" content="#ffffff">
 <link rel="icon" type="image/png" href="vignettes/favicon.png">
 <link rel="apple-touch-icon" href="vignettes/logo-180.png">
+<link rel="preload" as="image" href="vignettes/intrusion.webp">
 <title>Léa Tramati</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -270,6 +271,28 @@ body:not(.intro) #intro { transform: translate(-50%, -47%); visibility: hidden; 
 #about dd { margin: 0; overflow-wrap: anywhere; }
 #about a { color: var(--ink); }
 
+/* ---------- Bande-démo (mode expo, après inactivité) ---------- */
+#reel { position: fixed; inset: 0; z-index: 70; background: #0E0E0E; color: #F4F4F1; overflow: hidden; cursor: pointer; }
+#reelStage { position: absolute; inset: 0; }
+.slide { position: absolute; inset: 0; display: grid; place-items: center; padding: 6vh 6vw 22vh; opacity: 0; transition: opacity .9s ease; }
+.slide.in { opacity: 1; }
+.slide img, .slide video { position: relative; z-index: 1; display: block; max-width: 86vw; max-height: 68vh; width: auto; height: auto; box-shadow: 0 30px 80px rgba(0,0,0,.5); }
+.slide.kb img { animation: kb 7.5s ease-out forwards; }
+@keyframes kb { from { transform: scale(1); } to { transform: scale(1.06); } }
+.slide .bg { position: absolute; inset: -60px; z-index: 0; background-size: cover; background-position: center; filter: blur(50px) brightness(.3); }
+.r-text { position: absolute; left: 5vw; right: 5vw; bottom: 7vh; display: grid; gap: 10px; }
+.r-k { font: 400 clamp(14px, 1.4vw, 20px)/1.2 var(--mono); color: #B8B8B3; }
+.r-t { margin: 0; font: 800 clamp(48px, 10vw, 170px)/.85 var(--sans); letter-spacing: -.045em; text-transform: uppercase; }
+.r-t, .r-k { transition: opacity .5s; }
+#reel.swap .r-t, #reel.swap .r-k { opacity: 0; }
+.r-text, .r-cta, .r-bar { z-index: 2; }
+.r-cta { position: absolute; top: 4vh; right: 5vw; font: 700 clamp(13px, 1.1vw, 16px)/1 var(--sans); text-transform: uppercase; border: 2px solid #F4F4F1; border-radius: 99px; padding: 10px 16px 9px; display: inline-flex; gap: 8px; align-items: center; }
+.r-cta::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #FF5A4A; animation: blink 1.2s infinite; }
+.r-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: rgba(255,255,255,.15); }
+.r-bar span { display: block; height: 100%; width: 0; background: #F4F4F1; }
+@keyframes blink { 50% { opacity: .2; } }
+body.still .slide.kb img, body.still .r-cta::before { animation: none; }
+
 /* ---------- Mode démo ---------- */
 #demo {
   position: fixed; z-index: 60; left: 50%; transform: translateX(-50%);
@@ -314,6 +337,7 @@ body.still .card.pulse .pill { animation: none; }
   <nav aria-label="Menu">
     <button class="pill" type="button" id="pause" aria-pressed="false"></button>
     <button class="pill" type="button" id="navAbout" aria-haspopup="dialog"></button>
+    <a class="pill" id="navMain" target="_blank" rel="noopener"></a>
   </nav>
   <div id="right">
     <div class="langs" role="group" id="langs">
@@ -346,7 +370,12 @@ body.still .card.pulse .pill { animation: none; }
 
 <p class="sr" id="live" aria-live="polite"></p>
 
-<span class="pill solid" id="demo" hidden><span data-t="demo"></span></span>
+<div id="reel" hidden aria-hidden="true">
+  <div id="reelStage"></div>
+  <div class="r-text"><span class="r-k" id="reelKind"></span><p class="r-t" id="reelTitle"></p></div>
+  <span class="r-cta" id="reelCta"></span>
+  <div class="r-bar"><span id="reelBar"></span></div>
+</div>
 
 <section id="focus" role="dialog" aria-modal="true" aria-labelledby="fTitle" aria-hidden="true">
   <div class="flood" aria-hidden="true">
@@ -387,6 +416,7 @@ body.still .card.pulse .pill { animation: none; }
       <dt data-t="where"></dt><dd>KISD — Köln International School of Design</dd>
       <dt data-t="what"></dt><dd data-t="fields"></dd>
       <dt data-t="contact"></dt><dd id="contact"></dd>
+      <dt data-t="mainLabel"></dt><dd><a id="aboutMain" target="_blank" rel="noopener"></a></dd>
       <dt>GitHub</dt><dd><a href="https://github.com/lea-tramati" target="_blank" rel="noopener">github.com/lea-tramati</a></dd>
     </dl>
   </aside>
@@ -407,20 +437,22 @@ body.still .card.pulse .pill { animation: none; }
 const SITE_URL = "https://lea-tramati.github.io/portfolio/";
 const IDLE_SECONDS = 30;
 const DEMO_STEP_SECONDS = 8;
-/* Photo pour « À propos » : par ex. "vignettes/portrait.jpg" (vide : votre logo). */
+/* Photo pour « À propos » : par ex. "vignettes/portrait.webp" (vide : votre logo). */
 const PORTRAIT = "";
 /* Contact : par ex. { label: "@lea.tramati", href: "https://instagram.com/lea.tramati" } */
 const CONTACT = null;
+/* Portfolio principal */
+const MAIN_SITE = "https://lea-tramati.github.io/Lea_tramati_2026/";
 
 /* Photos d'ambiance : soirée « potluck! ». Décoratives dans le carrousel, en galerie dans le projet Potluck. */
-const PHOTOS = ["photos/IMG_1411.jpg","photos/IMG_1412.jpg","photos/IMG_1413.jpg","photos/IMG_1414.jpg","photos/IMG_1415.jpg","photos/IMG_1416.jpg","photos/IMG_1417.jpg","photos/IMG_1418.jpg","photos/IMG_1419.jpg","photos/IMG_1420.jpg","photos/IMG_1421.jpg","photos/IMG_1422.jpg","photos/IMG_1423.jpg","photos/IMG_1424.jpg","photos/IMG_1425.jpg","photos/IMG_1426.jpg","photos/IMG_1427.jpg","photos/IMG_1428.jpg","photos/IMG_1429.jpg","photos/IMG_1430.jpg","photos/IMG_1431.jpg","photos/IMG_1432.jpg","photos/IMG_1434.jpg","photos/IMG_1435.jpg","photos/IMG_1436.jpg","photos/IMG_1437.jpg","photos/IMG_1438.jpg","photos/IMG_1439.jpg","photos/IMG_1440.jpg","photos/IMG_1443.jpg","photos/IMG_1444.jpg"];
+const PHOTOS = ["photos/IMG_1411.webp","photos/IMG_1412.webp","photos/IMG_1413.webp","photos/IMG_1414.webp","photos/IMG_1415.webp","photos/IMG_1416.webp","photos/IMG_1417.webp","photos/IMG_1418.webp","photos/IMG_1419.webp","photos/IMG_1420.webp","photos/IMG_1421.webp","photos/IMG_1422.webp","photos/IMG_1423.webp","photos/IMG_1424.webp","photos/IMG_1425.webp","photos/IMG_1426.webp","photos/IMG_1427.webp","photos/IMG_1428.webp","photos/IMG_1429.webp","photos/IMG_1430.webp","photos/IMG_1431.webp","photos/IMG_1432.webp","photos/IMG_1434.webp","photos/IMG_1435.webp","photos/IMG_1436.webp","photos/IMG_1437.webp","photos/IMG_1438.webp","photos/IMG_1439.webp","photos/IMG_1440.webp","photos/IMG_1443.webp","photos/IMG_1444.webp"];
 
 /* ═══════════════ PROJETS ═══════════════
    type : "lien", "affiche", "galerie", "video", "videos" ; groupes : filtres du bas
    alt : description de l'image pour les lecteurs d'écran */
 const PROJETS = [
   { id: "intrusion", titre: "Intrusion", type: "lien", format: "paysage", couleur: "#FF8A6B", groupes: ["jeu"],
-    image: "vignettes/intrusion.jpg", lien: "https://lea-tramati.github.io/intrusion/",
+    image: "vignettes/intrusion.webp", lien: "https://lea-tramati.github.io/intrusion/",
     tags: ["Unity", "WebGL"],
     cat:  { fr: "jeu", en: "game", de: "Spiel" },
     alt:  { fr: "Écran titre noir du jeu, avec le mot INTRUSION en blanc.", en: "Black title screen of the game, with the word INTRUSION in white.", de: "Schwarzer Titelbildschirm des Spiels mit dem Wort INTRUSION in Weiß." },
@@ -428,7 +460,7 @@ const PROJETS = [
             en: "A game about thoughts that won't leave you: seven levels to dodge, then accept. Playable in the browser.",
             de: "Ein Spiel über Gedanken, die einen nicht loslassen: sieben Level zum Ausweichen und dann Annehmen. Direkt im Browser spielbar." } },
   { id: "feed-your-head", titre: "Feed your head", type: "affiche", format: "affiche", couleur: "#FF8FC7", groupes: ["affiche"],
-    image: "vignettes/feed-your-head.jpg",
+    image: "vignettes/feed-your-head.webp",
     tags: ["Photoshop", "Typographie"],
     cat:  { fr: "affiche", en: "poster", de: "Plakat" },
     alt:  { fr: "Affiche noir et blanc : les mots « feed your head » déformés coulent autour d'un visage.", en: "Black-and-white poster: the warped words “feed your head” flow around a face.", de: "Schwarz-Weiß-Plakat: Die verzerrten Wörter „feed your head“ fließen um ein Gesicht." },
@@ -436,7 +468,7 @@ const PROJETS = [
             en: "A black-and-white typographic poster: the title warps and flows around a face, on a printed paper grain.",
             de: "Typografisches Schwarz-Weiß-Plakat: Der Titel verzerrt sich und fließt um ein Gesicht, auf gedrucktem Papierkorn." } },
   { id: "robert-wun", titre: "Robert Wun", type: "lien", format: "portrait", couleur: "#C7A6FF", groupes: ["web"],
-    image: "vignettes/robert-wun.jpg", lien: "https://lea-tramati.github.io/robert-wun-site/",
+    image: "vignettes/robert-wun.webp", lien: "https://lea-tramati.github.io/robert-wun-site/",
     tags: ["HTML", "CSS"],
     cat:  { fr: "site web", en: "website", de: "Website" },
     alt:  { fr: "Page d'accueil du site : une robe blanche tachée de rouge sur fond rouge.", en: "Website home page: a white dress spattered with red on a red background.", de: "Startseite der Website: ein weißes, rot bespritztes Kleid vor rotem Hintergrund." },
@@ -444,7 +476,7 @@ const PROJETS = [
             en: "A website for Robert Wun's haute couture house, where fashion becomes architecture that sculpts the human form.",
             de: "Website für das Haute-Couture-Haus von Robert Wun, in dem Mode zur Architektur wird und den menschlichen Körper formt." } },
   { id: "apperture", titre: "Apperture", type: "affiche", format: "affiche", couleur: "#E0A458", groupes: ["app", "affiche"],
-    image: "vignettes/aperture.jpg", video: "vignettes/aperture-teaser.mp4",
+    image: "vignettes/aperture.webp", video: "vignettes/aperture-teaser.mp4",
     tags: ["App", "Flutter", "Teaser"],
     cat:  { fr: "app, affiche", en: "app, poster", de: "App, Plakat" },
     alt:  { fr: "Affiche : les lettres APPERTURE en blanc sur un fond de code et de photo en noir et blanc.", en: "Poster: the letters APPERTURE in white over code and a black-and-white photo.", de: "Plakat: die Buchstaben APPERTURE in Weiß über Code und einem Schwarz-Weiß-Foto." },
@@ -452,7 +484,7 @@ const PROJETS = [
             en: "Where memories meet place: an app that ties memories to locations. Create a spot, film it, find it again on site.",
             de: "Where memories meet place: eine App, die Erinnerungen mit Orten verbindet. Einen Spot anlegen, filmen und vor Ort wiederfinden." } },
   { id: "kisd-spaces", titre: "KISD Spaces", type: "lien", format: "paysage", couleur: "#A6E06A", groupes: ["web"],
-    image: "vignettes/kisd-spaces.jpg", lien: "https://spaces.kisd.de/home/",
+    image: "vignettes/kisd-spaces.webp", lien: "https://spaces.kisd.de/home/",
     tags: ["Plateforme", "KISD"],
     cat:  { fr: "site web", en: "website", de: "Website" },
     alt:  { fr: "Page d'accueil de Spaces : texte de présentation et boutons de connexion.", en: "Spaces home page: introduction text and login buttons.", de: "Startseite von Spaces: Einführungstext und Login-Buttons." },
@@ -460,7 +492,7 @@ const PROJETS = [
             en: "Spaces, KISD's social learning environment in Cologne: share work, discuss online and help each other.",
             de: "Spaces, die soziale Lernumgebung der KISD in Köln: Arbeiten teilen, online diskutieren und sich gegenseitig unterstützen." } },
   { id: "nomadic-workspace", titre: "Nomadic Workspace", type: "video", format: "paysage", couleur: "#BDBDB8", groupes: ["video"],
-    image: "videos/nomadic-workspace.jpg", video: "videos/nomadic-workspace.mp4",
+    image: "videos/nomadic-workspace.webp", video: "videos/nomadic-workspace.mp4",
     tags: ["Vidéo", "Scan 3D", "KISD"],
     cat:  { fr: "vidéo", en: "video", de: "Video" },
     alt:  { fr: "Image de la vidéo : collage en noir et blanc d'un espace de travail scanné en 3D.", en: "Video still: black-and-white collage of a 3D-scanned workspace.", de: "Standbild: Schwarz-Weiß-Collage eines 3D-gescannten Arbeitsraums." },
@@ -468,7 +500,7 @@ const PROJETS = [
             en: "A video about KISD's workspaces, where people work just about anywhere: 3D scans, black-and-white collage and typography.",
             de: "Ein Video über die Arbeitsorte der KISD, an der überall gearbeitet wird: 3D-Scans, Schwarz-Weiß-Collagen und Typografie." } },
   { id: "kisd-students", titre: "KISD Students", type: "videos", format: "story", couleur: "#7FC8F8", groupes: ["video"],
-    image: "videos/tips-first-year.jpg", preview: "videos/tips-first-year.mp4",
+    image: "videos/tips-first-year.webp", preview: "videos/tips-first-year.mp4",
     videos: ["videos/tips-first-year.mp4", "videos/ask-a-student-1.mp4", "videos/ask-a-student-2.mp4", "videos/what-are-you-doing.mp4", "videos/which-designer.mp4"],
     videoTitles: ["Tips for first-year students", "Ask a student #1", "Ask a student #2", "What are you doing?", "Which designer?"],
     tags: ["Vidéo", "Réseaux sociaux", "Interviews"],
@@ -478,7 +510,7 @@ const PROJETS = [
             en: "A series of short videos for KISD's social media: students answer on camera. Tips for first-years, current projects, favourite designer.",
             de: "Eine Reihe kurzer Videos für die Social-Media-Kanäle der KISD: Studierende antworten vor der Kamera. Tipps fürs erste Jahr, aktuelle Projekte, Lieblingsdesigner." } },
   { id: "potluck", titre: "Potluck!", type: "galerie", format: "paysage", couleur: "#FFC93C", groupes: ["photo"],
-    image: "vignettes/potluck.jpg", galerie: PHOTOS,
+    image: "vignettes/potluck.webp", galerie: PHOTOS,
     tags: ["Photo", "Erasmus", "Köln"],
     cat:  { fr: "photographie", en: "photography", de: "Fotografie" },
     alt:  { fr: "Photo de groupe : des étudiants réunis autour d'une table pendant la soirée.", en: "Group photo: students gathered around a table during the evening.", de: "Gruppenfoto: Studierende um einen Tisch während des Abends." },
@@ -501,12 +533,12 @@ const T = {
         open: "Ouvrir le projet", poster: "Voir l'affiche en grand", teaser: "Voir le teaser", photos: "Voir les photos",
         video: "Voir la vidéo", videos: "Voir les vidéos", newTab: "(nouvel onglet)",
         close: "Fermer ×", prevP: "← Précédent", nextP: "Suivant →", prevLabel: "Projet précédent", nextLabel: "Projet suivant",
-        full: "Plein écran", demo: "Démo — touchez l'écran pour explorer",
+        full: "Plein écran", demo: "Touchez l'écran pour explorer",
         stage: "Carrousel des projets", projectOf: (i, n, p) => `Projet ${i} sur ${n} : ${p.titre}, ${p.cat.fr}. Ouvrir la fiche.`,
         now: (i, n, p) => `Projet ${i} sur ${n} : ${p.titre}`,
         photoOf: (i, n) => `Photo ${i} sur ${n} — soirée Potluck`, videoOf: (i, n, t) => `Vidéo ${i} sur ${n} — ${t}`,
         prevItem: "Élément précédent", nextItem: "Élément suivant", langs: "Langue",
-        where: "[école]", what: "[domaines]", contact: "[contact]", fields: "Jeu, web, affiche, application, vidéo, photo", noContact: "à venir",
+        where: "[école]", what: "[domaines]", contact: "[contact]", fields: "Jeu, web, affiche, application, vidéo, photo", noContact: "à venir", main: "Portfolio complet ↗", mainLabel: "[portfolio]",
         bio1: "Je suis Léa Tramati. Pendant mon semestre Erasmus à la Köln International School of Design, j'ai travaillé entre le jeu vidéo, le web, l'affiche, l'application mobile, la vidéo et la photo.",
         bio2: "Ce site rassemble ces projets. Cliquez une image pour découvrir chacun d'eux, ou scannez le QR code pour les retrouver sur votre téléphone." },
   en: { context: "Portfolio — Erasmus, KISD Cologne", about: "About", skip: "Skip to projects",
@@ -521,12 +553,12 @@ const T = {
         open: "Open project", poster: "View poster full size", teaser: "Watch the teaser", photos: "See the photos",
         video: "Watch the video", videos: "Watch the videos", newTab: "(new tab)",
         close: "Close ×", prevP: "← Previous", nextP: "Next →", prevLabel: "Previous project", nextLabel: "Next project",
-        full: "Full screen", demo: "Demo — touch the screen to explore",
+        full: "Full screen", demo: "Touch the screen to explore",
         stage: "Project carousel", projectOf: (i, n, p) => `Project ${i} of ${n}: ${p.titre}, ${p.cat.en}. Open the project page.`,
         now: (i, n, p) => `Project ${i} of ${n}: ${p.titre}`,
         photoOf: (i, n) => `Photo ${i} of ${n} — Potluck evening`, videoOf: (i, n, t) => `Video ${i} of ${n} — ${t}`,
         prevItem: "Previous item", nextItem: "Next item", langs: "Language",
-        where: "[school]", what: "[fields]", contact: "[contact]", fields: "Games, web, posters, apps, video, photography", noContact: "coming soon",
+        where: "[school]", what: "[fields]", contact: "[contact]", fields: "Games, web, posters, apps, video, photography", noContact: "coming soon", main: "Full portfolio ↗", mainLabel: "[portfolio]",
         bio1: "I'm Léa Tramati. During my Erasmus semester at the Köln International School of Design, I worked across video games, the web, posters, mobile apps, video and photography.",
         bio2: "This site brings those projects together. Click an image to explore each one, or scan the QR code to find them on your phone." },
   de: { context: "Portfolio — Erasmus, KISD Köln", about: "Über mich", skip: "Zu den Projekten springen",
@@ -541,12 +573,12 @@ const T = {
         open: "Projekt öffnen", poster: "Plakat groß ansehen", teaser: "Teaser ansehen", photos: "Fotos ansehen",
         video: "Video ansehen", videos: "Videos ansehen", newTab: "(neuer Tab)",
         close: "Schließen ×", prevP: "← Zurück", nextP: "Weiter →", prevLabel: "Vorheriges Projekt", nextLabel: "Nächstes Projekt",
-        full: "Vollbild", demo: "Demo — Bildschirm berühren zum Erkunden",
+        full: "Vollbild", demo: "Bildschirm berühren zum Erkunden",
         stage: "Projekt-Karussell", projectOf: (i, n, p) => `Projekt ${i} von ${n}: ${p.titre}, ${p.cat.de}. Projektseite öffnen.`,
         now: (i, n, p) => `Projekt ${i} von ${n}: ${p.titre}`,
         photoOf: (i, n) => `Foto ${i} von ${n} — Potluck-Abend`, videoOf: (i, n, t) => `Video ${i} von ${n} — ${t}`,
         prevItem: "Vorheriges Element", nextItem: "Nächstes Element", langs: "Sprache",
-        where: "[Hochschule]", what: "[Bereiche]", contact: "[Kontakt]", fields: "Spiel, Web, Plakat, App, Video, Fotografie", noContact: "folgt",
+        where: "[Hochschule]", what: "[Bereiche]", contact: "[Kontakt]", fields: "Spiel, Web, Plakat, App, Video, Fotografie", noContact: "folgt", main: "Ganzes Portfolio ↗", mainLabel: "[Portfolio]",
         bio1: "Ich bin Léa Tramati. In meinem Erasmus-Semester an der Köln International School of Design habe ich zwischen Videospiel, Web, Plakat, mobiler App, Video und Fotografie gearbeitet.",
         bio2: "Diese Seite versammelt diese Projekte. Klicke auf ein Bild, um jedes zu entdecken, oder scanne den QR-Code, um sie auf dem Handy zu öffnen." },
 };
@@ -799,7 +831,7 @@ function applyFilter() {
 
 /* ═══════════════ Accueil ═══════════════ */
 function renderIntro() {
-  const insets = ["vignettes/intrusion.jpg", "vignettes/robert-wun.jpg"];
+  const insets = ["vignettes/intrusion.webp", "vignettes/robert-wun.webp"];
   $("hl").replaceChildren(...t("hl").map(row => {
     const d = document.createElement("span");
     d.className = "row";
@@ -826,7 +858,7 @@ addEventListener("keydown", hideIntro);
 
 /* ═══════════════ Fenêtres (fiche, zoom, à propos) : focus piégé ═══════════════ */
 const focusEl = $("focus"), zoomEl = $("zoom"), aboutEl = $("about");
-const outside = () => [$("top"), stage, $("bottom"), $("goPrev"), $("goNext"), $("skip")];
+const outside = () => [$("top"), stage, $("reel"), $("bottom"), $("goPrev"), $("goNext"), $("skip")];
 function topDialog() {
   if (!zoomEl.hidden) return zoomEl;
   if (!aboutEl.hidden) return aboutEl;
@@ -909,7 +941,7 @@ function fill(i) {
     const li = document.createElement("li");
     const b = document.createElement("button"); b.type = "button";
     b.setAttribute("aria-label", isVideo(src) ? T[lang].videoOf(k + 1, list.length, p.videoTitles[k]) : T[lang].photoOf(k + 1, list.length));
-    const img = new Image(); img.src = isVideo(src) ? src.replace(/\.mp4$/, ".jpg") : src; img.alt = ""; img.loading = "lazy"; b.append(img);
+    const img = new Image(); img.src = isVideo(src) ? src.replace(/\.mp4$/, ".webp") : src; img.alt = ""; img.loading = "lazy"; b.append(img);
     b.addEventListener("click", () => zoom(list, k, p));
     li.append(b);
     return li;
@@ -1059,32 +1091,66 @@ $("pause").addEventListener("click", () => {
   build();
 });
 
-/* ═══════════════ Démo automatique (mode expo) ═══════════════ */
+/* ═══════════════ Bande-démo (mode expo) ═══════════════
+   Après IDLE_SECONDS sans activité : défilement plein écran des projets, image ou vidéo en grand,
+   titre en très grand. Un geste (toucher, clic, touche) l'arrête. */
 let idleTimer = null, demoTimer = null, demoOn = false, demoIndex = -1;
-function startDemo() {
-  demoOn = true;
-  $("demo").hidden = false;
-  demoIndex = -1;
-  unzoom(); closeAbout(); closeFocus(); filtre = "all"; renderFilters(); applyFilter();
-  showIntro();
-  demoTimer = setTimeout(demoStep, 5000);
+const reelEl = $("reel");
+function reelSlide(p, i) {
+  const slide = document.createElement("div");
+  slide.className = "slide" + (still ? "" : " kb");
+  const bg = document.createElement("div"); bg.className = "bg"; bg.style.backgroundImage = `url("${p.image}")`;
+  slide.append(bg);
+  const vid = !still && (p.preview || p.video);
+  if (vid) {
+    const v = document.createElement("video");
+    v.src = vid; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true; v.poster = p.image;
+    slide.append(v); v.play().catch(() => {});
+  } else {
+    const img = new Image(); img.src = p.image; img.alt = "";
+    slide.append(img);
+  }
+  return slide;
 }
 function demoStep() {
-  unzoom(); hideIntro();
   demoIndex = (demoIndex + 1) % N;
-  if (current >= 0) {
-    closeFocus();
-    demoTimer = setTimeout(() => { openFocus(demoIndex, true); demoTimer = setTimeout(demoStep, DEMO_STEP_SECONDS * 1000); }, still ? 300 : 1300);
-  } else {
-    openFocus(demoIndex, true);
-    demoTimer = setTimeout(demoStep, DEMO_STEP_SECONDS * 1000);
-  }
+  const p = PROJETS[demoIndex];
+  const st = $("reelStage");
+  const slide = reelSlide(p, demoIndex);
+  st.append(slide);
+  reelEl.classList.add("swap");
+  setTimeout(() => slide.classList.add("in"), 40);
+  setTimeout(() => {
+    $("reelKind").textContent = `${pad(demoIndex + 1)} / ${pad(N)}  [${p.cat[lang]}]`;
+    $("reelTitle").textContent = p.titre;
+    reelEl.classList.remove("swap");
+  }, 450);
+  [...st.children].slice(0, -1).forEach(old => { old.classList.remove("in"); setTimeout(() => old.remove(), 1000); });
+  const bar = $("reelBar");
+  bar.getAnimations?.().forEach(x => x.cancel());
+  bar.animate?.([{ width: "0%" }, { width: "100%" }], { duration: DEMO_STEP_SECONDS * 1000, easing: "linear", fill: "forwards" });
+  demoTimer = setTimeout(demoStep, DEMO_STEP_SECONDS * 1000);
+}
+function startDemo() {
+  if (demoOn) return;
+  demoOn = true;
+  unzoom(); closeAbout(); closeFocus(); hideIntro();
+  filtre = "all"; renderFilters(); applyFilter();
+  demoIndex = -1;
+  $("reelCta").textContent = t("demo");
+  $("reelStage").replaceChildren();
+  reelEl.hidden = false;
+  paused = true;
+  demoStep();
 }
 function stopDemo() {
   clearTimeout(demoTimer);
   demoOn = false;
-  $("demo").hidden = true;
-  closeFocus(); hideIntro();
+  reelEl.hidden = true;
+  $("reelStage").replaceChildren();
+  paused = false;
+  showIntro();
+  setTimeout(() => { if (!demoOn) hideIntro(); }, 3000);
 }
 function activity(e) {
   if (demoOn) { stopDemo(); if (e && e.cancelable) { e.preventDefault(); e.stopPropagation(); } }
@@ -1110,6 +1176,12 @@ function applyLang() {
   stage.setAttribute("aria-roledescription", t("stage"));
   $("hint").innerHTML = t("hint");
   $("navAbout").textContent = t("about");
+  const nm = $("navMain");
+  nm.href = MAIN_SITE; nm.hidden = EXPO;  /* en expo, on ne quitte pas le portfolio depuis l'écran */
+  nm.innerHTML = "<span></span><span class=\"sr\"></span>";
+  nm.firstChild.textContent = t("main"); nm.lastChild.textContent = " " + t("newTab");
+  const am = $("aboutMain");
+  am.href = MAIN_SITE; am.textContent = MAIN_SITE.replace(/^https:\/\//, "").replace(/\/$/, "");
   $("close").textContent = t("close");
   $("zoomClose").textContent = t("close");
   $("aboutClose").textContent = t("close");
