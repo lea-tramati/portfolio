@@ -116,15 +116,15 @@ body.filtering .tile.ph { opacity: .3; }
 .stack .under { position: absolute; width: 46%; max-height: 60%; object-fit: cover; box-shadow: 0 0 0 1px rgba(0,0,0,.06); }
 .stack .under:nth-child(1) { left: 0; top: 0; }
 .stack .under:nth-child(2) { right: 0; bottom: 0; }
-.big { position: relative; z-index: 2; display: block; line-height: 0; cursor: pointer; }
-.big img { display: block; max-width: min(100%, 640px); max-height: 64vh; width: auto; height: auto; box-shadow: 0 0 0 1px rgba(0,0,0,.06); }
-#focus.on .stack .under, #focus.on .big { animation: drop .55s cubic-bezier(.2,.8,.2,1) both; }
+#big { position: relative; z-index: 2; display: block; line-height: 0; cursor: pointer; }
+#big img { display: block; max-width: min(100%, 640px); max-height: 64vh; width: auto; height: auto; box-shadow: 0 0 0 1px rgba(0,0,0,.06); }
+#focus.on .stack .under, #focus.on #big { animation: drop .55s cubic-bezier(.2,.8,.2,1) both; }
 #focus.on .stack .under:nth-child(2) { animation-delay: .07s; }
-#focus.on .big { animation-delay: .14s; }
+#focus.on #big { animation-delay: .14s; }
 @keyframes drop { from { opacity: 0; translate: 0 26px; } }
-body.still #focus.on .stack .under, body.still #focus.on .big { animation: none; }
+body.still #focus.on .stack .under, body.still #focus.on #big { animation: none; }
 .flyer { position: fixed; z-index: 45; margin: 0; pointer-events: none; display: block; box-shadow: 0 0 0 1px rgba(0,0,0,.06); }
-#focus.flying .stack .under, #focus.flying .big { visibility: hidden; animation: none !important; }
+#focus.flying .stack .under, #focus.flying #big { visibility: hidden; animation: none !important; }
 .info { display: grid; gap: 16px; justify-items: start; }
 .info .k { color: var(--soft); }
 .info h2 { margin: 0; font: 500 clamp(30px, 4vw, 58px)/1 var(--sans); letter-spacing: -.01em; }
@@ -176,10 +176,15 @@ body.still #focus.on .stack .under, body.still #focus.on .big { animation: none;
 
 @media (max-width: 760px) {
   body { font-size: 14px; }
-  #list { max-width: 100%; }
+  #bottom { left: 0; right: 0; padding-inline: 0; }
+  #bottom nav { width: 100%; }
+  #list { max-width: 100%; flex-wrap: nowrap; overflow-x: auto; padding: 4px var(--gx) 6px; scroll-snap-type: x proximity; scrollbar-width: none; }
+  #list::-webkit-scrollbar { display: none; }
+  #list li { flex: none; scroll-snap-align: start; }
+  #list .box { background: var(--paper); }
   .qr { display: none; }
   .sheet { grid-template-columns: 1fr; gap: 24px; }
-  .big img { max-height: 44vh; }
+  #big img { max-height: 44vh; }
   .pqr { display: none; }
   #zoom { padding: 70px 12px 100px; }
   .zarrow { top: auto; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: none; }
@@ -243,7 +248,7 @@ body.still #focus.on .stack .under, body.still #focus.on .big { animation: none;
 </section>
 
 <div id="about" hidden>
-  <aside class="panel" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
     <div class="top"><button class="box" id="aboutClose" type="button"></button></div>
     <div class="portrait" id="portrait"></div>
     <h2 id="aboutTitle">Léa Tramati</h2>
@@ -255,7 +260,7 @@ body.still #focus.on .stack .under, body.still #focus.on .big { animation: none;
       <dt data-t="contact"></dt><dd id="contact"></dd>
       <dt>GitHub</dt><dd><a href="https://github.com/lea-tramati" target="_blank" rel="noopener">github.com/lea-tramati</a></dd>
     </dl>
-  </aside>
+  </div>
 </div>
 
 <div id="zoom" role="dialog" aria-modal="true" aria-labelledby="zoomCap" hidden>
@@ -373,7 +378,7 @@ const RATIO_OF = { "vignettes/guide-tour-kisd.webp": 1.463, "videos/nomadic-work
 
 /* ═══════════════ TEXTES ═══════════════ */
 const T = {
-  fr: { list: "Projets", context: "Portfolio — Erasmus, KISD Köln", tagline: "Survolez ou choisissez un projet en bas pour l'ouvrir",
+  fr: { list: "Projets", context: "Portfolio — Erasmus, KISD Köln", tagline: "Survolez ou choisissez un projet en bas pour l'ouvrir", taglineTouch: "Touchez une image ou un projet en bas pour l'ouvrir",
         info: "Info", pause: "‖ Pause", play: "▶ Animer", pauseLabel: "Mettre en pause les animations et vidéos", playLabel: "Relancer les animations et vidéos",
         skip: "Aller à la liste des projets", full: "Plein écran", langs: "Langue",
         scanSite: "Scanner pour emporter le portfolio", scanProject: "Scanner pour ouvrir ce projet sur votre téléphone",
@@ -387,7 +392,7 @@ const T = {
         guideVideo: "Voir la visite guidée",
         bio1: "Je suis Léa Tramati. Pendant mon semestre Erasmus à la Köln International School of Design, j'ai travaillé entre le jeu vidéo, le web, l'affiche, l'application mobile, la vidéo et la photo.",
         bio2: "Ce site rassemble ces projets. Choisissez-en un pour le découvrir, ou scannez le QR code pour les retrouver sur votre téléphone." },
-  en: { list: "Projects", context: "Portfolio — Erasmus, KISD Cologne", tagline: "Hover or pick a project below to open it",
+  en: { list: "Projects", context: "Portfolio — Erasmus, KISD Cologne", tagline: "Hover or pick a project below to open it", taglineTouch: "Tap an image or a project below to open it",
         info: "Info", pause: "‖ Pause", play: "▶ Play", pauseLabel: "Pause animations and videos", playLabel: "Resume animations and videos",
         skip: "Skip to the project list", full: "Full screen", langs: "Language",
         scanSite: "Scan to take the portfolio with you", scanProject: "Scan to open this project on your phone",
@@ -401,7 +406,7 @@ const T = {
         guideVideo: "Watch the guided tour",
         bio1: "I'm Léa Tramati. During my Erasmus semester at the Köln International School of Design, I worked across video games, the web, posters, mobile apps, video and photography.",
         bio2: "This site brings those projects together. Pick one to explore it, or scan the QR code to find them on your phone." },
-  de: { list: "Projekte", context: "Portfolio — Erasmus, KISD Köln", tagline: "Bild berühren oder unten ein Projekt wählen",
+  de: { list: "Projekte", context: "Portfolio — Erasmus, KISD Köln", tagline: "Bild mit der Maus berühren oder unten ein Projekt wählen", taglineTouch: "Bild antippen oder unten ein Projekt wählen",
         info: "Info", pause: "‖ Pause", play: "▶ Abspielen", pauseLabel: "Animationen und Videos pausieren", playLabel: "Animationen und Videos fortsetzen",
         skip: "Zur Projektliste springen", full: "Vollbild", langs: "Sprache",
         scanSite: "Scannen und das Portfolio mitnehmen", scanProject: "Scannen, um das Projekt auf dem Handy zu öffnen",
@@ -567,7 +572,7 @@ function setSpot(i) {
   markSpot();
   const p = PROJETS[i];
   type($("label"), p ? `${pad3(i + 1)} — ${p.titre}` : "Léa Tramati");
-  $("sub").textContent = p ? p.cat[lang] : t("tagline");
+  $("sub").textContent = p ? p.cat[lang] : t(matchMedia("(hover: none)").matches ? "taglineTouch" : "tagline");
 }
 function markSpot() {
   document.body.classList.toggle("spot", spot >= 0);
@@ -591,7 +596,7 @@ function renderList() {
     });
     b.addEventListener("pointerenter", () => setSpot(i));
     b.addEventListener("pointerleave", () => setSpot(-1));
-    b.addEventListener("focus", () => setSpot(i));
+    b.addEventListener("focus", () => { setSpot(i); b.scrollIntoView({ block: "nearest", inline: "nearest" }); });
     b.addEventListener("blur", () => setSpot(-1));
     li.append(b);
     return li;
@@ -710,7 +715,7 @@ function fill(i) {
   $("fCount").textContent = `${pad3(i + 1)} / ${pad3(N)}`;
   focusEl.scrollTop = 0;
   /* relance l'animation de pile */
-  stack.querySelectorAll(".under, .big").forEach(x => { x.style.animation = "none"; void x.offsetWidth; x.style.animation = ""; });
+  stack.querySelectorAll(".under, #big").forEach(x => { x.style.animation = "none"; void x.offsetWidth; x.style.animation = ""; });
 }
 function openFocus(i, quiet, fromTile) {
   if (current < 0) focusReturn = document.activeElement;
@@ -867,7 +872,8 @@ function demoStep() {
   const r = rng("reel" + demoIndex);
   extraImages(p).concat(PROJETS.filter((_, j) => j !== demoIndex).slice(0, 3).map(q => q.image)).forEach(src => {
     const u = new Image(); u.src = src; u.alt = ""; u.className = "under";
-    u.style.left = (8 + r() * 70) + "vw"; u.style.top = (6 + r() * 50) + "vh"; u.style.width = (8 + r() * 8) + "vw";
+    const side = slide.querySelectorAll(".under").length % 2;  /* alternance gauche / droite, autour de l'image principale */
+    u.style.left = (side ? 74 + r() * 12 : 3 + r() * 12) + "vw"; u.style.top = (8 + r() * 52) + "vh"; u.style.width = (9 + r() * 6) + "vw";
     slide.append(u);
   });
   const vid = !still && (p.preview || p.video);
