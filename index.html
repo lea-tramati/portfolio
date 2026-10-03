@@ -3,17 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Portfolio Erasmus de Léa Tramati à la KISD Köln : jeu, sites web, affiches, application et photographie.">
+<meta name="description" content="Portfolio Erasmus de Léa Tramati à la KISD Köln : jeu, sites web, affiches, application, vidéo et photographie.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Léa Tramati — Portfolio Erasmus">
-<meta property="og:description" content="Jeu, sites web, affiches, application et photographie, réalisés pendant un Erasmus à la KISD Köln.">
+<meta property="og:description" content="Jeu, sites web, affiches, application, vidéo et photographie, réalisés pendant un Erasmus à la KISD Köln.">
 <meta property="og:url" content="https://lea-tramati.github.io/portfolio/">
 <meta property="og:image" content="https://lea-tramati.github.io/portfolio/vignettes/apercu.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#ffffff">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 fill=%22%23fff%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%229%22 fill=%22%23E3261C%22/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" href="vignettes/favicon.png">
+<link rel="apple-touch-icon" href="vignettes/logo-180.png">
 <title>Léa Tramati</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -69,7 +70,8 @@ button { font: inherit; color: inherit; }
 }
 .bar > * { pointer-events: auto; }
 #top { top: 0; padding-top: calc(16px + env(safe-area-inset-top, 0px)); }
-#name { font: 500 17px/1.1 var(--sans); letter-spacing: -.01em; justify-self: start; }
+#name { font: 500 17px/1.1 var(--sans); letter-spacing: -.01em; justify-self: start; display: flex; align-items: center; gap: 10px; }
+#name img { width: 40px; height: 40px; display: block; }
 #name small { display: block; font: 400 13px/1.3 var(--mono); color: var(--soft); letter-spacing: 0; }
 nav { display: flex; gap: 6px; }
 #right { justify-self: end; display: flex; align-items: center; gap: 14px; }
@@ -315,7 +317,7 @@ body:not(.intro) #intro { transform: translate(-50%, -47%); }
 <main id="stage"></main>
 
 <header class="bar" id="top">
-  <div id="name">Léa Tramati<small data-t="context"></small></div>
+  <div id="name"><img src="vignettes/logo.png" alt="Logo LT"><span>Léa Tramati<small data-t="context"></small></span></div>
   <nav aria-label="Navigation">
     <button class="pill" type="button" id="navField" data-t="explore"></button>
     <button class="pill" type="button" id="navIndex" data-t="index"></button>
@@ -452,6 +454,21 @@ const PROJETS = [
     desc: { fr: "Spaces, l'environnement d'apprentissage social de la KISD à Cologne : partager ses travaux, discuter et s'entraider.",
             en: "Spaces, KISD's social learning environment in Cologne: share work, discuss online and help each other.",
             de: "Spaces, die soziale Lernumgebung der KISD in Köln: Arbeiten teilen, online diskutieren und sich gegenseitig unterstützen." } },
+  { id: "nomadic-workspace", titre: "Nomadic Workspace", type: "video", format: "paysage", couleur: "#BDBDB8", groupes: ["video"],
+    image: "videos/nomadic-workspace.jpg", video: "videos/nomadic-workspace.mp4",
+    tags: ["Vidéo", "Scan 3D", "KISD"],
+    cat:  { fr: "vidéo", en: "video", de: "Video" },
+    desc: { fr: "Une vidéo sur les espaces de travail de la KISD, où l'on travaille un peu partout : scans 3D, collages en noir et blanc et typographie.",
+            en: "A video about KISD's workspaces, where people work just about anywhere: 3D scans, black-and-white collage and typography.",
+            de: "Ein Video über die Arbeitsorte der KISD, an der überall gearbeitet wird: 3D-Scans, Schwarz-Weiß-Collagen und Typografie." } },
+  { id: "kisd-students", titre: "KISD Students", type: "videos", format: "story", couleur: "#7FC8F8", groupes: ["video"],
+    image: "videos/tips-first-year.jpg", preview: "videos/tips-first-year.mp4",
+    videos: ["videos/tips-first-year.mp4", "videos/ask-a-student-1.mp4", "videos/ask-a-student-2.mp4", "videos/what-are-you-doing.mp4", "videos/which-designer.mp4"],
+    tags: ["Vidéo", "Réseaux sociaux", "Interviews"],
+    cat:  { fr: "vidéos", en: "videos", de: "Videos" },
+    desc: { fr: "Une série de vidéos courtes pour les réseaux de la KISD : des étudiants répondent face caméra. Conseils aux premières années, projets du moment, designer préféré.",
+            en: "A series of short videos for KISD's social media: students answer on camera. Tips for first-years, current projects, favourite designer.",
+            de: "Eine Reihe kurzer Videos für die Social-Media-Kanäle der KISD: Studierende antworten vor der Kamera. Tipps fürs erste Jahr, aktuelle Projekte, Lieblingsdesigner." } },
   { id: "potluck", titre: "Potluck!", type: "galerie", format: "paysage", couleur: "#FFC93C", groupes: ["photo"],
     image: "vignettes/potluck.jpg", galerie: PHOTOS,
     tags: ["Photo", "Erasmus", "Köln"],
@@ -467,40 +484,40 @@ const T = {
         hl: [["Bonjour", "tout le monde", "je suis Léa!"], ["Portfolio", "img:0"], ["img:1", "à la KISD, Köln", "Erasmus"]],
         tip: "[ Suivez le <b>fil rouge</b> et cliquez un projet pour l'ouvrir ]",
         hint: "<b>Cliquez</b> une image reliée par le fil rouge pour ouvrir le projet. Glissez pour parcourir.",
-        all: "Tous", groups: { web: "Web", affiche: "Affiches", app: "App", jeu: "Jeu", photo: "Photo" },
+        all: "Tous", groups: { web: "Web", affiche: "Affiches", app: "App", jeu: "Jeu", video: "Vidéo", photo: "Photo" }, video: "Voir la vidéo", videos: "Voir les vidéos",
         presents: "Léa Tramati présente :", photosTitle: "Potluck! — la soirée en photos",
         scanSite: "Scanner pour emporter le portfolio", scanProject: "Scanner pour ouvrir ce projet sur votre téléphone",
         open: "Ouvrir le projet", poster: "Voir l'affiche en grand", teaser: "Voir le teaser", photos: "Voir les photos",
         close: "Fermer ×", prev: "Projet précédent", next: "Projet suivant", full: "Plein écran",
         demo: "Démo — touchez l'écran pour explorer", stage: "Projets. Glissez ou faites défiler pour parcourir.", cardHint: "Ouvrir la fiche du projet.",
-        where: "[école]", what: "[domaines]", contact: "[contact]", fields: "Jeu, web, affiche, application, photo", noContact: "à venir",
-        bio1: "Je suis Léa Tramati. Pendant mon semestre Erasmus à la Köln International School of Design, j'ai travaillé entre le jeu vidéo, le web, l'affiche, l'application mobile et la photo.",
+        where: "[école]", what: "[domaines]", contact: "[contact]", fields: "Jeu, web, affiche, application, vidéo, photo", noContact: "à venir",
+        bio1: "Je suis Léa Tramati. Pendant mon semestre Erasmus à la Köln International School of Design, j'ai travaillé entre le jeu vidéo, le web, l'affiche, l'application mobile, la vidéo et la photo.",
         bio2: "Ce site rassemble ces projets. Cliquez une image pour découvrir chacun d'eux, ou scannez le QR code pour les retrouver sur votre téléphone." },
   en: { context: "Portfolio — Erasmus, KISD Cologne", explore: "Explore", index: "Index", about: "About",
         hl: [["Hi", "everyone", "I'm Léa!"], ["Portfolio", "img:0"], ["img:1", "at KISD, Cologne", "Erasmus"]],
         tip: "[ Follow the <b>red thread</b> and click a project to open it ]",
         hint: "<b>Click</b> an image on the red thread to open the project. Drag to browse.",
-        all: "All", groups: { web: "Web", affiche: "Posters", app: "App", jeu: "Game", photo: "Photo" },
+        all: "All", groups: { web: "Web", affiche: "Posters", app: "App", jeu: "Game", video: "Video", photo: "Photo" }, video: "Watch the video", videos: "Watch the videos",
         presents: "Léa Tramati presents:", photosTitle: "Potluck! — the evening in photos",
         scanSite: "Scan to take the portfolio with you", scanProject: "Scan to open this project on your phone",
         open: "Open project", poster: "View poster full size", teaser: "Watch the teaser", photos: "See the photos",
         close: "Close ×", prev: "Previous project", next: "Next project", full: "Full screen",
         demo: "Demo — touch the screen to explore", stage: "Projects. Drag or scroll to browse.", cardHint: "Open the project page.",
-        where: "[school]", what: "[fields]", contact: "[contact]", fields: "Games, web, posters, apps, photography", noContact: "coming soon",
-        bio1: "I'm Léa Tramati. During my Erasmus semester at the Köln International School of Design, I worked across video games, the web, posters, mobile apps and photography.",
+        where: "[school]", what: "[fields]", contact: "[contact]", fields: "Games, web, posters, apps, video, photography", noContact: "coming soon",
+        bio1: "I'm Léa Tramati. During my Erasmus semester at the Köln International School of Design, I worked across video games, the web, posters, mobile apps, video and photography.",
         bio2: "This site brings those projects together. Click an image to explore each one, or scan the QR code to find them on your phone." },
   de: { context: "Portfolio — Erasmus, KISD Köln", explore: "Entdecken", index: "Index", about: "Über mich",
         hl: [["Hallo", "alle zusammen", "ich bin Léa!"], ["Portfolio", "img:0"], ["img:1", "an der KISD, Köln", "Erasmus"]],
         tip: "[ Folge dem <b>roten Faden</b> und klicke ein Projekt an ]",
         hint: "<b>Klicke</b> ein Bild am roten Faden an, um das Projekt zu öffnen. Ziehen zum Durchblättern.",
-        all: "Alle", groups: { web: "Web", affiche: "Plakate", app: "App", jeu: "Spiel", photo: "Foto" },
+        all: "Alle", groups: { web: "Web", affiche: "Plakate", app: "App", jeu: "Spiel", video: "Video", photo: "Foto" }, video: "Video ansehen", videos: "Videos ansehen",
         presents: "Léa Tramati präsentiert:", photosTitle: "Potluck! — der Abend in Fotos",
         scanSite: "Scannen und das Portfolio mitnehmen", scanProject: "Scannen, um das Projekt auf dem Handy zu öffnen",
         open: "Projekt öffnen", poster: "Plakat groß ansehen", teaser: "Teaser ansehen", photos: "Fotos ansehen",
         close: "Schließen ×", prev: "Vorheriges Projekt", next: "Nächstes Projekt", full: "Vollbild",
         demo: "Demo — Bildschirm berühren zum Erkunden", stage: "Projekte. Ziehen oder scrollen zum Durchblättern.", cardHint: "Projektseite öffnen.",
-        where: "[Hochschule]", what: "[Bereiche]", contact: "[Kontakt]", fields: "Spiel, Web, Plakat, App, Fotografie", noContact: "folgt",
-        bio1: "Ich bin Léa Tramati. In meinem Erasmus-Semester an der Köln International School of Design habe ich zwischen Videospiel, Web, Plakat, mobiler App und Fotografie gearbeitet.",
+        where: "[Hochschule]", what: "[Bereiche]", contact: "[Kontakt]", fields: "Spiel, Web, Plakat, App, Video, Fotografie", noContact: "folgt",
+        bio1: "Ich bin Léa Tramati. In meinem Erasmus-Semester an der Köln International School of Design habe ich zwischen Videospiel, Web, Plakat, mobiler App, Video und Fotografie gearbeitet.",
         bio2: "Diese Seite versammelt diese Projekte. Klicke auf ein Bild, um jedes zu entdecken, oder scanne den QR-Code, um sie auf dem Handy zu öffnen." },
 };
 let lang = (() => {
@@ -516,7 +533,7 @@ const pad = n => String(n).padStart(2, "0");
 const mod = (a, n) => ((a % n) + n) % n;
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const EXPO = location.hash === "#expo";
-const RATIOS = { paysage: 4 / 3, portrait: 3 / 4, carre: 1, affiche: 1 / 1.414 };
+const RATIOS = { paysage: 4 / 3, portrait: 3 / 4, carre: 1, affiche: 1 / 1.414, story: 9 / 16 };
 const RED = "#E3261C";
 
 function rng(seed) {
@@ -597,11 +614,11 @@ function build() {
     cta.firstChild.textContent = t("open");
     b.append(f, cap, cta);
     b.addEventListener("click", e => { if (moved > 6) { e.preventDefault(); return; } openFocus(i, false, f); });
-    if (p.video) {
+    if (p.video || p.preview) {
       b.addEventListener("pointerenter", e => {
         if (e.pointerType !== "mouse") return;
         const v = document.createElement("video");
-        v.src = p.video; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true;
+        v.src = p.preview || p.video; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true;
         v.style.setProperty("--r", String(ratio));
         f.firstChild.replaceWith(v);
         v.play().catch(() => {});
@@ -761,7 +778,7 @@ stage.addEventListener("pointerover", e => { hover = !!e.target.closest(".card")
 stage.addEventListener("pointerleave", () => { hover = false; });
 
 /* ═══════════════ Filtres ═══════════════ */
-const GROUPS = ["web", "affiche", "app", "jeu", "photo"];
+const GROUPS = ["web", "affiche", "app", "jeu", "video", "photo"];
 function renderFilters() {
   const el = $("filters");
   el.setAttribute("aria-label", t("all"));
@@ -886,10 +903,10 @@ function fill(i) {
     if (EXPO) big.removeAttribute("target"); else { big.target = "_blank"; big.rel = "noopener"; }
     big.setAttribute("aria-label", `${t("open")} : ${p.titre}`);
   } else {
-    const go = () => p.galerie ? zoom("img", p.galerie[0], p.galerie) : zoom("img", p.image);
+    const go = () => p.videos ? zoom("video", p.videos[0], p.videos) : p.type === "video" ? zoom("video", p.video) : p.galerie ? zoom("img", p.galerie[0], p.galerie) : zoom("img", p.image);
     big.removeAttribute("href"); big.removeAttribute("target");
     big.setAttribute("role", "button"); big.tabIndex = 0;
-    big.setAttribute("aria-label", `${p.galerie ? t("photos") : t("poster")} : ${p.titre}`);
+    big.setAttribute("aria-label", `${p.videos ? t("videos") : p.type === "video" ? t("video") : p.galerie ? t("photos") : t("poster")} : ${p.titre}`);
     big.onclick = go;
     big.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } };
   }
@@ -900,14 +917,16 @@ function fill(i) {
   const acts = [];
   if (p.type === "lien") acts.push(linkPill(p));
   else if (p.type === "galerie") acts.push(pillButton(t("photos"), () => zoom("img", p.galerie[0], p.galerie), true));
+  else if (p.type === "video") acts.push(pillButton(t("video"), () => zoom("video", p.video), true));
+  else if (p.type === "videos") acts.push(pillButton(t("videos"), () => zoom("video", p.videos[0], p.videos), true));
   else acts.push(pillButton(t("poster"), () => zoom("img", p.image), true));
-  if (p.video) acts.push(pillButton(t("teaser"), () => zoom("video", p.video)));
+  if (p.video && p.type !== "video") acts.push(pillButton(t("teaser"), () => zoom("video", p.video)));
   $("fActions").replaceChildren(...acts);
-  const list = p.galerie || p.process || [];
+  const list = p.videos || p.galerie || p.process || [];
   $("fProcess").replaceChildren(...list.map(src => {
     const b = document.createElement("button"); b.type = "button";
-    const img = new Image(); img.src = src; img.alt = ""; img.loading = "lazy"; b.append(img);
-    b.addEventListener("click", () => zoom("img", src, list));
+    const img = new Image(); img.src = isVideo(src) ? src.replace(/\.mp4$/, ".jpg") : src; img.alt = ""; img.loading = "lazy"; b.append(img);
+    b.addEventListener("click", () => zoom(isVideo(src) ? "video" : "img", src, list));
     return b;
   }));
   $("fScan").textContent = t("scanProject");
@@ -970,6 +989,7 @@ function zoom(kind, src, list) {
     const v = document.createElement("video");
     v.src = src; v.controls = true; v.autoplay = true; v.playsInline = true;
     v.addEventListener("click", e => e.stopPropagation());
+    if (list) v.addEventListener("ended", () => zoomShift(1));
     body.replaceChildren(v);
   } else {
     const img = new Image(); img.src = src; img.alt = "";
@@ -979,10 +999,11 @@ function zoom(kind, src, list) {
   zoomEl.hidden = false;
   $("zoomClose").focus({ preventScroll: true });
 }
+const isVideo = src => /\.mp4$/i.test(src);
 function zoomShift(d) {
   if (!zoomList) return;
   zoomAt = mod(zoomAt + d, zoomList.length);
-  zoom("img", zoomList[zoomAt], zoomList);
+  zoom(isVideo(zoomList[zoomAt]) ? "video" : "img", zoomList[zoomAt], zoomList);
 }
 function unzoom() {
   if (zoomEl.hidden) return false;
