@@ -332,14 +332,15 @@ const PROJETS = [
     desc: { fr: "Where memories meet place : une application qui relie les souvenirs aux lieux. On crée un « spot », on le filme, on le retrouve sur place.",
             en: "Where memories meet place: an app that ties memories to locations. Create a spot, film it, find it again on site.",
             de: "Where memories meet place: eine App, die Erinnerungen mit Orten verbindet. Einen Spot anlegen, filmen und vor Ort wiederfinden." } },
-  { id: "kisd-spaces", titre: "KISD Spaces", type: "lien", format: "paysage", couleur: "#A6E06A", groupes: ["web"],
-    image: "vignettes/kisd-spaces.webp", lien: "https://spaces.kisd.de/home/",
-    tags: ["Plateforme", "KISD"],
+  { id: "kisd-spaces", titre: "KISD Spaces — Guide Tour", type: "lien", format: "paysage", couleur: "#A6E06A", groupes: ["web", "video"],
+    image: "vignettes/guide-tour-kisd.webp", lien: "https://spaces.kisd.de/home/",
+    video: "videos/guide-tour-kisd.mp4", videoLabel: "guideVideo",
+    tags: ["Guided tour", "UX", "KISD"],
     cat:  { fr: "site web", en: "website", de: "Website" },
-    alt:  { fr: "Page d'accueil de Spaces : texte de présentation et boutons de connexion.", en: "Spaces home page: introduction text and login buttons.", de: "Startseite von Spaces: Einführungstext und Login-Buttons." },
-    desc: { fr: "Spaces, l'environnement d'apprentissage social de la KISD à Cologne : partager ses travaux, discuter et s'entraider.",
-            en: "Spaces, KISD's social learning environment in Cologne: share work, discuss online and help each other.",
-            de: "Spaces, die soziale Lernumgebung der KISD in Köln: Arbeiten teilen, online diskutieren und sich gegenseitig unterstützen." } },
+    alt:  { fr: "Fil d'actualité de Spaces : publications d'étudiants, agenda et colonne « Featured ».", en: "Spaces news feed: student posts, calendar and a “Featured” column.", de: "Spaces-Feed: Beiträge von Studierenden, Kalender und eine „Featured“-Spalte." },
+    desc: { fr: "Une visite guidée pour Spaces, la plateforme d'apprentissage de la KISD : à la première connexion, des bulles présentent pas à pas l'accueil, le profil et les publications.",
+            en: "A guided tour for Spaces, KISD's learning platform: on first login, step-by-step tooltips introduce the home feed, the profile and posting.",
+            de: "Eine geführte Tour für Spaces, die Lernplattform der KISD: Beim ersten Login erklären Hinweise Schritt für Schritt Startseite, Profil und Beiträge." } },
   { id: "nomadic-workspace", titre: "Nomadic Workspace", type: "video", format: "paysage", couleur: "#BDBDB8", groupes: ["video"],
     image: "videos/nomadic-workspace.webp", video: "videos/nomadic-workspace.mp4",
     tags: ["Vidéo", "Scan 3D", "KISD"],
@@ -383,6 +384,7 @@ const T = {
         projectOf: (i, n, p) => `Projet ${i} sur ${n} : ${p.titre}, ${p.cat.fr}. Ouvrir la fiche.`, now: (i, n, p) => `Projet ${i} sur ${n} : ${p.titre}`,
         photoOf: (i, n) => `Photo ${i} sur ${n} — soirée Potluck`, videoOf: (i, n, t) => `Vidéo ${i} sur ${n} — ${t}`,
         where: "École", what: "Domaines", contact: "Contact", fields: "Jeu, web, affiche, application, vidéo, photo", noContact: "À venir",
+        guideVideo: "Voir la visite guidée",
         bio1: "Je suis Léa Tramati. Pendant mon semestre Erasmus à la Köln International School of Design, j'ai travaillé entre le jeu vidéo, le web, l'affiche, l'application mobile, la vidéo et la photo.",
         bio2: "Ce site rassemble ces projets. Cliquez une image pour découvrir chacun d'eux, ou scannez le QR code pour les retrouver sur votre téléphone." },
   en: { title: "Projects by Léa Tramati", context: "Portfolio — Erasmus, KISD Cologne", work: "Projects", info: "Info", filters: "Filters",
@@ -397,6 +399,7 @@ const T = {
         projectOf: (i, n, p) => `Project ${i} of ${n}: ${p.titre}, ${p.cat.en}. Open the project page.`, now: (i, n, p) => `Project ${i} of ${n}: ${p.titre}`,
         photoOf: (i, n) => `Photo ${i} of ${n} — Potluck evening`, videoOf: (i, n, t) => `Video ${i} of ${n} — ${t}`,
         where: "School", what: "Fields", contact: "Contact", fields: "Games, web, posters, apps, video, photography", noContact: "Coming soon",
+        guideVideo: "Watch the guided tour",
         bio1: "I'm Léa Tramati. During my Erasmus semester at the Köln International School of Design, I worked across video games, the web, posters, mobile apps, video and photography.",
         bio2: "This site brings those projects together. Click an image to explore each one, or scan the QR code to find them on your phone." },
   de: { title: "Projekte von Léa Tramati", context: "Portfolio — Erasmus, KISD Köln", work: "Projekte", info: "Info", filters: "Filter",
@@ -411,6 +414,7 @@ const T = {
         projectOf: (i, n, p) => `Projekt ${i} von ${n}: ${p.titre}, ${p.cat.de}. Projektseite öffnen.`, now: (i, n, p) => `Projekt ${i} von ${n}: ${p.titre}`,
         photoOf: (i, n) => `Foto ${i} von ${n} — Potluck-Abend`, videoOf: (i, n, t) => `Video ${i} von ${n} — ${t}`,
         where: "Hochschule", what: "Bereiche", contact: "Kontakt", fields: "Spiel, Web, Plakat, App, Video, Fotografie", noContact: "Folgt",
+        guideVideo: "Geführte Tour ansehen",
         bio1: "Ich bin Léa Tramati. In meinem Erasmus-Semester an der Köln International School of Design habe ich zwischen Videospiel, Web, Plakat, mobiler App, Video und Fotografie gearbeitet.",
         bio2: "Diese Seite versammelt diese Projekte. Klicke auf ein Bild, um jedes zu entdecken, oder scanne den QR-Code, um sie auf dem Handy zu öffnen." },
 };
@@ -599,7 +603,7 @@ function fill(i) {
   else if (p.type === "video") acts.push(btn(t("video"), mainAction(p), true));
   else if (p.type === "videos") acts.push(btn(t("videos"), mainAction(p), true));
   else acts.push(btn(t("poster"), mainAction(p), true));
-  if (p.video && p.type !== "video") acts.push(btn(t("teaser"), () => zoom([p.video], 0, p)));
+  if (p.video && p.type !== "video") acts.push(btn(t(p.videoLabel || "teaser"), () => zoom([p.video], 0, p)));
   $("fActions").replaceChildren(...acts);
   const list = p.videos || p.galerie || [];
   $("fProcess").replaceChildren(...list.map((src, k) => {
