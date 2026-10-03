@@ -25,9 +25,10 @@
 - `CONTACT` : { label: "@votre.insta", href: "https://instagram.com/votre.insta" } pour afficher un contact.
 - Images de processus : ajouter `process: ["vignettes/croquis.jpg"]` à un projet.
 
-## Vues
-- …/portfolio/ : champ d'images relié par le fil rouge
-- …/portfolio/#index : grille de tous les projets et des photos
+## Accessibilité
+- Clavier : ← → (ou les flèches à l'écran) pour passer d'un projet à l'autre, Entrée pour ouvrir, Échap pour fermer, Tab pour parcourir les boutons.
+- Bouton « Pause » en haut : arrête toutes les animations (mémorisé pour la visite suivante).
+- Lecteurs d'écran : chaque projet et chaque image ont une description en FR/EN/DE (champ `alt` des projets).
 
 ## À imprimer
 - `../carte-qr-portfolio.pdf` : carton A5 avec le QR code, à poser à côté de l'écran.
