@@ -470,14 +470,14 @@ function build() {
   cw = small ? 110 : 168; ch = small ? 120 : 150;
   cols = Math.ceil(vw / cw) + 1;
   rows = Math.ceil(vh / ch) + 2;
-  /* Une case sur trois (en quinconce) reçoit un projet, à tour de rôle : les 8 projets apparaissent toujours, quelle que soit la largeur de l'écran */
-  const ph = PHOTOS.filter((_, j) => j % 2 === 0);
-  let pk = 0, hk = 0;
+  /* Une case sur deux (en damier) reçoit un projet, à tour de rôle : les 8 projets apparaissent toujours, quelle que soit la largeur de l'écran. Pas de photos décoratives. */
+  let pk = 0;
   const r = rng("champ");
   field.replaceChildren();
   tiles = [];
   for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
-    const it = mod(x + 2 * y, 3) === 0 ? { p: pk++ % N } : { ph: ph[hk++ % ph.length] };
+    if (mod(x + y, 2) !== 0) continue;
+    const it = { p: pk++ % N };
     const el = document.createElement("div");
     let w;
     if (it.p !== undefined) {
@@ -797,7 +797,7 @@ function demoStep() {
   const slide = document.createElement("div");
   slide.className = "slide";
   const r = rng("reel" + demoIndex);
-  extraImages(p).concat(PHOTOS.filter((_, j) => j % 5 === demoIndex % 5).slice(0, 2)).forEach(src => {
+  extraImages(p).concat(PROJETS.filter((_, j) => j !== demoIndex).slice(0, 3).map(q => q.image)).forEach(src => {
     const u = new Image(); u.src = src; u.alt = ""; u.className = "under";
     u.style.left = (8 + r() * 70) + "vw"; u.style.top = (6 + r() * 50) + "vh"; u.style.width = (8 + r() * 8) + "vw";
     slide.append(u);
