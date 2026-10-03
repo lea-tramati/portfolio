@@ -19,396 +19,243 @@
 <title>Léa Tramati</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800&family=Courier+Prime:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
-/* Page blanche, encre noire. Un seul thème, volontairement. Contrastes vérifiés AA. */
+/* Grille blanche, une police mono en capitales. Un seul thème, volontairement. Contrastes AA. */
 :root {
   --paper: #FFFFFF;
   --ink: #111111;
-  --soft: #595959;      /* 7:1 sur blanc */
-  --red: #C8201A;       /* 5,9:1 sur blanc */
+  --soft: #5E5E5E;
+  --line: #DADADA;
   --focus: #1F4BFF;
-  --sans: "Archivo", "Helvetica Neue", Arial, sans-serif;
-  --mono: "Courier Prime", "Courier New", Courier, monospace;
+  --mono: "Space Mono", "Courier New", ui-monospace, monospace;
+  --gx: 16px;
 }
 [hidden] { display: none !important; }
-body.nocursor, body.nocursor * { cursor: none !important; }
 * { box-sizing: border-box; }
-html, body { height: 100%; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body {
   margin: 0;
-  background: var(--paper);
-  color: var(--ink);
-  font: 400 16px/1.45 var(--sans);
-  overflow: hidden;
+  background: var(--paper); color: var(--ink);
+  font: 400 13px/1.45 var(--mono);
+  text-transform: uppercase; letter-spacing: .02em;
 }
+body.locked { overflow: hidden; }
+body.nocursor, body.nocursor * { cursor: none !important; }
 img { max-width: 100%; }
-button { font: inherit; color: inherit; }
-:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; border-radius: 4px; }
+button { font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
 .sr { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-
-/* Lien d'évitement */
-.skip {
-  position: fixed; left: 12px; top: -60px; z-index: 100;
-  background: var(--ink); color: var(--paper); padding: 10px 14px; border-radius: 6px;
-  font: 600 15px/1 var(--sans); text-decoration: none;
-}
+.skip { position: fixed; left: 12px; top: -60px; z-index: 100; background: var(--ink); color: var(--paper); padding: 10px 14px; text-decoration: none; }
 .skip:focus { top: 12px; }
 
-/* ---------- Pastilles (boutons, étiquettes) ---------- */
-.pill {
-  display: inline-flex; align-items: center; gap: 6px;
-  min-height: 34px;
-  border: 2px solid var(--ink); border-radius: 99px;
-  background: var(--paper); color: var(--ink);
-  font: 700 13px/1 var(--sans); text-transform: uppercase; letter-spacing: .01em;
-  padding: 7px 12px 6px;
-  text-decoration: none; white-space: nowrap; cursor: pointer;
-  transition: background .15s, color .15s, gap .2s;
-}
-.pill:hover, .pill[aria-pressed="true"], .pill.solid { background: var(--ink); color: var(--paper); }
-.pill.solid:hover { background: var(--soft); border-color: var(--soft); color: var(--paper); }
-.pill.big { font-size: 15px; padding: 12px 18px 11px; min-height: 46px; }
-.pill.big:hover { gap: 12px; }
+/* Boutons à lettre cerclée : Ⓟ PROJETS, Ⓘ INFO */
+.tab { display: inline-flex; align-items: center; gap: 9px; background: none; border: 0; padding: 4px 2px; cursor: pointer; text-decoration: none; min-height: 34px; }
+.ic { width: 27px; height: 27px; border: 1.5px solid var(--ink); border-radius: 50%; display: inline-grid; place-items: center; font-size: 12px; line-height: 1; flex: none; }
+.tab[aria-pressed="true"] .ic, .tab:hover .ic { background: var(--ink); color: var(--paper); }
+.tab:hover .lb { text-decoration: underline; text-underline-offset: 3px; }
 
-/* ---------- Barres haut et bas ---------- */
-.bar {
-  position: fixed; left: 0; right: 0; z-index: 30;
-  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px;
-  padding-inline: 20px;
-  pointer-events: none;
+/* ---------- En-tête ---------- */
+header {
+  position: sticky; top: 0; z-index: 20; background: var(--paper);
+  display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto; gap: 12px 28px; align-items: start;
+  padding: calc(14px + env(safe-area-inset-top, 0px)) var(--gx) 14px;
 }
-.bar > * { pointer-events: auto; }
-#top { top: 0; padding-top: calc(14px + env(safe-area-inset-top, 0px)); }
-#name { font: 500 18px/1.1 var(--sans); letter-spacing: -.01em; justify-self: start; display: flex; align-items: center; gap: 10px; }
-#name img { width: 42px; height: 42px; display: block; }
-#name small { display: block; font: 400 14px/1.3 var(--mono); color: var(--soft); letter-spacing: 0; }
-nav { display: flex; gap: 6px; }
-#right { justify-self: end; display: flex; align-items: center; gap: 10px; }
+.who { display: flex; gap: 10px; align-items: flex-start; }
+.who img { width: 30px; height: 30px; display: block; margin-top: -3px; }
+.who p { margin: 0; }
+.who small { display: block; font-size: 12px; color: var(--soft); }
+nav { display: flex; gap: 22px; flex-wrap: wrap; }
+.tools { display: flex; gap: 18px; align-items: center; justify-self: end; }
 .langs { display: flex; gap: 2px; }
-.langs button {
-  background: none; border: 0; cursor: pointer; padding: 8px 6px; min-width: 34px; min-height: 34px;
-  font: 400 15px/1 var(--mono); color: var(--soft);
-}
-.langs button:hover, .langs button[aria-pressed="true"] { color: var(--ink); }
-.langs button[aria-pressed="true"] { text-decoration: underline; text-underline-offset: 4px; }
+.langs button { background: none; border: 0; cursor: pointer; padding: 6px 5px; min-height: 34px; color: var(--soft); }
+.langs button[aria-pressed="true"], .langs button:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+.filters { display: flex; gap: 14px; align-items: flex-start; }
+.filters ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: auto auto; gap: 0 22px; }
+.filters li button { background: none; border: 0; cursor: pointer; padding: 1px 0; min-height: 24px; text-align: left; color: var(--soft); }
+.filters li button:hover, .filters li button[aria-pressed="true"] { color: var(--ink); }
+.filters li button[aria-pressed="true"] { text-decoration: underline; text-underline-offset: 3px; }
+.filters sup { font-size: 9px; }
+#hint { grid-column: 1 / -1; margin: 0; color: var(--soft); font-size: 12px; }
+#hint kbd { font: inherit; color: var(--ink); border: 1px solid var(--ink); padding: 0 4px; }
 
-#bottom { bottom: 0; padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px)); align-items: end; }
-#hint { font: 400 14px/1.4 var(--mono); color: var(--soft); justify-self: start; max-width: 32ch; margin: 0; }
-#hint kbd { font: 700 13px/1 var(--sans); color: var(--ink); border: 1.5px solid var(--ink); border-radius: 4px; padding: 1px 5px; }
-#filters { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 14px; }
-#filters button {
-  background: none; border: 0; cursor: pointer; padding: 6px 2px; min-height: 34px;
-  font: 400 17px/1 var(--sans); color: var(--soft);
-}
-#filters button:hover, #filters button[aria-pressed="true"] { color: var(--ink); }
-#filters button[aria-pressed="true"] { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 5px; }
-#filters sup { font-size: 11px; margin-left: 1px; }
-.qr { justify-self: end; display: flex; align-items: end; gap: 10px; text-align: right; }
-.qr span { font: 400 13px/1.3 var(--mono); color: var(--soft); max-width: 16ch; }
+/* ---------- Grille ---------- */
+main { padding: 34px var(--gx) 0; }
+.grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 72px calc(var(--gx) * 2); align-items: end; }
+.grid li { min-width: 0; }
+.item { display: grid; gap: 12px; width: 100%; padding: 0; border: 0; background: none; text-align: left; cursor: pointer; }
+.media { display: flex; align-items: flex-end; min-height: 0; }
+.media img, .media video { display: block; width: 100%; height: auto; max-height: 380px; object-fit: cover; object-position: top; background: #F2F2F2; transition: opacity .2s; }
+.media .tall { width: auto; max-width: 100%; }
+.item:hover .media img, .item:hover .media video { opacity: .86; }
+.cap { display: flex; justify-content: space-between; gap: 14px; padding-inline: 6px; }
+.cap .t { text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.item:hover .cap .t, .item:focus-visible .cap .t { text-decoration: underline; text-underline-offset: 3px; }
+.item:focus-visible { outline: none; }
+.item:focus-visible .media { outline: 3px solid var(--focus); outline-offset: 4px; }
+
+/* ---------- Pied de page ---------- */
+footer { margin-top: 110px; padding: 18px var(--gx) calc(22px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: end; gap: 20px; flex-wrap: wrap; color: var(--soft); }
+footer p { margin: 0; }
+.qr { display: flex; align-items: end; gap: 12px; }
 .code { background: #fff; line-height: 0; }
-.code canvas, .code img { display: block; }
-.qr .code canvas, .qr .code img { width: 62px; height: 62px; }
-
-/* ---------- Carrousel ---------- */
-#stage {
-  position: relative; z-index: 0; isolation: isolate;
-  height: 100%; overflow: hidden;
-  cursor: grab; touch-action: pan-y;
-}
-#stage.dragging { cursor: grabbing; }
-
-.card {
-  position: absolute; left: 0; top: 0; z-index: 10;
-  display: grid; gap: 8px; justify-items: start;
-  padding: 0; border: 0; background: none; text-align: left;
-  cursor: pointer; will-change: transform;
-  transition: opacity .4s;
-}
-.shot { position: relative; display: block; width: 100%; background: #F3F3F1; box-shadow: 0 2px 4px rgba(0,0,0,.06), 0 14px 34px rgba(0,0,0,.12); }
-.shot img, .shot video { display: block; width: 100%; height: auto; aspect-ratio: var(--r); object-fit: cover; object-position: top; }
-.shot .over {
-  position: absolute; inset: 0; display: grid; place-items: center;
-  font: 800 17px/1.1 var(--sans); color: #fff; text-transform: uppercase; text-align: center;
-  background: rgba(17,17,17,.45); opacity: 0; transition: opacity .2s;
-}
-.card:hover .shot img, .card:focus-visible .shot img { filter: brightness(.92); }
-.shot img { transition: filter .2s; }
-.card:focus-visible { outline: none; }
-.card:focus-visible .shot, .card.sel .shot { outline: 4px solid var(--focus); outline-offset: 5px; }
-.cap { font: 400 15px/1.3 var(--mono); color: var(--ink); }
-.cap .n { color: var(--red); font-weight: 700; }
-.cap .c { color: var(--soft); }
-.card .pill { pointer-events: none; }
-.card:hover .pill, .card:focus-visible .pill { background: var(--ink); color: var(--paper); }
-.card.dim { opacity: .1; }
-.card.pulse .pill { animation: nudge 1.4s ease-in-out; }
-@keyframes nudge { 30%, 60% { background: var(--ink); color: var(--paper); } }
-
-.photo {
-  position: absolute; left: 0; top: 0; z-index: 1;
-  pointer-events: none; will-change: transform;
-  opacity: .75; transition: opacity .5s;
-}
-.photo img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; filter: grayscale(1) contrast(1.05); }
-body.intro .photo, body.filtered .photo { opacity: .15; }
-body.intro .card { opacity: .25; }
-
-/* Flèches de navigation à l'écran */
-.arrow {
-  position: fixed; top: 50%; z-index: 25; transform: translateY(-50%);
-  width: 46px; height: 46px; border-radius: 50%;
-  border: 1.5px solid var(--ink); background: var(--paper); color: var(--ink);
-  font: 500 20px/1 var(--sans); cursor: pointer;
-  display: grid; place-items: center;
-}
-.arrow:hover { background: var(--ink); color: var(--paper); }
-#goPrev { left: 16px; }
-#goNext { right: 16px; }
-
-/* ---------- Accueil ---------- */
-#intro {
-  position: fixed; z-index: 20;
-  left: 50%; top: 50%; transform: translate(-50%, -50%);
-  width: min(1040px, calc(100vw - 32px));
-  background: var(--paper);
-  padding: 22px 24px 20px;
-  box-shadow: 0 30px 80px rgba(0,0,0,.14);
-  pointer-events: none;
-  opacity: 0; transition: opacity .5s, transform .5s;
-}
-body.intro #intro { opacity: 1; }
-body:not(.intro) #intro { transform: translate(-50%, -47%); visibility: hidden; transition: opacity .5s, transform .5s, visibility 0s .5s; }
-.hl { margin: 0; font: 800 clamp(26px, 6.3vw, 86px)/.9 var(--sans); letter-spacing: -.045em; text-transform: uppercase; }
-.hl .row { display: flex; align-items: center; justify-content: space-between; gap: .18em; white-space: nowrap; }
-.hl .row > span { flex: none; }
-.hl .row + .row { margin-top: .06em; }
-.hl .pill { font-size: max(11px, .1em); letter-spacing: 0; padding: .45em .8em .38em; align-self: flex-start; margin-top: .25em; min-height: 0; }
-.hl .inset { height: .78em; width: auto; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
-#intro .tip { margin: 18px 0 0; font: 400 15px/1.4 var(--mono); color: var(--soft); }
+.code canvas, .code img { display: block; width: 74px; height: 74px; }
 
 /* ---------- Fiche projet ---------- */
-#focus { --ink: #F4F4F1; --paper: #111111; --soft: #B8B8B3; --focus: #8FA8FF; color: var(--ink);
-  position: fixed; inset: 0; z-index: 40; pointer-events: none; visibility: hidden; transition: visibility 0s 1s; }
-#focus.on { pointer-events: auto; visibility: visible; transition: none; }
-.flood {
-  position: absolute; left: -5%; right: -5%; top: 0; height: 100%;
-  background: #111111;
-  transform: translateY(115%);
-  transition: transform .9s cubic-bezier(.7,0,.2,1);
-}
-.flood svg { position: absolute; left: 0; bottom: 100%; width: 100%; height: 140px; display: block; }
-.flood svg path { fill: #111111; }
-#focus.on .flood { transform: translateY(0); }
-.inner {
-  position: absolute; inset: 0; overflow-y: auto;
-  display: grid; place-items: center;
-  padding-inline: 20px;
-  padding-block: calc(72px + env(safe-area-inset-top, 0px)) calc(64px + env(safe-area-inset-bottom, 0px));
-  opacity: 0; transition: opacity .3s;
-}
-#focus.on .inner { opacity: 1; transition: opacity .5s .55s; }
-.sheet { display: grid; grid-template-columns: auto minmax(0, 400px); align-items: end; gap: 40px; max-width: 100%; }
-.big {
-  display: block; position: relative; cursor: pointer; line-height: 0; background: #fff;
-  transform: translateY(24px); transition: transform .7s cubic-bezier(.2,.8,.2,1) .5s;
-  box-shadow: 0 30px 60px rgba(0,0,0,.18);
-}
-#focus.on .big { transform: none; }
-.big img { display: block; max-width: min(54vw, 560px); max-height: 66vh; width: auto; height: auto; }
-.info { display: grid; gap: 14px; justify-items: start; }
-.info .k { font: 400 15px/1.3 var(--mono); color: var(--soft); }
-.info h2 { margin: 0; font: 800 clamp(36px, 5.2vw, 72px)/.9 var(--sans); letter-spacing: -.04em; text-transform: uppercase; text-wrap: balance; }
-.info p { margin: 0; font-size: 18px; line-height: 1.5; max-width: 36ch; }
-.tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
-.tags .pill { cursor: default; }
-.tags .pill:hover { background: transparent; color: var(--ink); }
-.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
-.process { display: flex; flex-wrap: wrap; gap: 4px; max-height: 156px; overflow-y: auto; margin: 0; padding: 2px; list-style: none; }
+#focus { position: fixed; inset: 0; z-index: 40; background: var(--paper); overflow-y: auto; opacity: 0; visibility: hidden; transition: opacity .35s, visibility 0s .35s; }
+#focus.on { opacity: 1; visibility: visible; transition: opacity .35s; }
+.fbar { position: sticky; top: 0; z-index: 2; background: var(--paper); display: flex; gap: 24px; align-items: center; padding: calc(14px + env(safe-area-inset-top, 0px)) var(--gx) 14px; flex-wrap: wrap; }
+.fbar .count { color: var(--soft); }
+.fbar #close { margin-left: auto; }
+.sheet { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 40px; align-items: end; padding: 24px var(--gx) 60px; min-height: calc(100vh - 70px); }
+.big { display: block; line-height: 0; cursor: pointer; justify-self: start; }
+.big img { display: block; max-width: 100%; max-height: 76vh; width: auto; height: auto; }
+.info { display: grid; gap: 16px; align-content: end; }
+.info .k { color: var(--soft); }
+.info h2 { margin: 0; font: 700 clamp(28px, 3.6vw, 52px)/1 var(--mono); letter-spacing: -.01em; overflow-wrap: anywhere; }
+.info p { margin: 0; text-transform: none; letter-spacing: 0; font-size: 15px; line-height: 1.6; max-width: 46ch; }
+.tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 12px; color: var(--soft); }
+.tags li::before { content: "["; } .tags li::after { content: "]"; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { display: inline-flex; align-items: center; gap: 10px; border: 1.5px solid var(--ink); background: var(--paper); padding: 11px 15px 10px; min-height: 44px; cursor: pointer; text-decoration: none; }
+.btn.solid, .btn:hover { background: var(--ink); color: var(--paper); }
+.process { list-style: none; margin: 0; padding: 2px; display: flex; flex-wrap: wrap; gap: 4px; max-height: 160px; overflow-y: auto; }
 .process:empty { display: none; }
 .process button { padding: 0; border: 0; cursor: zoom-in; line-height: 0; }
-.process img { width: 52px; height: 52px; object-fit: cover; }
-.pqr { display: flex; align-items: center; gap: 12px; }
-.pqr .code canvas, .pqr .code img { width: 72px; height: 72px; }
-.pqr span { font: 400 13px/1.35 var(--mono); max-width: 22ch; }
-.fnav { position: absolute; top: calc(14px + env(safe-area-inset-top, 0px)); left: 20px; right: 20px; display: flex; gap: 8px; align-items: center; }
-.fnav .count { font: 400 15px/1 var(--mono); margin-left: 6px; }
-.fnav #close { margin-left: auto; }
+.process img { width: 54px; height: 54px; object-fit: cover; }
+.pqr { display: flex; align-items: center; gap: 12px; color: var(--soft); font-size: 11px; }
+.pqr .code canvas, .pqr .code img { width: 70px; height: 70px; }
 .flyer { position: fixed; z-index: 45; margin: 0; pointer-events: none; transform-origin: 0 0; }
-#focus.flip .big { opacity: 0; transition: none; transform: none; }
+#focus.flip .big { opacity: 0; }
 
 /* ---------- Agrandissement ---------- */
-#zoom { position: fixed; inset: 0; z-index: 50; background: rgba(255,255,255,.98); display: grid; place-items: center; padding: 72px 76px; }
+#zoom { position: fixed; inset: 0; z-index: 50; background: rgba(255,255,255,.98); display: grid; place-items: center; padding: 70px 80px; }
 #zoom figure { margin: 0; display: grid; gap: 10px; justify-items: center; }
 #zoom img, #zoom video { max-width: 100%; max-height: calc(100vh - 170px); display: block; }
 #zoom video { background: #000; }
-#zoom figcaption { font: 400 15px/1.3 var(--mono); }
-#zoomClose { position: absolute; top: calc(14px + env(safe-area-inset-top, 0px)); right: 20px; }
-#zoom .arrow { position: absolute; }
-#zoomPrev { left: 12px; }
-#zoomNext { right: 12px; }
+#zoomClose { position: absolute; top: calc(14px + env(safe-area-inset-top, 0px)); right: var(--gx); }
+.zarrow { position: absolute; top: 50%; transform: translateY(-50%); }
+#zoomPrev { left: var(--gx); }
+#zoomNext { right: var(--gx); }
 
-/* ---------- À propos ---------- */
-#about { position: fixed; z-index: 55; inset: 0; display: flex; justify-content: flex-end; background: rgba(17,17,17,.3); }
-#about .panel {
-  width: min(480px, 100%); height: 100%; overflow-y: auto;
-  background: var(--paper);
-  padding-inline: 28px;
-  padding-block: calc(18px + env(safe-area-inset-top, 0px)) calc(28px + env(safe-area-inset-bottom, 0px));
-  display: grid; align-content: start; gap: 20px;
-  animation: slide .45s cubic-bezier(.2,.8,.2,1);
-}
-@keyframes slide { from { transform: translateX(40px); opacity: 0; } }
+/* ---------- Info ---------- */
+#about { position: fixed; inset: 0; z-index: 55; display: flex; justify-content: flex-end; background: rgba(17,17,17,.25); }
+#about .panel { width: min(520px, 100%); height: 100%; overflow-y: auto; background: var(--paper); padding: calc(14px + env(safe-area-inset-top, 0px)) 24px 28px; display: grid; align-content: start; gap: 22px; }
 #about .top { display: flex; justify-content: flex-end; }
-#about .portrait { width: 56%; aspect-ratio: 4 / 5; background: var(--ink); color: var(--paper); display: grid; place-items: center; overflow: hidden; }
-#about .portrait img { width: 70%; height: auto; filter: invert(1); }
-#about .portrait img.photo-real { width: 100%; height: 100%; object-fit: cover; filter: none; }
-#about h2 { margin: 0; font: 800 52px/.9 var(--sans); letter-spacing: -.04em; text-transform: uppercase; }
-#about p { margin: 0; font-size: 17px; line-height: 1.55; max-width: 38ch; }
-#about dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 8px 14px; font: 400 15px/1.4 var(--mono); }
+#about .portrait { width: 50%; aspect-ratio: 4 / 5; background: #F2F2F2; display: grid; place-items: center; overflow: hidden; }
+#about .portrait img { width: 60%; }
+#about .portrait img.real { width: 100%; height: 100%; object-fit: cover; }
+#about h2 { margin: 0; font: 700 34px/1 var(--mono); }
+#about p { margin: 0; text-transform: none; letter-spacing: 0; font-size: 15px; line-height: 1.6; }
+#about dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; }
 #about dt { color: var(--soft); }
 #about dd { margin: 0; overflow-wrap: anywhere; }
-#about a { color: var(--ink); }
 
-/* ---------- Bande-démo (mode expo, après inactivité) ---------- */
+/* ---------- Bande-démo (mode expo) ---------- */
 #reel { position: fixed; inset: 0; z-index: 70; background: #0E0E0E; color: #F4F4F1; overflow: hidden; cursor: pointer; }
 #reelStage { position: absolute; inset: 0; }
 .slide { position: absolute; inset: 0; display: grid; place-items: center; padding: 6vh 6vw 22vh; opacity: 0; transition: opacity .9s ease; }
 .slide.in { opacity: 1; }
-.slide img, .slide video { position: relative; z-index: 1; display: block; max-width: 86vw; max-height: 68vh; width: auto; height: auto; box-shadow: 0 30px 80px rgba(0,0,0,.5); }
+.slide img, .slide video { position: relative; z-index: 1; display: block; max-width: 86vw; max-height: 66vh; width: auto; height: auto; }
 .slide.kb img { animation: kb 7.5s ease-out forwards; }
-@keyframes kb { from { transform: scale(1); } to { transform: scale(1.06); } }
+@keyframes kb { from { transform: scale(1); } to { transform: scale(1.05); } }
 .slide .bg { position: absolute; inset: -60px; z-index: 0; background-size: cover; background-position: center; filter: blur(50px) brightness(.3); }
-.r-text { position: absolute; left: 5vw; right: 5vw; bottom: 7vh; display: grid; gap: 10px; }
-.r-k { font: 400 clamp(14px, 1.4vw, 20px)/1.2 var(--mono); color: #B8B8B3; }
-.r-t { margin: 0; font: 800 clamp(48px, 10vw, 170px)/.85 var(--sans); letter-spacing: -.045em; text-transform: uppercase; }
-.r-t, .r-k { transition: opacity .5s; }
-#reel.swap .r-t, #reel.swap .r-k { opacity: 0; }
-.r-text, .r-cta, .r-bar { z-index: 2; }
-.r-cta { position: absolute; top: 4vh; right: 5vw; font: 700 clamp(13px, 1.1vw, 16px)/1 var(--sans); text-transform: uppercase; border: 2px solid #F4F4F1; border-radius: 99px; padding: 10px 16px 9px; display: inline-flex; gap: 8px; align-items: center; }
-.r-cta::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #FF5A4A; animation: blink 1.2s infinite; }
-.r-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: rgba(255,255,255,.15); }
+.r-text { position: absolute; z-index: 2; left: 4vw; right: 4vw; bottom: 6vh; display: flex; justify-content: space-between; align-items: end; gap: 3vw; }
+.r-k { font-size: clamp(16px, 2vw, 30px); }
+.r-t { margin: 0; font: 700 clamp(40px, 7vw, 120px)/.95 var(--mono); text-align: right; }
+.r-text { transition: opacity .5s; }
+#reel.swap .r-text { opacity: 0; }
+.r-cta { position: absolute; z-index: 2; top: 4vh; left: 4vw; display: inline-flex; gap: 10px; align-items: center; font-size: clamp(13px, 1.1vw, 17px); }
+.r-cta .ic { border-color: #F4F4F1; animation: blink 1.4s infinite; }
+@keyframes blink { 50% { opacity: .3; } }
+.r-bar { position: absolute; z-index: 2; left: 0; right: 0; bottom: 0; height: 3px; background: rgba(255,255,255,.15); }
 .r-bar span { display: block; height: 100%; width: 0; background: #F4F4F1; }
-@keyframes blink { 50% { opacity: .2; } }
-body.still .slide.kb img, body.still .r-cta::before { animation: none; }
+body.still .slide.kb img, body.still .r-cta .ic { animation: none; }
 
-/* ---------- Mode démo ---------- */
-#demo {
-  position: fixed; z-index: 60; left: 50%; transform: translateX(-50%);
-  bottom: calc(76px + env(safe-area-inset-bottom, 0px));
-  pointer-events: none;
-}
-#demo::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #FF5A4A; animation: blink 1.2s infinite; }
-@keyframes blink { 50% { opacity: .2; } }
-
+@media (max-width: 1100px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 760px) {
-  .bar { grid-template-columns: 1fr auto; }
-  #top nav { grid-column: 1 / -1; grid-row: 2; justify-self: start; }
-  #bottom { grid-template-columns: 1fr auto; }
-  #hint { display: none; }
-  #filters { justify-content: start; gap: 2px 10px; }
-  #filters button { font-size: 15px; }
-  .qr span { display: none; }
-  .qr .code canvas, .qr .code img { width: 50px; height: 50px; }
-  #intro { padding: 16px; }
-  .sheet { grid-template-columns: 1fr; gap: 22px; justify-items: start; }
-  .big img { max-width: calc(100vw - 40px); max-height: 40vh; }
+  header { grid-template-columns: 1fr auto; }
+  nav { grid-column: 1 / -1; grid-row: 2; }
+  .filters { grid-column: 1 / -1; }
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 10px; }
+  .media img, .media video { max-height: 300px; }
+  .cap { flex-direction: column; gap: 2px; }
+  .cap .t { text-align: left; white-space: normal; }
+  .sheet { grid-template-columns: 1fr; gap: 24px; }
+  .big img { max-height: 46vh; }
   .pqr { display: none; }
-  .arrow { width: 48px; height: 48px; top: auto; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); transform: none; }
-  #zoom { padding: 72px 12px 110px; }
-  #zoom .arrow { bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
+  #zoom { padding: 70px 12px 100px; }
+  .zarrow { top: auto; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: none; }
 }
-/* Animations réduites : demandé par le système ou par le bouton Pause */
-@media (prefers-reduced-motion: reduce) {
-  .flood, .inner, .big { transition-duration: .01s !important; transition-delay: 0s !important; }
-  #demo::before, .card.pulse .pill { animation: none; }
-}
-body.still .flood, body.still .inner, body.still .big { transition-duration: .01s !important; transition-delay: 0s !important; }
-body.still .card.pulse .pill { animation: none; }
 </style>
 </head>
 <body>
 
-<a class="skip" href="#stage" id="skip"></a>
+<a class="skip" href="#grid" id="skip"></a>
 
-<header class="bar" id="top">
-  <div id="name"><img src="vignettes/logo.png" alt="Logo LT"><span>Léa Tramati<small data-t="context"></small></span></div>
+<header id="top">
+  <div class="who"><img src="vignettes/logo.png" alt="Logo LT"><p>Léa Tramati<small data-t="context"></small></p></div>
   <nav aria-label="Menu">
-    <button class="pill" type="button" id="pause" aria-pressed="false"></button>
-    <button class="pill" type="button" id="navAbout" aria-haspopup="dialog"></button>
+    <button class="tab" type="button" id="navWork" aria-pressed="true"><span class="ic" aria-hidden="true">P</span><span class="lb" data-t="work"></span></button>
+    <button class="tab" type="button" id="navAbout" aria-haspopup="dialog"><span class="ic" aria-hidden="true">I</span><span class="lb" data-t="info"></span></button>
+    <button class="tab" type="button" id="pause" aria-pressed="false"><span class="ic" aria-hidden="true">‖</span><span class="lb" id="pauseLb"></span></button>
   </nav>
-  <div id="right">
+  <div class="filters">
+    <span class="tab" aria-hidden="true"><span class="ic">F</span><span data-t="filters"></span></span>
+    <ul id="filters"></ul>
+  </div>
+  <div class="tools">
     <div class="langs" role="group" id="langs">
       <button type="button" data-lang="fr" id="lang-fr" lang="fr" aria-label="Français">FR</button>
       <button type="button" data-lang="en" id="lang-en" lang="en" aria-label="English">EN</button>
       <button type="button" data-lang="de" id="lang-de" lang="de" aria-label="Deutsch">DE</button>
     </div>
-    <button class="pill" id="full" type="button">⛶</button>
+    <button class="tab" id="full" type="button"><span class="ic" aria-hidden="true">⛶</span></button>
   </div>
+  <p id="hint"></p>
 </header>
 
-<main id="stage" tabindex="-1"></main>
+<main>
+  <h1 class="sr" data-t="title"></h1>
+  <ul class="grid" id="grid" tabindex="-1"></ul>
+</main>
 
-<button class="arrow" id="goPrev" type="button">←</button>
-<button class="arrow" id="goNext" type="button">→</button>
-
-<footer class="bar" id="bottom">
-  <p id="hint"></p>
-  <div id="filters" role="group"></div>
-  <div class="qr">
-    <span data-t="scanSite"></span>
-    <div class="code" id="siteQr" role="img"></div>
-  </div>
+<footer id="foot">
+  <p>Léa Tramati — Erasmus, KISD Köln<br><span data-t="credits"></span></p>
+  <div class="qr"><span data-t="scanSite"></span><div class="code" id="siteQr" role="img"></div></div>
 </footer>
-
-<div id="intro" aria-hidden="true">
-  <p class="hl" id="hl"></p>
-  <p class="tip" id="tip"></p>
-</div>
 
 <p class="sr" id="live" aria-live="polite"></p>
 
-<div id="reel" hidden aria-hidden="true">
-  <div id="reelStage"></div>
-  <div class="r-text"><span class="r-k" id="reelKind"></span><p class="r-t" id="reelTitle"></p></div>
-  <span class="r-cta" id="reelCta"></span>
-  <div class="r-bar"><span id="reelBar"></span></div>
-</div>
-
 <section id="focus" role="dialog" aria-modal="true" aria-labelledby="fTitle" aria-hidden="true">
-  <div class="flood" aria-hidden="true">
-    <svg viewBox="0 0 1200 140" preserveAspectRatio="none">
-      <path d="M0 140 L0 96 C 180 112, 300 64, 520 40 C 760 14, 960 70, 1200 22 L1200 140 Z"></path>
-    </svg>
-  </div>
-  <div class="inner">
-    <div class="sheet">
-      <a class="big" id="big"></a>
-      <div class="info">
-        <span class="k" id="fKind"></span>
-        <h2 id="fTitle"></h2>
-        <p id="fDesc"></p>
-        <ul class="tags" id="fTags"></ul>
-        <div class="actions" id="fActions"></div>
-        <ul class="process" id="fProcess"></ul>
-        <div class="pqr"><div class="code" id="projQr" role="img"></div><span id="fScan"></span></div>
-      </div>
-    </div>
-  </div>
-  <div class="fnav">
-    <button class="pill" id="prev" type="button"></button>
-    <button class="pill" id="next" type="button"></button>
+  <div class="fbar">
+    <button class="tab" id="prev" type="button"><span class="ic" aria-hidden="true">←</span><span class="lb" data-t="prevShort"></span></button>
+    <button class="tab" id="next" type="button"><span class="ic" aria-hidden="true">→</span><span class="lb" data-t="nextShort"></span></button>
     <span class="count" id="fCount"></span>
-    <button class="pill" id="close" type="button"></button>
+    <button class="tab" id="close" type="button"><span class="ic" aria-hidden="true">×</span><span class="lb" data-t="closeShort"></span></button>
+  </div>
+  <div class="sheet">
+    <a class="big" id="big"></a>
+    <div class="info">
+      <span class="k" id="fKind"></span>
+      <h2 id="fTitle"></h2>
+      <p id="fDesc"></p>
+      <ul class="tags" id="fTags"></ul>
+      <div class="actions" id="fActions"></div>
+      <ul class="process" id="fProcess"></ul>
+      <div class="pqr"><div class="code" id="projQr" role="img"></div><span id="fScan"></span></div>
+    </div>
   </div>
 </section>
 
 <div id="about" hidden>
   <aside class="panel" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
-    <div class="top"><button class="pill" id="aboutClose" type="button"></button></div>
+    <div class="top"><button class="tab" id="aboutClose" type="button"><span class="ic" aria-hidden="true">×</span><span class="lb" data-t="closeShort"></span></button></div>
     <div class="portrait" id="portrait"></div>
-    <h2 id="aboutTitle">Léa<br>Tramati</h2>
+    <h2 id="aboutTitle">Léa Tramati</h2>
     <p data-t="bio1"></p>
     <p data-t="bio2"></p>
     <dl>
@@ -421,26 +268,32 @@ body.still .card.pulse .pill { animation: none; }
 </div>
 
 <div id="zoom" role="dialog" aria-modal="true" aria-labelledby="zoomCap" hidden>
-  <button class="pill" id="zoomClose" type="button"></button>
-  <button class="arrow" id="zoomPrev" type="button">←</button>
+  <button class="tab" id="zoomClose" type="button"><span class="ic" aria-hidden="true">×</span><span class="lb" data-t="closeShort"></span></button>
+  <button class="tab zarrow" id="zoomPrev" type="button"><span class="ic" aria-hidden="true">←</span></button>
   <figure><div id="zoomBody"></div><figcaption id="zoomCap"></figcaption></figure>
-  <button class="arrow" id="zoomNext" type="button">→</button>
+  <button class="tab zarrow" id="zoomNext" type="button"><span class="ic" aria-hidden="true">→</span></button>
+</div>
+
+<div id="reel" hidden aria-hidden="true">
+  <div id="reelStage"></div>
+  <span class="r-cta"><span class="ic">●</span><span id="reelCta"></span></span>
+  <div class="r-text"><span class="r-k" id="reelKind"></span><p class="r-t" id="reelTitle"></p></div>
+  <div class="r-bar"><span id="reelBar"></span></div>
 </div>
 
 <script>
 /* ═══════════════ RÉGLAGES ═══════════════
    SITE_URL : adresse publique (QR codes).
-   Mode expo : ajouter #expo à l'adresse → démo automatique après IDLE_SECONDS sans activité,
-   les projets s'ouvrent dans le même onglet. */
+   Mode expo : ajouter #expo à l'adresse → bande-démo plein écran après IDLE_SECONDS sans activité,
+   curseur masqué, projets ouverts dans le même onglet. */
 const SITE_URL = "https://lea-tramati.github.io/portfolio/";
 const IDLE_SECONDS = 30;
 const DEMO_STEP_SECONDS = 8;
-/* Photo pour « À propos » : par ex. "vignettes/portrait.webp" (vide : votre logo). */
+/* Photo pour « Info » : par ex. "vignettes/portrait.webp" (vide : logo). */
 const PORTRAIT = "";
 /* Contact : par ex. { label: "@lea.tramati", href: "https://instagram.com/lea.tramati" } */
 const CONTACT = null;
 
-/* Photos d'ambiance : soirée « potluck! ». Décoratives dans le carrousel, en galerie dans le projet Potluck. */
 const PHOTOS = ["photos/IMG_1411.webp","photos/IMG_1412.webp","photos/IMG_1413.webp","photos/IMG_1414.webp","photos/IMG_1415.webp","photos/IMG_1416.webp","photos/IMG_1417.webp","photos/IMG_1418.webp","photos/IMG_1419.webp","photos/IMG_1420.webp","photos/IMG_1421.webp","photos/IMG_1422.webp","photos/IMG_1423.webp","photos/IMG_1424.webp","photos/IMG_1425.webp","photos/IMG_1426.webp","photos/IMG_1427.webp","photos/IMG_1428.webp","photos/IMG_1429.webp","photos/IMG_1430.webp","photos/IMG_1431.webp","photos/IMG_1432.webp","photos/IMG_1434.webp","photos/IMG_1435.webp","photos/IMG_1436.webp","photos/IMG_1437.webp","photos/IMG_1438.webp","photos/IMG_1439.webp","photos/IMG_1440.webp","photos/IMG_1443.webp","photos/IMG_1444.webp"];
 
 /* ═══════════════ PROJETS ═══════════════
@@ -515,66 +368,49 @@ const PROJETS = [
             de: "Ein Potluck mit Erasmus-Studierenden in Köln: Alle bringen ein Gericht mit, wir teilen den Tisch. Der Abend in Fotos." } },
 ];
 
+
 /* ═══════════════ TEXTES ═══════════════ */
 const T = {
-  fr: { context: "Portfolio — Erasmus, KISD Köln", about: "À propos", skip: "Aller aux projets",
-        pause: "Pause", play: "Animation", pauseLabel: "Mettre en pause les animations", playLabel: "Relancer les animations",
-        hl: [["Bonjour", "tout le monde", "je suis Léa!"], ["Portfolio", "img:0"], ["img:1", "à la KISD, Köln", "Erasmus"]],
-        tip: "[ Cliquez un projet pour l'ouvrir — ou utilisez les flèches ← → et Entrée ]",
-        hint: "<kbd>←</kbd> <kbd>→</kbd> parcourir · <kbd>Entrée</kbd> ouvrir",
-        all: "Tous", filterLabel: "Filtrer les projets",
-        groups: { web: "Web", affiche: "Affiches", app: "App", jeu: "Jeu", video: "Vidéo", photo: "Photo" },
-        scanSite: "Scanner pour emporter le portfolio", scanProject: "Scanner pour ouvrir ce projet sur votre téléphone",
+  fr: { title: "Projets de Léa Tramati", context: "Portfolio — Erasmus, KISD Köln", work: "Projets", info: "Info", filters: "Filtres",
+        pause: "Pause", play: "Animer", pauseLabel: "Mettre en pause les vidéos et animations", playLabel: "Relancer les vidéos et animations",
+        skip: "Aller aux projets", hint: "Cliquez une image pour ouvrir le projet — clavier : <kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd> puis <kbd>Entrée</kbd>",
+        all: "Tous", filterLabel: "Filtrer les projets", groups: { web: "Web", affiche: "Affiches", app: "App", jeu: "Jeu", video: "Vidéo", photo: "Photo" },
+        credits: "Photos et vidéos : étudiants de la KISD.", scanSite: "Scanner pour emporter le portfolio", scanProject: "Scanner pour ouvrir ce projet sur votre téléphone",
         qrSite: "QR code vers le site du portfolio", qrProject: "QR code vers ce projet",
-        open: "Ouvrir le projet", poster: "Voir l'affiche en grand", teaser: "Voir le teaser", photos: "Voir les photos",
-        video: "Voir la vidéo", videos: "Voir les vidéos", newTab: "(nouvel onglet)",
-        close: "Fermer ×", prevP: "← Précédent", nextP: "Suivant →", prevLabel: "Projet précédent", nextLabel: "Projet suivant",
-        full: "Plein écran", demo: "Touchez l'écran pour explorer",
-        stage: "Carrousel des projets", projectOf: (i, n, p) => `Projet ${i} sur ${n} : ${p.titre}, ${p.cat.fr}. Ouvrir la fiche.`,
-        now: (i, n, p) => `Projet ${i} sur ${n} : ${p.titre}`,
+        open: "Ouvrir le projet", poster: "Voir l'affiche en grand", teaser: "Voir le teaser", photos: "Voir les photos", video: "Voir la vidéo", videos: "Voir les vidéos", newTab: "(nouvel onglet)",
+        prevShort: "Précédent", nextShort: "Suivant", closeShort: "Fermer", prevLabel: "Projet précédent", nextLabel: "Projet suivant", prevItem: "Élément précédent", nextItem: "Élément suivant",
+        full: "Plein écran", langs: "Langue", demo: "Touchez l'écran pour explorer",
+        projectOf: (i, n, p) => `Projet ${i} sur ${n} : ${p.titre}, ${p.cat.fr}. Ouvrir la fiche.`, now: (i, n, p) => `Projet ${i} sur ${n} : ${p.titre}`,
         photoOf: (i, n) => `Photo ${i} sur ${n} — soirée Potluck`, videoOf: (i, n, t) => `Vidéo ${i} sur ${n} — ${t}`,
-        prevItem: "Élément précédent", nextItem: "Élément suivant", langs: "Langue",
-        where: "[école]", what: "[domaines]", contact: "[contact]", fields: "Jeu, web, affiche, application, vidéo, photo", noContact: "à venir",
+        where: "École", what: "Domaines", contact: "Contact", fields: "Jeu, web, affiche, application, vidéo, photo", noContact: "À venir",
         bio1: "Je suis Léa Tramati. Pendant mon semestre Erasmus à la Köln International School of Design, j'ai travaillé entre le jeu vidéo, le web, l'affiche, l'application mobile, la vidéo et la photo.",
         bio2: "Ce site rassemble ces projets. Cliquez une image pour découvrir chacun d'eux, ou scannez le QR code pour les retrouver sur votre téléphone." },
-  en: { context: "Portfolio — Erasmus, KISD Cologne", about: "About", skip: "Skip to projects",
-        pause: "Pause", play: "Motion", pauseLabel: "Pause animations", playLabel: "Resume animations",
-        hl: [["Hi", "everyone", "I'm Léa!"], ["Portfolio", "img:0"], ["img:1", "at KISD, Cologne", "Erasmus"]],
-        tip: "[ Click a project to open it — or use the ← → arrows and Enter ]",
-        hint: "<kbd>←</kbd> <kbd>→</kbd> browse · <kbd>Enter</kbd> open",
-        all: "All", filterLabel: "Filter projects",
-        groups: { web: "Web", affiche: "Posters", app: "App", jeu: "Game", video: "Video", photo: "Photo" },
-        scanSite: "Scan to take the portfolio with you", scanProject: "Scan to open this project on your phone",
+  en: { title: "Projects by Léa Tramati", context: "Portfolio — Erasmus, KISD Cologne", work: "Projects", info: "Info", filters: "Filters",
+        pause: "Pause", play: "Play", pauseLabel: "Pause videos and animations", playLabel: "Resume videos and animations",
+        skip: "Skip to projects", hint: "Click an image to open the project — keyboard: <kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd> then <kbd>Enter</kbd>",
+        all: "All", filterLabel: "Filter projects", groups: { web: "Web", affiche: "Posters", app: "App", jeu: "Game", video: "Video", photo: "Photo" },
+        credits: "Photos and videos: KISD students.", scanSite: "Scan to take the portfolio with you", scanProject: "Scan to open this project on your phone",
         qrSite: "QR code to the portfolio website", qrProject: "QR code to this project",
-        open: "Open project", poster: "View poster full size", teaser: "Watch the teaser", photos: "See the photos",
-        video: "Watch the video", videos: "Watch the videos", newTab: "(new tab)",
-        close: "Close ×", prevP: "← Previous", nextP: "Next →", prevLabel: "Previous project", nextLabel: "Next project",
-        full: "Full screen", demo: "Touch the screen to explore",
-        stage: "Project carousel", projectOf: (i, n, p) => `Project ${i} of ${n}: ${p.titre}, ${p.cat.en}. Open the project page.`,
-        now: (i, n, p) => `Project ${i} of ${n}: ${p.titre}`,
+        open: "Open project", poster: "View poster full size", teaser: "Watch the teaser", photos: "See the photos", video: "Watch the video", videos: "Watch the videos", newTab: "(new tab)",
+        prevShort: "Previous", nextShort: "Next", closeShort: "Close", prevLabel: "Previous project", nextLabel: "Next project", prevItem: "Previous item", nextItem: "Next item",
+        full: "Full screen", langs: "Language", demo: "Touch the screen to explore",
+        projectOf: (i, n, p) => `Project ${i} of ${n}: ${p.titre}, ${p.cat.en}. Open the project page.`, now: (i, n, p) => `Project ${i} of ${n}: ${p.titre}`,
         photoOf: (i, n) => `Photo ${i} of ${n} — Potluck evening`, videoOf: (i, n, t) => `Video ${i} of ${n} — ${t}`,
-        prevItem: "Previous item", nextItem: "Next item", langs: "Language",
-        where: "[school]", what: "[fields]", contact: "[contact]", fields: "Games, web, posters, apps, video, photography", noContact: "coming soon",
+        where: "School", what: "Fields", contact: "Contact", fields: "Games, web, posters, apps, video, photography", noContact: "Coming soon",
         bio1: "I'm Léa Tramati. During my Erasmus semester at the Köln International School of Design, I worked across video games, the web, posters, mobile apps, video and photography.",
         bio2: "This site brings those projects together. Click an image to explore each one, or scan the QR code to find them on your phone." },
-  de: { context: "Portfolio — Erasmus, KISD Köln", about: "Über mich", skip: "Zu den Projekten springen",
-        pause: "Pause", play: "Animation", pauseLabel: "Animationen pausieren", playLabel: "Animationen fortsetzen",
-        hl: [["Hallo", "alle zusammen", "ich bin Léa!"], ["Portfolio", "img:0"], ["img:1", "an der KISD, Köln", "Erasmus"]],
-        tip: "[ Klicke ein Projekt an — oder nutze die Pfeiltasten ← → und Enter ]",
-        hint: "<kbd>←</kbd> <kbd>→</kbd> blättern · <kbd>Enter</kbd> öffnen",
-        all: "Alle", filterLabel: "Projekte filtern",
-        groups: { web: "Web", affiche: "Plakate", app: "App", jeu: "Spiel", video: "Video", photo: "Foto" },
-        scanSite: "Scannen und das Portfolio mitnehmen", scanProject: "Scannen, um das Projekt auf dem Handy zu öffnen",
+  de: { title: "Projekte von Léa Tramati", context: "Portfolio — Erasmus, KISD Köln", work: "Projekte", info: "Info", filters: "Filter",
+        pause: "Pause", play: "Abspielen", pauseLabel: "Videos und Animationen pausieren", playLabel: "Videos und Animationen fortsetzen",
+        skip: "Zu den Projekten springen", hint: "Bild anklicken, um das Projekt zu öffnen — Tastatur: <kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd> dann <kbd>Enter</kbd>",
+        all: "Alle", filterLabel: "Projekte filtern", groups: { web: "Web", affiche: "Plakate", app: "App", jeu: "Spiel", video: "Video", photo: "Foto" },
+        credits: "Fotos und Videos: Studierende der KISD.", scanSite: "Scannen und das Portfolio mitnehmen", scanProject: "Scannen, um das Projekt auf dem Handy zu öffnen",
         qrSite: "QR-Code zur Portfolio-Website", qrProject: "QR-Code zu diesem Projekt",
-        open: "Projekt öffnen", poster: "Plakat groß ansehen", teaser: "Teaser ansehen", photos: "Fotos ansehen",
-        video: "Video ansehen", videos: "Videos ansehen", newTab: "(neuer Tab)",
-        close: "Schließen ×", prevP: "← Zurück", nextP: "Weiter →", prevLabel: "Vorheriges Projekt", nextLabel: "Nächstes Projekt",
-        full: "Vollbild", demo: "Bildschirm berühren zum Erkunden",
-        stage: "Projekt-Karussell", projectOf: (i, n, p) => `Projekt ${i} von ${n}: ${p.titre}, ${p.cat.de}. Projektseite öffnen.`,
-        now: (i, n, p) => `Projekt ${i} von ${n}: ${p.titre}`,
+        open: "Projekt öffnen", poster: "Plakat groß ansehen", teaser: "Teaser ansehen", photos: "Fotos ansehen", video: "Video ansehen", videos: "Videos ansehen", newTab: "(neuer Tab)",
+        prevShort: "Zurück", nextShort: "Weiter", closeShort: "Schließen", prevLabel: "Vorheriges Projekt", nextLabel: "Nächstes Projekt", prevItem: "Vorheriges Element", nextItem: "Nächstes Element",
+        full: "Vollbild", langs: "Sprache", demo: "Bildschirm berühren zum Erkunden",
+        projectOf: (i, n, p) => `Projekt ${i} von ${n}: ${p.titre}, ${p.cat.de}. Projektseite öffnen.`, now: (i, n, p) => `Projekt ${i} von ${n}: ${p.titre}`,
         photoOf: (i, n) => `Foto ${i} von ${n} — Potluck-Abend`, videoOf: (i, n, t) => `Video ${i} von ${n} — ${t}`,
-        prevItem: "Vorheriges Element", nextItem: "Nächstes Element", langs: "Sprache",
-        where: "[Hochschule]", what: "[Bereiche]", contact: "[Kontakt]", fields: "Spiel, Web, Plakat, App, Video, Fotografie", noContact: "folgt",
+        where: "Hochschule", what: "Bereiche", contact: "Kontakt", fields: "Spiel, Web, Plakat, App, Video, Fotografie", noContact: "Folgt",
         bio1: "Ich bin Léa Tramati. In meinem Erasmus-Semester an der Köln International School of Design habe ich zwischen Videospiel, Web, Plakat, mobiler App, Video und Fotografie gearbeitet.",
         bio2: "Diese Seite versammelt diese Projekte. Klicke auf ein Bild, um jedes zu entdecken, oder scanne den QR-Code, um sie auf dem Handy zu öffnen." },
 };
@@ -587,35 +423,25 @@ const t = k => T[lang][k];
 
 /* ═══════════════ Outils ═══════════════ */
 const $ = id => document.getElementById(id);
-const pad = n => String(n).padStart(2, "0");
+const pad3 = n => String(n).padStart(3, "0");
 const mod = (a, n) => ((a % n) + n) % n;
-const sysReduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-let still = sysReduce;
+let still = matchMedia("(prefers-reduced-motion: reduce)").matches;
 try { if (localStorage.getItem("still") === "1") still = true; } catch {}
 const EXPO = location.hash === "#expo";
 const RATIOS = { paysage: 4 / 3, portrait: 3 / 4, carre: 1, affiche: 1 / 1.414, story: 9 / 16 };
 const isVideo = src => /\.mp4$/i.test(src);
 const N = PROJETS.length;
+let filtre = "all";
+const visible = p => filtre === "all" || p.groupes.includes(filtre);
 
-function rng(seed) {
-  let h = 2166136261 >>> 0;
-  for (const ch of String(seed)) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
-  return () => {
-    h += 0x6D2B79F5;
-    let x = h;
-    x = Math.imul(x ^ (x >>> 15), x | 1);
-    x ^= x + Math.imul(x ^ (x >>> 7), x | 61);
-    return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
-  };
-}
-function thumb(p, width, withAlt) {
+function img(p, withAlt) {
   const ratio = RATIOS[p.format] || 4 / 3;
-  const img = new Image();
-  img.src = p.image; img.alt = withAlt ? p.alt[lang] : "";
-  img.width = Math.round(width); img.height = Math.round(width / ratio);
-  img.style.setProperty("--r", String(ratio));
-  img.draggable = false;
-  return img;
+  const im = new Image();
+  im.src = p.image; im.alt = withAlt ? p.alt[lang] : "";
+  im.width = 900; im.height = Math.round(900 / ratio);
+  im.decoding = "async";
+  if (ratio < 0.7) im.className = "tall";
+  return im;
 }
 function qr(el, text, size, label) {
   el.replaceChildren();
@@ -626,235 +452,78 @@ function qr(el, text, size, label) {
 }
 function announce(msg) { const l = $("live"); l.textContent = ""; setTimeout(() => { l.textContent = msg; }, 30); }
 const projectUrl = p => p.type === "lien" ? p.lien : SITE_URL + "#" + p.id;
-let filtre = "all";
-const visible = p => filtre === "all" || p.groupes.includes(filtre);
 
-/* ═══════════════ Carrousel ═══════════════ */
-const stage = $("stage");
-let items = [], photoItems = [], world = 0, offset = 0, vel = 0, target = null, sel = 0;
-const DRIFT = 0.22;
-
+/* ═══════════════ Grille ═══════════════ */
+const grid = $("grid");
+let cards = [];
 function build() {
-  const vw = stage.clientWidth, vh = stage.clientHeight;
-  const small = vw < 640;
-  const r = rng("disposition");
-  stage.replaceChildren();
-
-  /* Projets : une seule rangée, même hauteur d'image, centrée verticalement */
-  const H = Math.round(Math.min(vh * (small ? 0.34 : 0.4), small ? 260 : 360));
-  const rowY = Math.round(vh * (small ? 0.36 : 0.33));
-  let x0 = 0;
-  const gapX = small ? 44 : 72;
-  items = PROJETS.map((p, i) => {
-    const ratio = RATIOS[p.format] || 4 / 3;
-    const w = Math.round(H * ratio);
+  cards = PROJETS.map((p, i) => {
+    const li = document.createElement("li");
     const b = document.createElement("button");
-    b.className = "card"; b.type = "button"; b.id = "card-" + p.id;
-    b.style.width = w + "px";
+    b.className = "item"; b.type = "button"; b.id = "card-" + p.id;
     b.setAttribute("aria-label", T[lang].projectOf(i + 1, N, p));
-    const f = document.createElement("span");
-    f.className = "shot";
-    f.append(thumb(p, w * 2));
-    const cap = document.createElement("span");
-    cap.className = "cap"; cap.setAttribute("aria-hidden", "true");
-    cap.innerHTML = '<span class="n"></span> <span></span> <span class="c"></span>';
-    cap.children[0].textContent = pad(i + 1);
-    cap.children[1].textContent = p.titre;
-    cap.children[2].textContent = `[${p.cat[lang]}]`;
-    const cta = document.createElement("span");
-    cta.className = "pill"; cta.setAttribute("aria-hidden", "true");
-    cta.textContent = t("open") + " →";
-    b.append(f, cap, cta);
-    b.addEventListener("click", e => { if (moved > 6) { e.preventDefault(); return; } sel = i; openFocus(i, false, f); });
-    b.addEventListener("focus", () => { sel = i; markSel(); center(i); });
-    if ((p.video || p.preview) && !still) {
+    const m = document.createElement("span"); m.className = "media";
+    m.append(img(p));
+    const cap = document.createElement("span"); cap.className = "cap"; cap.setAttribute("aria-hidden", "true");
+    cap.innerHTML = '<span class="n"></span><span class="t"></span>';
+    cap.firstChild.textContent = pad3(i + 1); cap.lastChild.textContent = p.titre;
+    b.append(m, cap);
+    b.addEventListener("click", () => openFocus(i, false, m.firstChild));
+    if (p.video || p.preview) {
       b.addEventListener("pointerenter", e => {
         if (e.pointerType !== "mouse" || still) return;
         const v = document.createElement("video");
-        v.src = p.preview || p.video; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true;
+        v.src = p.preview || p.video; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true; v.poster = p.image;
         v.setAttribute("aria-hidden", "true");
-        v.style.setProperty("--r", String(ratio));
-        f.firstChild.replaceWith(v);
-        v.play().catch(() => {});
+        if (m.firstChild.classList.contains("tall")) v.className = "tall";
+        m.firstChild.replaceWith(v); v.play().catch(() => {});
       });
-      b.addEventListener("pointerleave", () => { const v = f.querySelector("video"); if (v) v.replaceWith(thumb(p, w * 2)); });
+      b.addEventListener("pointerleave", () => { const v = m.querySelector("video"); if (v) v.replaceWith(img(p)); });
     }
-    stage.append(b);
-    const it = { el: b, p, i, base: x0, y: rowY, w, h: H + 90, phase: 0 };
-    x0 += w + gapX;
-    return it;
+    li.append(b);
+    return { li, b, p, i };
   });
-  world = Math.max(x0, vw + 560);
-
-  /* Photos : un bandeau régulier en haut, comme une planche contact */
-  const ph = small ? 44 : 58, pw = Math.round(ph * 4 / 3), py = Math.round(vh * (small ? 0.2 : 0.15));
-  const per = Math.max(1, Math.floor(world / (pw + 10)));
-  photoItems = [];
-  for (let j = 0; j < per; j++) {
-    const el = document.createElement("div");
-    el.className = "photo"; el.setAttribute("aria-hidden", "true");
-    el.style.width = pw + "px";
-    const img = new Image(); img.src = PHOTOS[j % PHOTOS.length]; img.alt = ""; img.draggable = false; img.decoding = "async"; img.loading = "lazy";
-    el.append(img);
-    stage.prepend(el);
-    photoItems.push({ el, base: j * (world / per), y: Math.min(py, rowY - ph - 24), w: pw, h: ph, phase: 0 });
-  }
+  grid.replaceChildren(...cards.map(c => c.li));
   applyFilter();
-  markSel();
-  place();
 }
+function applyFilter() { cards.forEach(c => { c.li.hidden = !visible(c.p); }); }
 
-let mx = 0, my = 0, tmx = 0, tmy = 0;
-function position(it, now) {
-  const x = mod(it.base - offset, world) - 280;
-  it.x = x;
-  it.sx = x;
-  it.sy = it.y;
-  it.el.style.transform = `translate3d(${it.sx.toFixed(1)}px, ${it.sy.toFixed(1)}px, 0)`;
-}
-function place() {
-  const now = performance.now();
-  for (const it of photoItems) position(it, now);
-  for (const it of items) position(it, now);
-}
-/* Amène le projet i au centre de l'écran */
-function center(i, instant) {
-  const it = items[i];
-  if (!it) return;
-  const vw = stage.clientWidth;
-  const delta = (it.x + it.w / 2) - vw / 2;
-  if (Math.abs(delta) < 4) return;
-  vel = 0;
-  if (instant || still) { offset += delta; target = null; place(); }
-  else target = offset + delta;
-}
-function markSel() { items.forEach(it => it.el.classList.toggle("sel", it.i === sel && document.body.classList.contains("kbd"))); }
-/* Navigation par flèches (clavier ou boutons à l'écran) */
-function go(d) {
-  hideIntro();
-  let i = sel;
-  for (let k = 0; k < N; k++) { i = mod(i + d, N); if (visible(PROJETS[i])) break; }
-  sel = i;
-  center(i);
-  items[i].el.focus({ preventScroll: true });
-  markSel();
-  announce(T[lang].now(i + 1, N, PROJETS[i]));
-}
-
-let paused = false, hover = false, focusInStage = false;
-function tick() {
-  if (!paused) {
-    vel *= 0.92;
-    mx += (tmx - mx) * 0.05; my += (tmy - my) * 0.05;
-    if (target !== null) {
-      const d = target - offset;
-      offset += d * 0.12;
-      if (Math.abs(d) < 0.5) { offset = target; target = null; }
-    } else {
-      offset += vel + (hover || focusInStage || still ? 0 : DRIFT);
-    }
-    place();
-  }
-  requestAnimationFrame(tick);
-}
-
-/* Une image « pulse » de temps en temps pour inviter au clic */
-setInterval(() => {
-  if (paused || still || focusInStage) return;
-  const vw = stage.clientWidth;
-  const vis = items.filter(it => it.sx > 80 && it.sx + it.w < vw - 80 && visible(it.p));
-  if (!vis.length) return;
-  const it = vis[Math.floor(Math.random() * vis.length)];
-  it.el.classList.remove("pulse"); void it.el.offsetWidth; it.el.classList.add("pulse");
-  setTimeout(() => it.el.classList.remove("pulse"), 1700);
-}, 3000);
-
-/* Souris et tactile */
-let down = false, lastX = 0, moved = 0;
-stage.addEventListener("pointerdown", e => { down = true; moved = 0; lastX = e.clientX; vel = 0; target = null; document.body.classList.remove("kbd"); markSel(); });
-addEventListener("pointermove", e => {
-  if (e.pointerType === "mouse" && !still) { tmx = e.clientX / innerWidth - 0.5; tmy = e.clientY / innerHeight - 0.5; }
-  if (!down) return;
-  const dx = e.clientX - lastX;
-  lastX = e.clientX;
-  moved += Math.abs(dx);
-  if (moved > 6) stage.classList.add("dragging");
-  offset -= dx; vel = -dx * 0.9;
-}, { passive: true });
-addEventListener("pointerup", () => { down = false; stage.classList.remove("dragging"); });
-stage.addEventListener("wheel", e => {
-  e.preventDefault(); target = null;
-  vel += (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY) * 0.06;
-}, { passive: false });
-stage.addEventListener("pointerover", e => { hover = !!e.target.closest(".card"); });
-stage.addEventListener("pointerleave", () => { hover = false; });
-stage.addEventListener("focusin", () => { focusInStage = true; });
-stage.addEventListener("focusout", () => { focusInStage = false; });
-$("goPrev").addEventListener("click", () => go(-1));
-$("goNext").addEventListener("click", () => go(1));
+/* Flèches du clavier dans la grille (← → ↑ ↓, Début, Fin) */
+grid.addEventListener("keydown", e => {
+  const vis = cards.filter(c => !c.li.hidden);
+  const at = vis.findIndex(c => c.b === document.activeElement);
+  if (at < 0) return;
+  const cols = getComputedStyle(grid).gridTemplateColumns.split(" ").length;
+  const moves = { ArrowRight: 1, ArrowLeft: -1, ArrowDown: cols, ArrowUp: -cols, Home: -at, End: vis.length - 1 - at };
+  if (!(e.key in moves)) return;
+  e.preventDefault();
+  const to = Math.max(0, Math.min(vis.length - 1, at + moves[e.key]));
+  vis[to].b.focus();
+  vis[to].b.scrollIntoView({ block: "nearest", behavior: still ? "auto" : "smooth" });
+});
 
 /* ═══════════════ Filtres ═══════════════ */
 const GROUPS = ["web", "affiche", "app", "jeu", "video", "photo"];
 function renderFilters() {
-  const el = $("filters");
-  el.setAttribute("aria-label", t("filterLabel"));
+  const ul = $("filters");
+  ul.setAttribute("aria-label", t("filterLabel"));
   const opts = [["all", t("all"), N], ...GROUPS.map(g => [g, t("groups")[g], PROJETS.filter(p => p.groupes.includes(g)).length])];
-  el.replaceChildren(...opts.filter(o => o[2] > 0).map(([g, label, n]) => {
+  ul.replaceChildren(...opts.filter(o => o[2] > 0).map(([g, label, n]) => {
+    const li = document.createElement("li");
     const b = document.createElement("button");
     b.type = "button"; b.id = "filter-" + g;
     b.setAttribute("aria-pressed", String(filtre === g));
     b.innerHTML = '<span></span><sup aria-hidden="true"></sup><span class="sr"></span>';
     b.children[0].textContent = label; b.children[1].textContent = n; b.children[2].textContent = ` (${n})`;
-    b.addEventListener("click", () => {
-      filtre = g; renderFilters(); applyFilter(); hideIntro();
-      const first = PROJETS.findIndex(visible);
-      if (first >= 0 && !visible(PROJETS[sel])) { sel = first; center(first); }
-      $("filter-" + g).focus();
-      announce(`${label} : ${n}`);
-    });
-    return b;
+    b.addEventListener("click", () => { filtre = g; renderFilters(); applyFilter(); $("filter-" + g).focus(); announce(`${label} : ${n}`); });
+    li.append(b);
+    return li;
   }));
 }
-function applyFilter() {
-  document.body.classList.toggle("filtered", filtre !== "all");
-  for (const it of items) {
-    const off = !visible(it.p);
-    it.el.classList.toggle("dim", off);
-    it.el.tabIndex = off ? -1 : 0;
-    if (off) it.el.setAttribute("aria-hidden", "true"); else it.el.removeAttribute("aria-hidden");
-  }
-}
 
-/* ═══════════════ Accueil ═══════════════ */
-function renderIntro() {
-  const insets = ["vignettes/intrusion.webp", "vignettes/robert-wun.webp"];
-  $("hl").replaceChildren(...t("hl").map(row => {
-    const d = document.createElement("span");
-    d.className = "row";
-    row.forEach((part, k) => {
-      if (part.startsWith("img:")) {
-        const img = new Image(); img.src = insets[+part.slice(4)]; img.alt = ""; img.className = "inset";
-        d.append(img);
-      } else {
-        const s = document.createElement("span");
-        if (k === 1 && row.length === 3) s.className = "pill";
-        s.textContent = part; d.append(s);
-      }
-    });
-    return d;
-  }));
-  $("tip").textContent = t("tip");
-}
-function showIntro() { document.body.classList.add("intro"); }
-function hideIntro() { document.body.classList.remove("intro"); }
-stage.addEventListener("pointerdown", hideIntro);
-stage.addEventListener("wheel", hideIntro, { passive: true });
-stage.addEventListener("pointerover", e => { if (e.target.closest(".card")) hideIntro(); });
-addEventListener("keydown", hideIntro);
-
-/* ═══════════════ Fenêtres (fiche, zoom, à propos) : focus piégé ═══════════════ */
+/* ═══════════════ Fenêtres : focus piégé, fond inerte ═══════════════ */
 const focusEl = $("focus"), zoomEl = $("zoom"), aboutEl = $("about");
-const outside = () => [$("top"), stage, $("reel"), $("bottom"), $("goPrev"), $("goNext"), $("skip")];
+const outside = () => [$("top"), document.querySelector("main"), $("foot"), $("skip"), $("reel")];
 function topDialog() {
   if (!zoomEl.hidden) return zoomEl;
   if (!aboutEl.hidden) return aboutEl;
@@ -865,12 +534,13 @@ function syncInert() {
   const d = topDialog();
   outside().forEach(el => { el.inert = !!d; });
   focusEl.inert = !!d && d !== focusEl;
+  document.body.classList.toggle("locked", !!d);
 }
 addEventListener("keydown", e => {
   if (e.key !== "Tab") return;
   const d = topDialog();
   if (!d) return;
-  const f = [...d.querySelectorAll('a[href], button:not([disabled]), video[controls], [tabindex="0"]')].filter(x => x.offsetParent !== null || x === document.activeElement);
+  const f = [...d.querySelectorAll('a[href], button:not([disabled]), video[controls], [tabindex="0"]')].filter(x => x.getClientRects().length);
   if (!f.length) return;
   const first = f[0], last = f[f.length - 1];
   if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
@@ -879,34 +549,33 @@ addEventListener("keydown", e => {
 });
 
 /* ═══════════════ Fiche projet ═══════════════ */
-let current = -1, lastFocus = null;
-function pillButton(label, onClick, solid) {
+let current = -1;
+function btn(label, onClick, solid) {
   const b = document.createElement("button");
-  b.type = "button"; b.className = "pill big" + (solid ? " solid" : "");
+  b.type = "button"; b.className = "btn" + (solid ? " solid" : "");
   b.innerHTML = `<span></span><span aria-hidden="true">→</span>`;
   b.firstChild.textContent = label;
   b.addEventListener("click", onClick);
   return b;
 }
-function linkPill(p) {
+function linkBtn(p) {
   const a = document.createElement("a");
-  a.className = "pill big solid"; a.href = p.lien;
+  a.className = "btn solid"; a.href = p.lien;
   a.innerHTML = `<span></span><span aria-hidden="true">↗</span>`;
   a.firstChild.textContent = t("open");
   if (!EXPO) { a.target = "_blank"; a.rel = "noopener"; const s = document.createElement("span"); s.className = "sr"; s.textContent = " " + t("newTab"); a.append(s); }
   return a;
 }
 function mainAction(p) {
-  if (p.videos) return () => zoom(p.videos, 0);
-  if (p.type === "video") return () => zoom([p.video], 0);
-  if (p.galerie) return () => zoom(p.galerie, 0);
+  if (p.videos) return () => zoom(p.videos, 0, p);
+  if (p.type === "video") return () => zoom([p.video], 0, p);
+  if (p.galerie) return () => zoom(p.galerie, 0, p);
   return () => zoom([p.image], 0, p);
 }
 function fill(i) {
   const p = PROJETS[i];
-  focusEl.style.setProperty("--c", p.couleur);
   const big = $("big");
-  big.replaceChildren(thumb(p, 900, true));
+  big.replaceChildren(img(p, true));
   big.onclick = null; big.onkeydown = null;
   if (p.type === "lien") {
     big.href = p.lien; big.removeAttribute("role"); big.removeAttribute("tabindex");
@@ -920,103 +589,97 @@ function fill(i) {
     big.onclick = run;
     big.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); run(); } };
   }
-  $("fKind").textContent = `${pad(i + 1)} [${p.cat[lang]}]`;
+  $("fKind").textContent = `${pad3(i + 1)} — ${p.cat[lang]}`;
   $("fTitle").textContent = p.titre;
   $("fDesc").textContent = p.desc[lang];
-  $("fTags").replaceChildren(...(p.tags || []).map(x => { const s = document.createElement("li"); s.className = "pill"; s.textContent = x; return s; }));
+  $("fTags").replaceChildren(...(p.tags || []).map(x => { const li = document.createElement("li"); li.textContent = x; return li; }));
   const acts = [];
-  if (p.type === "lien") acts.push(linkPill(p));
-  else if (p.type === "galerie") acts.push(pillButton(t("photos"), mainAction(p), true));
-  else if (p.type === "video") acts.push(pillButton(t("video"), mainAction(p), true));
-  else if (p.type === "videos") acts.push(pillButton(t("videos"), mainAction(p), true));
-  else acts.push(pillButton(t("poster"), mainAction(p), true));
-  if (p.video && p.type !== "video") acts.push(pillButton(t("teaser"), () => zoom([p.video], 0)));
+  if (p.type === "lien") acts.push(linkBtn(p));
+  else if (p.type === "galerie") acts.push(btn(t("photos"), mainAction(p), true));
+  else if (p.type === "video") acts.push(btn(t("video"), mainAction(p), true));
+  else if (p.type === "videos") acts.push(btn(t("videos"), mainAction(p), true));
+  else acts.push(btn(t("poster"), mainAction(p), true));
+  if (p.video && p.type !== "video") acts.push(btn(t("teaser"), () => zoom([p.video], 0, p)));
   $("fActions").replaceChildren(...acts);
   const list = p.videos || p.galerie || [];
   $("fProcess").replaceChildren(...list.map((src, k) => {
     const li = document.createElement("li");
     const b = document.createElement("button"); b.type = "button";
     b.setAttribute("aria-label", isVideo(src) ? T[lang].videoOf(k + 1, list.length, p.videoTitles[k]) : T[lang].photoOf(k + 1, list.length));
-    const img = new Image(); img.src = isVideo(src) ? src.replace(/\.mp4$/, ".webp") : src; img.alt = ""; img.loading = "lazy"; b.append(img);
+    const im = new Image(); im.src = isVideo(src) ? src.replace(/\.mp4$/, ".webp") : src; im.alt = ""; im.loading = "lazy"; b.append(im);
     b.addEventListener("click", () => zoom(list, k, p));
     li.append(b);
     return li;
   }));
   $("fScan").textContent = t("scanProject");
-  qr($("projQr"), projectUrl(p), 144, t("qrProject"));
-  $("fCount").textContent = `${pad(i + 1)} / ${pad(N)}`;
+  qr($("projQr"), projectUrl(p), 140, t("qrProject"));
+  $("fCount").textContent = `${pad3(i + 1)} / ${pad3(N)}`;
+  focusEl.scrollTop = 0;
 }
 function openFocus(i, quiet, fromEl) {
-  if (current < 0) lastFocus = document.activeElement;
-  hideIntro();
-  current = i; sel = i;
+  current = i;
   fill(i);
-  if (fromEl && !still) fly(fromEl);
-  paused = true;
   focusEl.classList.add("on");
   focusEl.setAttribute("aria-hidden", "false");
+  if (fromEl && !still) fly(fromEl);
   syncInert();
-  if (!quiet) setTimeout(() => $("fActions").firstChild?.focus({ preventScroll: true }), still ? 0 : 650);
+  if (!quiet) setTimeout(() => $("fActions").firstChild?.focus({ preventScroll: true }), still ? 0 : 400);
 }
 function fly(fromEl) {
-  const big = $("big");
-  const r0 = fromEl.getBoundingClientRect();
+  const target = $("big").firstChild;
   focusEl.classList.add("flip");
-  const r1 = big.getBoundingClientRect();
+  const r0 = fromEl.getBoundingClientRect(), r1 = target.getBoundingClientRect();
+  if (!r0.width || !r1.width) { focusEl.classList.remove("flip"); return; }
   const c = fromEl.cloneNode(true);
-  c.querySelector(".over")?.remove();
-  c.classList.add("flyer"); c.setAttribute("aria-hidden", "true");
-  Object.assign(c.style, { left: r0.left + "px", top: r0.top + "px", width: r0.width + "px" });
+  c.className = "flyer"; c.setAttribute("aria-hidden", "true");
+  Object.assign(c.style, { left: r0.left + "px", top: r0.top + "px", width: r0.width + "px", height: r0.height + "px", objectFit: "cover" });
   document.body.append(c);
-  const k = r1.width / r0.width;
   const a = c.animate([
     { transform: "translate(0, 0) scale(1)" },
-    { transform: `translate(${r1.left - r0.left}px, ${r1.top - r0.top}px) scale(${k})` },
-  ], { duration: 850, easing: "cubic-bezier(.7,0,.2,1)", fill: "forwards" });
+    { transform: `translate(${r1.left - r0.left}px, ${r1.top - r0.top}px) scale(${r1.width / r0.width}, ${r1.height / r0.height})` },
+  ], { duration: 650, easing: "cubic-bezier(.6,0,.2,1)", fill: "forwards" });
   a.onfinish = () => { focusEl.classList.remove("flip"); requestAnimationFrame(() => c.remove()); };
 }
 function closeFocus() {
   if (current < 0) return;
   focusEl.classList.remove("on");
   focusEl.setAttribute("aria-hidden", "true");
-  paused = false;
+  const back = cards[current]?.b;
   current = -1;
   syncInert();
-  center(sel, true);
-  const back = items[sel]?.el || lastFocus;
-  back?.focus?.({ preventScroll: true });
+  back?.focus({ preventScroll: true });
+  back?.scrollIntoView({ block: "nearest" });
 }
 function shift(d) {
   if (current < 0) return;
-  current = mod(current + d, N);
-  sel = current;
-  fill(current);
-  announce(T[lang].now(current + 1, N, PROJETS[current]));
+  let i = current;
+  for (let k = 0; k < N; k++) { i = mod(i + d, N); if (visible(PROJETS[i])) break; }
+  current = i;
+  fill(i);
+  announce(T[lang].now(i + 1, N, PROJETS[i]));
 }
 
-/* ═══════════════ Agrandissement : affiches, photos, vidéos ═══════════════ */
+/* ═══════════════ Agrandissement ═══════════════ */
 let zoomList = [], zoomAt = 0, zoomProject = null, zoomReturn = null;
 function zoom(list, at, p) {
   if (zoomEl.hidden) zoomReturn = document.activeElement;
-  zoomList = list; zoomAt = at; zoomProject = p || PROJETS[current] || null;
+  zoomList = list; zoomAt = at; zoomProject = p;
   const src = list[at];
-  const body = $("zoomBody");
   const many = list.length > 1;
   $("zoomPrev").hidden = $("zoomNext").hidden = !many;
   let cap;
   if (isVideo(src)) {
     const v = document.createElement("video");
     v.src = src; v.controls = true; v.playsInline = true; v.autoplay = !still;
-    if (zoomProject?.videoTitles) cap = T[lang].videoOf(at + 1, list.length, zoomProject.videoTitles[at]);
-    else cap = zoomProject ? zoomProject.titre : "";
+    cap = p.videoTitles ? T[lang].videoOf(at + 1, list.length, p.videoTitles[at]) : p.titre;
     v.setAttribute("aria-label", cap);
     if (many) v.addEventListener("ended", () => zoomShift(1));
-    body.replaceChildren(v);
+    $("zoomBody").replaceChildren(v);
   } else {
-    const img = new Image(); img.src = src;
-    if (zoomProject?.galerie) { cap = T[lang].photoOf(at + 1, list.length); img.alt = cap; }
-    else { cap = zoomProject ? zoomProject.titre : ""; img.alt = zoomProject ? zoomProject.alt[lang] : ""; }
-    body.replaceChildren(img);
+    const im = new Image(); im.src = src;
+    if (p.galerie) { cap = T[lang].photoOf(at + 1, list.length); im.alt = cap; }
+    else { cap = p.titre; im.alt = p.alt[lang]; }
+    $("zoomBody").replaceChildren(im);
   }
   $("zoomCap").textContent = cap;
   zoomEl.hidden = false;
@@ -1024,10 +687,7 @@ function zoom(list, at, p) {
   $("zoomClose").focus({ preventScroll: true });
   if (many) announce(cap);
 }
-function zoomShift(d) {
-  if (zoomList.length < 2) return;
-  zoom(zoomList, mod(zoomAt + d, zoomList.length), zoomProject);
-}
+function zoomShift(d) { if (zoomList.length > 1) zoom(zoomList, mod(zoomAt + d, zoomList.length), zoomProject); }
 function unzoom() {
   if (zoomEl.hidden) return false;
   zoomEl.hidden = true;
@@ -1041,83 +701,68 @@ $("zoomClose").addEventListener("click", unzoom);
 $("zoomPrev").addEventListener("click", () => zoomShift(-1));
 $("zoomNext").addEventListener("click", () => zoomShift(1));
 
-/* ═══════════════ À propos ═══════════════ */
+/* ═══════════════ Info ═══════════════ */
 let aboutReturn = null;
 function openAbout() {
   if (aboutEl.hidden) aboutReturn = document.activeElement;
-  hideIntro();
   const box = $("portrait");
-  box.replaceChildren();
-  const img = new Image();
-  if (PORTRAIT) { img.src = PORTRAIT; img.alt = "Léa Tramati"; img.className = "photo-real"; }
-  else { img.src = "vignettes/logo.png"; img.alt = "Logo LT"; }
-  box.append(img);
+  const im = new Image();
+  if (PORTRAIT) { im.src = PORTRAIT; im.alt = "Léa Tramati"; im.className = "real"; } else { im.src = "vignettes/logo.png"; im.alt = "Logo LT"; }
+  box.replaceChildren(im);
   const c = $("contact");
   if (CONTACT) { const a = document.createElement("a"); a.href = CONTACT.href; a.target = "_blank"; a.rel = "noopener"; a.textContent = CONTACT.label; c.replaceChildren(a); }
   else c.textContent = t("noContact");
   aboutEl.hidden = false;
-  $("navAbout").setAttribute("aria-expanded", "true");
+  $("navAbout").setAttribute("aria-pressed", "true"); $("navWork").setAttribute("aria-pressed", "false");
   syncInert();
   $("aboutClose").focus({ preventScroll: true });
 }
 function closeAbout() {
   if (aboutEl.hidden) return false;
   aboutEl.hidden = true;
-  $("navAbout").setAttribute("aria-expanded", "false");
+  $("navAbout").setAttribute("aria-pressed", "false"); $("navWork").setAttribute("aria-pressed", "true");
   syncInert();
   aboutReturn?.focus?.({ preventScroll: true });
   return true;
 }
 $("navAbout").addEventListener("click", openAbout);
+$("navWork").addEventListener("click", () => { closeAbout(); closeFocus(); scrollTo({ top: 0 }); });
 $("aboutClose").addEventListener("click", closeAbout);
 aboutEl.addEventListener("click", e => { if (e.target === aboutEl) closeAbout(); });
 
-/* ═══════════════ Pause des animations ═══════════════ */
+/* ═══════════════ Pause ═══════════════ */
 function applyStill() {
   document.body.classList.toggle("still", still);
-  const b = $("pause");
-  b.setAttribute("aria-pressed", String(still));
-  b.textContent = still ? "▶ " + t("play") : "❚❚ " + t("pause");
-  b.setAttribute("aria-label", still ? t("playLabel") : t("pauseLabel"));
+  $("pause").setAttribute("aria-pressed", String(still));
+  $("pause").querySelector(".ic").textContent = still ? "▶" : "‖";
+  $("pauseLb").textContent = still ? t("play") : t("pause");
+  $("pause").setAttribute("aria-label", still ? t("playLabel") : t("pauseLabel"));
 }
 $("pause").addEventListener("click", () => {
   still = !still;
   try { localStorage.setItem("still", still ? "1" : "0"); } catch {}
   applyStill();
-  build();
 });
 
-/* ═══════════════ Bande-démo (mode expo) ═══════════════
-   Après IDLE_SECONDS sans activité : défilement plein écran des projets, image ou vidéo en grand,
-   titre en très grand. Un geste (toucher, clic, touche) l'arrête. */
+/* ═══════════════ Bande-démo (mode expo) ═══════════════ */
 let idleTimer = null, demoTimer = null, demoOn = false, demoIndex = -1;
 const reelEl = $("reel");
-function reelSlide(p, i) {
+function demoStep() {
+  demoIndex = (demoIndex + 1) % N;
+  const p = PROJETS[demoIndex];
+  const st = $("reelStage");
   const slide = document.createElement("div");
   slide.className = "slide" + (still ? "" : " kb");
   const bg = document.createElement("div"); bg.className = "bg"; bg.style.backgroundImage = `url("${p.image}")`;
   slide.append(bg);
   const vid = !still && (p.preview || p.video);
-  if (vid) {
-    const v = document.createElement("video");
-    v.src = vid; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true; v.poster = p.image;
-    slide.append(v); v.play().catch(() => {});
-  } else {
-    const img = new Image(); img.src = p.image; img.alt = "";
-    slide.append(img);
-  }
-  return slide;
-}
-function demoStep() {
-  demoIndex = (demoIndex + 1) % N;
-  const p = PROJETS[demoIndex];
-  const st = $("reelStage");
-  const slide = reelSlide(p, demoIndex);
+  if (vid) { const v = document.createElement("video"); v.src = vid; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true; v.poster = p.image; slide.append(v); v.play().catch(() => {}); }
+  else { const im = new Image(); im.src = p.image; im.alt = ""; slide.append(im); }
   st.append(slide);
   reelEl.classList.add("swap");
   setTimeout(() => slide.classList.add("in"), 40);
   setTimeout(() => {
-    $("reelKind").textContent = `${pad(demoIndex + 1)} / ${pad(N)}  [${p.cat[lang]}]`;
+    $("reelKind").textContent = `${pad3(demoIndex + 1)} — ${p.cat[lang]}`;
     $("reelTitle").textContent = p.titre;
     reelEl.classList.remove("swap");
   }, 450);
@@ -1130,13 +775,12 @@ function demoStep() {
 function startDemo() {
   if (demoOn) return;
   demoOn = true;
-  unzoom(); closeAbout(); closeFocus(); hideIntro();
-  filtre = "all"; renderFilters(); applyFilter();
+  unzoom(); closeAbout(); closeFocus();
+  filtre = "all"; renderFilters(); applyFilter(); scrollTo({ top: 0 });
   demoIndex = -1;
   $("reelCta").textContent = t("demo");
   $("reelStage").replaceChildren();
   reelEl.hidden = false;
-  paused = true;
   demoStep();
 }
 function stopDemo() {
@@ -1144,9 +788,6 @@ function stopDemo() {
   demoOn = false;
   reelEl.hidden = true;
   $("reelStage").replaceChildren();
-  paused = false;
-  showIntro();
-  setTimeout(() => { if (!demoOn) hideIntro(); }, 3000);
 }
 function activity(e) {
   if (demoOn) { stopDemo(); if (e && e.cancelable) { e.preventDefault(); e.stopPropagation(); } }
@@ -1157,7 +798,7 @@ function activity(e) {
 if (EXPO) {
   let cur;
   addEventListener("pointermove", () => { document.body.classList.remove("nocursor"); clearTimeout(cur); cur = setTimeout(() => document.body.classList.add("nocursor"), 3000); }, { passive: true });
-  ["pointerdown", "keydown", "wheel", "touchstart"].forEach(ev => addEventListener(ev, activity, { capture: true, passive: false }));
+  ["pointerdown", "keydown", "wheel", "touchstart", "scroll"].forEach(ev => addEventListener(ev, activity, { capture: true, passive: ev === "scroll" }));
   activity();
 }
 
@@ -1168,23 +809,14 @@ function applyLang() {
   document.querySelectorAll(".langs button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
   $("langs").setAttribute("aria-label", t("langs"));
   $("skip").textContent = t("skip");
-  stage.setAttribute("aria-label", t("stage"));
-  stage.setAttribute("aria-roledescription", t("stage"));
   $("hint").innerHTML = t("hint");
-  $("navAbout").textContent = t("about");
-  $("close").textContent = t("close");
-  $("zoomClose").textContent = t("close");
-  $("aboutClose").textContent = t("close");
-  $("prev").textContent = t("prevP"); $("prev").setAttribute("aria-label", t("prevLabel"));
-  $("next").textContent = t("nextP"); $("next").setAttribute("aria-label", t("nextLabel"));
-  $("goPrev").setAttribute("aria-label", t("prevLabel")); $("goPrev").title = t("prevLabel");
-  $("goNext").setAttribute("aria-label", t("nextLabel")); $("goNext").title = t("nextLabel");
+  $("prev").setAttribute("aria-label", t("prevLabel"));
+  $("next").setAttribute("aria-label", t("nextLabel"));
   $("zoomPrev").setAttribute("aria-label", t("prevItem"));
   $("zoomNext").setAttribute("aria-label", t("nextItem"));
   $("full").setAttribute("aria-label", t("full")); $("full").title = t("full");
-  qr($("siteQr"), SITE_URL, 128, t("qrSite"));
-  applyStill();
-  renderIntro(); renderFilters(); build();
+  qr($("siteQr"), SITE_URL, 148, t("qrSite"));
+  applyStill(); renderFilters(); build();
   if (current >= 0) fill(current);
   if (!aboutEl.hidden) openAbout();
 }
@@ -1202,38 +834,25 @@ if (!document.fullscreenEnabled) $("full").hidden = true;
 $("close").addEventListener("click", closeFocus);
 $("prev").addEventListener("click", () => shift(-1));
 $("next").addEventListener("click", () => shift(1));
-$("skip").addEventListener("click", e => { e.preventDefault(); hideIntro(); const i = PROJETS.findIndex(visible); sel = i; items[i].el.focus(); });
+$("skip").addEventListener("click", e => { e.preventDefault(); cards.find(c => !c.li.hidden)?.b.focus(); });
 
 addEventListener("keydown", e => {
-  if (e.key === "Tab" || e.key.startsWith("Arrow")) { document.body.classList.add("kbd"); markSel(); }
   if (e.key === "Escape") { if (unzoom() || closeAbout()) return; if (current >= 0) { closeFocus(); return; } }
   if (!zoomEl.hidden) {
     if (e.key === "ArrowRight") { e.preventDefault(); zoomShift(1); }
     if (e.key === "ArrowLeft") { e.preventDefault(); zoomShift(-1); }
     return;
   }
-  if (!aboutEl.hidden) return;
-  const tag = document.activeElement?.tagName;
-  if (current >= 0) {
-    if (tag === "VIDEO") return;
+  if (current >= 0 && aboutEl.hidden && document.activeElement?.tagName !== "VIDEO") {
     if (e.key === "ArrowRight") shift(1);
     if (e.key === "ArrowLeft") shift(-1);
-    return;
   }
-  if (e.key === "ArrowRight" || e.key === "ArrowDown") { e.preventDefault(); go(1); }
-  if (e.key === "ArrowLeft" || e.key === "ArrowUp") { e.preventDefault(); go(-1); }
-  if (e.key === "Home") { e.preventDefault(); sel = N - 1; go(1); }
-  if (e.key === "End") { e.preventDefault(); sel = 0; go(-1); }
 });
 
 /* ═══════════════ Démarrage ═══════════════ */
 applyLang();
-if (!location.hash || EXPO) { showIntro(); setTimeout(() => { if (!demoOn) hideIntro(); }, 4500); }
-let rs;
-addEventListener("resize", () => { clearTimeout(rs); rs = setTimeout(build, 150); });
-requestAnimationFrame(tick);
 const deep = PROJETS.findIndex(p => "#" + p.id === location.hash);
-if (deep >= 0) openFocus(deep);
+if (deep >= 0) openFocus(deep, true);
 </script>
 </body>
 </html>
