@@ -8,7 +8,7 @@
 <meta property="og:title" content="Léa Tramati — Portfolio Erasmus">
 <meta property="og:description" content="Jeu, sites web, affiches, application, vidéo et photographie, réalisés pendant un Erasmus à la KISD Köln.">
 <meta property="og:url" content="https://lea-tramati.github.io/portfolio/">
-<meta property="og:image" content="https://lea-tramati.github.io/portfolio/vignettes/apercu.png">
+<meta property="og:image" content="https://lea-tramati.github.io/portfolio/vignettes/apercu-v2.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -91,7 +91,7 @@ body.still .caret::after { animation: none; opacity: 0; }
 /* ---------- Le champ d'images ---------- */
 #field { position: fixed; inset: 0; z-index: 0; overflow: hidden; touch-action: none; }
 .tile { position: absolute; left: 0; top: 0; will-change: transform; transition: opacity .35s; }
-.tile img { display: block; width: 100%; height: auto; }
+.tile img { display: block; width: 100%; height: auto; object-fit: cover; }
 .tile.ph { pointer-events: none; }
 .tile.pj { cursor: pointer; z-index: 2; }
 .tile.pj img { box-shadow: 0 0 0 1px rgba(0,0,0,.06); }
@@ -123,6 +123,8 @@ body.filtering .tile.ph { opacity: .3; }
 #focus.on .big { animation-delay: .14s; }
 @keyframes drop { from { opacity: 0; translate: 0 26px; } }
 body.still #focus.on .stack .under, body.still #focus.on .big { animation: none; }
+.flyer { position: fixed; z-index: 45; margin: 0; pointer-events: none; display: block; box-shadow: 0 0 0 1px rgba(0,0,0,.06); }
+#focus.flying .stack .under, #focus.flying .big { visibility: hidden; animation: none !important; }
 .info { display: grid; gap: 16px; justify-items: start; }
 .info .k { color: var(--soft); }
 .info h2 { margin: 0; font: 500 clamp(30px, 4vw, 58px)/1 var(--sans); letter-spacing: -.01em; }
@@ -359,6 +361,16 @@ const PROJETS = [
 ];
 
 
+/* Images supplémentaires par projet, tirées des vidéos : le champ varie au lieu de répéter la même vignette.
+   [chemin, proportion largeur/hauteur] */
+const FIELD = {
+  "apperture":         [["field/apperture-1.webp", 1.778], ["field/apperture-2.webp", 1.778]],
+  "kisd-spaces":       [["field/guide-1.webp", 1.939], ["field/guide-2.webp", 1.939]],
+  "nomadic-workspace": [["field/nomadic-1.webp", 1.778], ["field/nomadic-3.webp", 1.778]],
+  "kisd-students":     [["videos/ask-a-student-1.webp", 0.5625], ["videos/which-designer.webp", 0.5625]],
+};
+const RATIO_OF = { "vignettes/guide-tour-kisd.webp": 1.463, "videos/nomadic-workspace.webp": 1.778 };
+
 /* ═══════════════ TEXTES ═══════════════ */
 const T = {
   fr: { list: "Projets", context: "Portfolio — Erasmus, KISD Köln", tagline: "Survolez ou choisissez un projet en bas pour l'ouvrir",
@@ -421,6 +433,7 @@ const EXPO = location.hash === "#expo";
 const RATIOS = { paysage: 4 / 3, portrait: 3 / 4, carre: 1, affiche: 1 / 1.414, story: 9 / 16 };
 const isVideo = src => /\.mp4$/i.test(src);
 const N = PROJETS.length;
+const fieldImgs = p => [[p.image, RATIO_OF[p.image] || RATIOS[p.format] || 4 / 3], ...(FIELD[p.id] || [])];
 
 function rng(seed) {
   let h = 2166136261 >>> 0;
@@ -472,6 +485,7 @@ function build() {
   rows = Math.ceil(vh / ch) + 2;
   /* Une case sur deux (en damier) reçoit un projet, à tour de rôle : les 8 projets apparaissent toujours, quelle que soit la largeur de l'écran. Pas de photos décoratives. */
   let pk = 0;
+  const occ = Array(N).fill(0);
   const r = rng("champ");
   field.replaceChildren();
   tiles = [];
@@ -483,13 +497,32 @@ function build() {
     if (it.p !== undefined) {
       const p = PROJETS[it.p];
       el.className = "tile pj";
-      const ratio = RATIOS[p.format] || 4 / 3;
-      w = Math.round(cw * (ratio < 0.8 ? 0.42 : 0.6));
-      el.append(pimg(p));
+      const list = fieldImgs(p);
+      const [src, ratio] = list[occ[it.p]++ % list.length];
+      w = Math.round(cw * (ratio < 0.8 ? 0.42 : ratio > 1.6 ? 0.74 : 0.6));
+      const im = new Image(); im.src = src; im.alt = ""; im.decoding = "async"; im.draggable = false;
+      im.style.aspectRatio = String(ratio);
+      el.append(im);
       el.dataset.p = it.p;
-      el.addEventListener("click", () => openFocus(+el.dataset.p, false, el.firstChild));
-      el.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") setSpot(+el.dataset.p); });
-      el.addEventListener("pointerleave", () => setSpot(-1));
+      el.addEventListener("click", () => openFocus(+el.dataset.p, false, el));
+      el.addEventListener("pointerenter", e => {
+        if (e.pointerType !== "mouse") return;
+        setSpot(+el.dataset.p);
+        /* Point 4 : aperçu vidéo au survol */
+        const vsrc = p.preview || p.video;
+        if (!vsrc || still || el.querySelector("video")) return;
+        const v = document.createElement("video");
+        v.src = vsrc; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true; v.poster = src;
+        v.setAttribute("aria-hidden", "true");
+        v.style.cssText = `display:block;width:100%;aspect-ratio:${ratio};object-fit:cover`;
+        el.firstChild.hidden = true;
+        el.append(v); v.play().catch(() => {});
+      });
+      el.addEventListener("pointerleave", () => {
+        setSpot(-1);
+        el.querySelector("video")?.remove();
+        el.firstChild.hidden = false;
+      });
     } else {
       el.className = "tile ph";
       w = Math.round(cw * (0.26 + r() * 0.14));
@@ -554,7 +587,7 @@ function renderList() {
     b.children[0].textContent = pad3(i + 1); b.children[1].textContent = p.titre;
     b.addEventListener("click", () => {
       const tile = tiles.find(x => x.p === i && x.el.getBoundingClientRect().top > 60 && x.el.getBoundingClientRect().bottom < innerHeight - 60);
-      openFocus(i, false, tile?.el.firstChild);
+      openFocus(i, false, tile?.el);
     });
     b.addEventListener("pointerenter", () => setSpot(i));
     b.addEventListener("pointerleave", () => setSpot(-1));
@@ -628,7 +661,7 @@ function mainAction(p) {
 }
 function extraImages(p) {
   if (p.galerie) return [p.galerie[3], p.galerie[17]];
-  if (p.videos) return p.videos.slice(1, 3).map(v => v.replace(/\.mp4$/, ".webp"));
+  if (FIELD[p.id]) return FIELD[p.id].map(x => x[0]);
   return [];
 }
 function fill(i) {
@@ -679,14 +712,49 @@ function fill(i) {
   /* relance l'animation de pile */
   stack.querySelectorAll(".under, .big").forEach(x => { x.style.animation = "none"; void x.offsetWidth; x.style.animation = ""; });
 }
-function openFocus(i, quiet) {
+function openFocus(i, quiet, fromTile) {
   if (current < 0) focusReturn = document.activeElement;
   current = i;
   fill(i);
+  if (fromTile && !still) flyStack(i, fromTile);
   focusEl.classList.add("on");
   focusEl.setAttribute("aria-hidden", "false");
   syncInert();
   if (!quiet) setTimeout(() => $("fActions").firstChild?.focus({ preventScroll: true }), still ? 0 : 350);
+}
+function flyStack(i, fromTile) {
+  const vh = innerHeight;
+  const onScreen = el => { const r = el.getBoundingClientRect(); return r.bottom > 0 && r.top < vh && r.width > 0; };
+  /* la vignette cliquée va sur l'image principale, deux autres vignettes du même projet vont dessous */
+  const others = tiles.filter(t => t.p === i && t.el !== fromTile && onScreen(t.el)).map(t => t.el).slice(0, 2);
+  const targets = [$("big").firstChild, ...$("stack").querySelectorAll(".under")];
+  const sources = [fromTile, ...others];
+  focusEl.classList.add("flying");
+  const clones = [];
+  let left = 0;
+  const done = () => { if (--left > 0) return; focusEl.classList.remove("flying"); requestAnimationFrame(() => clones.forEach(c => c.remove())); };
+  requestAnimationFrame(() => {
+    sources.forEach((src, k) => {
+      const tgt = k === 0 ? targets[0] : targets[k];
+      if (!tgt) return;
+      const a = src.getBoundingClientRect(), b = tgt.getBoundingClientRect();
+      if (!a.width || !b.width) return;
+      const img = src.querySelector("img").cloneNode();
+      img.hidden = false;
+      img.className = "flyer";
+      img.setAttribute("aria-hidden", "true");
+      Object.assign(img.style, { left: a.left + "px", top: a.top + "px", width: a.width + "px", height: a.height + "px", objectFit: "cover", aspectRatio: "auto" });
+      document.body.append(img);
+      clones.push(img);
+      left++;
+      const anim = img.animate([
+        { left: a.left + "px", top: a.top + "px", width: a.width + "px", height: a.height + "px" },
+        { left: b.left + "px", top: b.top + "px", width: b.width + "px", height: b.height + "px" },
+      ], { duration: 700, delay: (sources.length - 1 - k) * 70, easing: "cubic-bezier(.6,0,.2,1)", fill: "forwards" });
+      anim.onfinish = done;
+    });
+    if (!left) focusEl.classList.remove("flying");
+  });
 }
 function closeFocus() {
   if (current < 0) return;
