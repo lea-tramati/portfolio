@@ -19,3 +19,15 @@
 
 ## Lien direct vers un projet
 …/portfolio/#intrusion, #feed-your-head, #robert-wun, #apperture, #kisd-spaces
+
+## Réglages en haut du script (index.html)
+- `PORTRAIT` : chemin d'une photo de vous pour « À propos » (ex. "vignettes/portrait.jpg").
+- `CONTACT` : { label: "@votre.insta", href: "https://instagram.com/votre.insta" } pour afficher un contact.
+- Images de processus : ajouter `process: ["vignettes/croquis.jpg"]` à un projet.
+
+## Vues
+- …/portfolio/ : champ d'images relié par le fil rouge
+- …/portfolio/#index : grille de tous les projets et des photos
+
+## À imprimer
+- `../carte-qr-portfolio.pdf` : carton A5 avec le QR code, à poser à côté de l'écran.

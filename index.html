@@ -3,272 +3,199 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Portfolio Erasmus de Léa Tramati à la KISD Köln : jeu, sites web, affiches, application et photographie.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Léa Tramati — Portfolio Erasmus">
+<meta property="og:description" content="Jeu, sites web, affiches, application et photographie, réalisés pendant un Erasmus à la KISD Köln.">
+<meta property="og:url" content="https://lea-tramati.github.io/portfolio/">
+<meta property="og:image" content="https://lea-tramati.github.io/portfolio/vignettes/apercu.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 fill=%22%23fff%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%229%22 fill=%22%23E3261C%22/%3E%3C/svg%3E">
 <title>Léa Tramati</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gabarito:wght@500;700;900&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800&family=Courier+Prime:wght@400;700&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
-/* Univers volontairement clair, comme la vidéo de référence : couleurs explicites, un seul thème. */
+/* Page blanche, encre noire, un fil rouge. Un seul thème, volontairement. */
 :root {
-  --paper: #EFECE6;
-  --frame: #FFFFFF;
-  --ink: #1E221D;
-  --soft: #6E6C66;
-  --dot: #A9A59C;
-  --red: #D7261E;
-  --title: "Gabarito", "Segoe UI", system-ui, sans-serif;
-  --mono: "DM Mono", ui-monospace, Consolas, monospace;
+  --paper: #FFFFFF;
+  --ink: #111111;
+  --soft: #6B6B6B;
+  --faint: #E9E9E6;
+  --red: #E3261C;
+  --sans: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --mono: "Courier Prime", "Courier New", Courier, monospace;
 }
 [hidden] { display: none !important; }
+* { box-sizing: border-box; }
 html, body { height: 100%; }
-body { margin: 0; }
-img { max-width: 100%; }
 body {
+  margin: 0;
   background: var(--paper);
   color: var(--ink);
-  font: 400 14px/1.5 var(--title);
+  font: 400 15px/1.45 var(--sans);
   overflow: hidden;
-  user-select: none;
-  -webkit-user-select: none;
+  -webkit-user-select: none; user-select: none;
 }
+img { max-width: 100%; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 
-/* ---------- Scène ---------- */
-#stage {
-  position: relative;
-  z-index: 0;
-  isolation: isolate; /* garde les miniatures sous la fiche projet */
-  height: 100%;
-  overflow: hidden;
-  cursor: grab;
-  touch-action: pan-y;
-}
-#stage.dragging { cursor: grabbing; }
-
-.card {
-  position: absolute; left: 0; top: 0;
-  display: grid; gap: 7px;
-  padding: 0; border: 0; background: none;
-  text-align: left; color: inherit; font: inherit;
-  cursor: pointer;
-  will-change: transform;
-}
-.frame {
-  display: block;
-  background: var(--frame);
-  padding: 5px;
-  box-shadow: 0 1px 2px rgba(30,34,29,.08), 0 10px 26px rgba(30,34,29,.12);
-  transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s;
-}
-.frame canvas, .frame img { display: block; width: 100%; height: auto; }
-.frame img, .frame video { display: block; width: 100%; height: auto; aspect-ratio: var(--r); object-fit: cover; object-position: top; }
-.card { transition: opacity .6s; }
-body.intro .card { opacity: .3; }
-
-/* ---------- Accueil ---------- */
-#intro {
-  position: fixed; z-index: 15;
-  left: 50%; top: 50%; transform: translate(-50%, -50%);
-  width: min(760px, calc(100vw - 40px));
-  display: grid; gap: 18px; justify-items: center; text-align: center;
-  pointer-events: none;
-  opacity: 0; transition: opacity .6s, transform .6s;
-}
-body.intro #intro { opacity: 1; }
-#intro::before {
-  content: ""; position: absolute; inset: -90px -140px; z-index: -1;
-  background: radial-gradient(closest-side, var(--paper) 55%, rgba(239,236,230,0));
-}
-body:not(.intro) #intro { transform: translate(-50%, -46%); }
-#intro .hello {
-  margin: 0;
-  font: 900 clamp(40px, 7.5vw, 92px)/.92 var(--title);
-  letter-spacing: -.03em;
-  text-wrap: balance;
-}
-#intro .sub { margin: 0; font-size: clamp(16px, 1.6vw, 19px); line-height: 1.5; color: var(--ink); max-width: 44ch; text-wrap: pretty; }
-#intro .hint {
-  display: flex; align-items: center; gap: 12px; margin-top: 8px;
-  font: 500 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--soft);
-}
-#intro .swipe { color: var(--ink); animation: swipe 2.2s cubic-bezier(.6,0,.3,1) infinite; }
-@keyframes swipe { 0%, 100% { transform: translateX(-14px); } 50% { transform: translateX(14px); } }
-
-/* ---------- À propos ---------- */
-.about-btn {
-  background: none; border: 1px solid var(--ink); border-radius: 99px;
-  font: 500 11px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase;
-  color: var(--ink); padding: 8px 12px; cursor: pointer;
-}
-.about-btn:hover { background: var(--ink); color: var(--paper); }
-.about-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-#about {
-  position: fixed; z-index: 55; inset: 0;
-  display: flex; justify-content: flex-end;
-  background: rgba(30,34,29,.25);
-}
-#about .panel {
-  width: min(440px, 100%); height: 100%; overflow-y: auto;
-  background: var(--paper);
-  padding-inline: 32px;
-  padding-block: calc(28px + env(safe-area-inset-top, 0px)) calc(28px + env(safe-area-inset-bottom, 0px));
-  display: grid; align-content: start; gap: 20px;
-  box-shadow: -20px 0 60px rgba(30,34,29,.18);
-  animation: slide .5s cubic-bezier(.2,.8,.2,1);
-}
-@keyframes slide { from { transform: translateX(40px); opacity: 0; } }
-#about .top { display: flex; justify-content: space-between; align-items: center; }
-#about .top .k { font: 500 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--soft); }
-#about .portrait { background: var(--frame); padding: 6px; box-shadow: 0 10px 26px rgba(30,34,29,.12); width: 62%; transform: rotate(-1.5deg); }
-#about .portrait canvas, #about .portrait img { display: block; width: 100%; height: auto; }
-#about h2 { margin: 0; font: 900 40px/.95 var(--title); letter-spacing: -.025em; text-transform: uppercase; }
-#about p { margin: 0; font-size: 16px; line-height: 1.55; max-width: 38ch; }
-#about dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; font: 400 12px/1.4 var(--mono); }
-#about dt { color: var(--soft); text-transform: uppercase; letter-spacing: .08em; }
-#about dd { margin: 0; overflow-wrap: anywhere; }
-#about a { color: var(--ink); }
-
-/* ---------- Processus ---------- */
-.process { display: flex; flex-wrap: wrap; gap: 8px; }
-.process:empty { display: none; }
-.process button { padding: 3px; border: 0; background: var(--frame); cursor: zoom-in; box-shadow: 0 4px 12px rgba(30,34,29,.15); }
-.process img { display: block; width: 64px; height: 64px; object-fit: cover; }
-.process.gallery { max-height: 156px; overflow-y: auto; }
-.process.gallery img { width: 52px; height: 52px; }
-#zoom img { cursor: e-resize; }
-#zoomCount { position: absolute; left: 20px; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); font: 400 11px/1 var(--mono); letter-spacing: .1em; color: #9A9C97; }
-
-/* ---------- Transition miniature → fiche ---------- */
-.flyer { position: fixed; z-index: 45; margin: 0; pointer-events: none; transform-origin: 0 0; }
-#focus.flip .big { opacity: 0; transition: none; transform: none; }
-@media (prefers-reduced-motion: reduce) { #intro .swipe { animation: none; } }
-.card:hover .frame, .card:focus-visible .frame {
-  transform: translateY(-6px) scale(1.04);
-  box-shadow: 0 2px 4px rgba(30,34,29,.08), 0 22px 44px rgba(30,34,29,.2);
-}
-.card:focus-visible { outline: none; }
-.card:focus-visible .frame { outline: 2px solid var(--ink); outline-offset: 4px; }
-.label {
-  font: 500 11px/1.4 var(--mono);
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--soft);
-  transition: color .25s;
-}
-.card:hover .label, .card:focus-visible .label { color: var(--ink); }
-
-/* Fil rouge */
-#web { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
-.frame { position: relative; }
-.card .frame::before, .photo::before {
-  content: ""; position: absolute; left: 50%; top: -5px; z-index: 2;
-  width: 10px; height: 10px; margin-left: -5px; border-radius: 50%;
-  background: var(--red);
-  box-shadow: 0 1px 2px rgba(0,0,0,.35), inset -2px -2px 0 rgba(0,0,0,.18);
-}
-.card { z-index: 10; }
-.card .num { color: var(--red); font-weight: 500; }
-.cta {
-  justify-self: start;
+/* ---------- Pastilles (boutons, étiquettes) ---------- */
+.pill {
   display: inline-flex; align-items: center; gap: 6px;
-  font: 500 10px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase;
-  color: var(--red); border: 1px solid var(--red); border-radius: 99px;
-  padding: 6px 9px; background: var(--paper);
-  transition: background .2s, color .2s, gap .2s;
+  border: 1.5px solid var(--ink); border-radius: 99px;
+  background: var(--paper); color: var(--ink);
+  font: 600 12px/1 var(--sans); text-transform: uppercase; letter-spacing: .01em;
+  padding: 6px 10px 5px;
+  text-decoration: none; white-space: nowrap; cursor: pointer;
+  transition: background .15s, color .15s, gap .2s;
 }
-.card:hover .cta, .card:focus-visible .cta { background: var(--red); color: #fff; gap: 10px; }
-.card.pulse .frame { animation: pulse 1.6s ease-out; }
-@keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(215,38,30,.55), 0 10px 26px rgba(30,34,29,.12); }
-  100% { box-shadow: 0 0 0 22px rgba(215,38,30,0), 0 10px 26px rgba(30,34,29,.12); }
-}
+.pill:hover, .pill[aria-pressed="true"], .pill.solid { background: var(--ink); color: var(--paper); }
+.pill.solid:hover { background: var(--red); border-color: var(--red); }
+.pill.big { font-size: 14px; padding: 11px 16px 10px; }
+.pill.big:hover { gap: 12px; }
 
-/* Photos d'ambiance (non cliquables) */
-.photo {
-  position: absolute; left: 0; top: 0; z-index: 1;
-  background: var(--frame); padding: 4px 4px 14px;
-  box-shadow: 0 1px 2px rgba(30,34,29,.08), 0 6px 16px rgba(30,34,29,.1);
+/* ---------- Barres haut et bas ---------- */
+.bar {
+  position: fixed; left: 0; right: 0; z-index: 30;
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px;
+  padding-inline: 20px;
   pointer-events: none;
-  will-change: transform;
 }
-.photo img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; filter: saturate(.85); }
-.photo { opacity: .8; }
-.photo img { filter: saturate(.6) contrast(.95); }
-body.intro .photo { opacity: .25; }
-.photo { transition: opacity .6s; }
-
-/* ---------- Habillage ---------- */
-.chrome { position: fixed; z-index: 20; }
-#mark { top: calc(18px + env(safe-area-inset-top, 0px)); left: 20px; pointer-events: none; }
-#mark canvas { display: block; width: 180px; height: auto; }
-#mark p {
-  margin: 6px 0 0;
-  font: 400 11px/1.5 var(--mono); letter-spacing: .1em; text-transform: uppercase;
-  color: var(--soft);
-}
-#mark p b { font-weight: 500; color: var(--ink); }
-
-#tools {
-  top: calc(18px + env(safe-area-inset-top, 0px)); right: 20px;
-  display: flex; align-items: center; gap: 18px;
-}
+.bar > * { pointer-events: auto; }
+#top { top: 0; padding-top: calc(16px + env(safe-area-inset-top, 0px)); }
+#name { font: 500 17px/1.1 var(--sans); letter-spacing: -.01em; justify-self: start; }
+#name small { display: block; font: 400 13px/1.3 var(--mono); color: var(--soft); letter-spacing: 0; }
+nav { display: flex; gap: 6px; }
+#right { justify-self: end; display: flex; align-items: center; gap: 14px; }
 .langs { display: flex; gap: 2px; }
 .langs button {
-  background: none; border: 0; cursor: pointer;
-  font: 500 12px/1 var(--mono); letter-spacing: .1em;
-  color: var(--soft);
-  padding: 8px 6px; border-radius: 4px;
+  background: none; border: 0; cursor: pointer; padding: 6px 5px;
+  font: 400 14px/1 var(--mono); color: var(--soft);
 }
-.langs button:hover { color: var(--ink); }
-.langs button[aria-pressed="true"] { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
-.langs button:focus-visible { outline: 2px solid var(--ink); }
+.langs button:hover, .langs button[aria-pressed="true"] { color: var(--ink); }
+.langs button[aria-pressed="true"] { text-decoration: underline; text-underline-offset: 4px; }
+#full { background: none; border: 0; cursor: pointer; padding: 6px; font: 400 14px/1 var(--mono); color: var(--soft); }
+#full:hover { color: var(--ink); }
 
-#foot {
-  left: 20px; right: 20px;
-  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
-  display: flex; justify-content: space-between; align-items: end; gap: 16px;
-  font: 400 11px/1.5 var(--mono); letter-spacing: .1em; text-transform: uppercase;
-  color: var(--soft);
+#bottom { bottom: 0; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); align-items: end; }
+#hint { font: 400 13px/1.35 var(--mono); color: var(--soft); justify-self: start; max-width: 30ch; }
+#hint b { font-weight: 400; color: var(--ink); }
+#filters { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 18px; }
+#filters button {
+  background: none; border: 0; cursor: pointer; padding: 4px 0;
+  font: 400 16px/1 var(--sans); color: var(--soft);
+}
+#filters button:hover, #filters button[aria-pressed="true"] { color: var(--ink); }
+#filters button[aria-pressed="true"] { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 5px; }
+#filters sup { font-size: 10px; margin-left: 1px; }
+.qr { justify-self: end; display: flex; align-items: end; gap: 10px; text-align: right; }
+.qr span { font: 400 12px/1.3 var(--mono); color: var(--soft); max-width: 16ch; }
+.code { background: #fff; line-height: 0; }
+.code canvas, .code img { display: block; }
+.qr .code canvas, .qr .code img { width: 62px; height: 62px; }
+
+/* ---------- Champ d'images ---------- */
+#stage {
+  position: relative; z-index: 0; isolation: isolate;
+  height: 100%; overflow: hidden;
+  cursor: grab; touch-action: pan-y;
+}
+#stage.dragging { cursor: grabbing; }
+#web { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+
+.card {
+  position: absolute; left: 0; top: 0; z-index: 10;
+  display: grid; gap: 7px; justify-items: start;
+  padding: 0; border: 0; background: none; text-align: left;
+  cursor: pointer; will-change: transform;
+  transition: opacity .5s;
+}
+.shot { position: relative; display: block; width: 100%; }
+.shot img, .shot video { display: block; width: 100%; height: auto; aspect-ratio: var(--r); object-fit: cover; object-position: top; }
+.shot::before, .photo::before {
+  content: ""; position: absolute; left: 50%; top: -4px; z-index: 2;
+  width: 8px; height: 8px; margin-left: -4px; border-radius: 50%; background: var(--red);
+}
+.shot .over {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font: 700 15px/1.1 var(--sans); color: #fff; text-transform: uppercase; text-align: center;
+  background: rgba(17,17,17,.35); opacity: 0; transition: opacity .2s;
+}
+.card:hover .over, .card:focus-visible .over { opacity: 1; }
+.cap { font: 400 13px/1.3 var(--mono); color: var(--ink); }
+.cap .n { color: var(--red); }
+.cap .c { color: var(--soft); }
+.card.dim { opacity: .12; pointer-events: none; }
+.card.pulse .shot { animation: pulse 1.6s ease-out; }
+@keyframes pulse { from { box-shadow: 0 0 0 0 rgba(227,38,28,.6); } to { box-shadow: 0 0 0 20px rgba(227,38,28,0); } }
+
+.photo {
+  position: absolute; left: 0; top: 0; z-index: 1;
+  pointer-events: none; will-change: transform;
+  transition: opacity .5s;
+}
+.photo img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+body.intro .photo, body.filtered .photo { opacity: .25; }
+body.intro .card { opacity: .25; }
+body.indexview .bar { background: var(--paper); }
+body.indexview #top { padding-bottom: 12px; }
+body.indexview #bottom { padding-top: 12px; }
+body.indexview #hint { visibility: hidden; }
+
+/* ---------- Accueil (carte blanche, grand titre) ---------- */
+#intro {
+  position: fixed; z-index: 20;
+  left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: min(1040px, calc(100vw - 32px));
+  background: var(--paper);
+  padding: 22px 24px 20px;
+  box-shadow: 0 30px 80px rgba(0,0,0,.12);
   pointer-events: none;
+  opacity: 0; transition: opacity .5s, transform .5s;
 }
-#foot b { font-weight: 500; color: var(--ink); font-variant-numeric: tabular-nums; }
-.qr { display: flex; align-items: end; gap: 10px; text-align: right; }
-.qr .code { background: #fff; padding: 5px; box-shadow: 0 6px 18px rgba(30,34,29,.1); line-height: 0; }
-.qr .code canvas, .qr .code img { display: block; width: 64px; height: 64px; }
-.qr span { max-width: 18ch; }
+body.intro #intro { opacity: 1; }
+body:not(.intro) #intro { transform: translate(-50%, -47%); }
+.hl { margin: 0; font: 800 clamp(26px, 6.3vw, 86px)/.9 var(--sans); letter-spacing: -.045em; text-transform: uppercase; }
+.hl .row { display: flex; align-items: center; justify-content: space-between; gap: .18em; white-space: nowrap; }
+.hl .row > span { flex: none; }
+.hl .row + .row { margin-top: .06em; }
+.hl .pill { font-size: max(10px, .1em); letter-spacing: 0; padding: .45em .8em .38em; align-self: flex-start; margin-top: .25em; }
+.hl .inset { height: .78em; width: auto; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+.hl .gap { flex: 1; }
+#intro .tip { margin: 18px 0 0; font: 400 14px/1.4 var(--mono); color: var(--soft); }
+#intro .tip b { font-weight: 400; color: var(--red); }
 
-.icon { display: block; color: var(--dot); }
-.icon circle { fill: currentColor; }
-
-button.dots {
-  background: none; border: 0; padding: 10px; margin: -10px;
-  cursor: pointer; color: var(--dot);
-  transition: color .2s;
+/* ---------- Index (grille dense) ---------- */
+#index {
+  position: fixed; inset: 0; z-index: 25;
+  background: var(--paper);
+  overflow-y: auto;
+  padding-inline: 20px;
+  padding-block: calc(78px + env(safe-area-inset-top, 0px)) calc(100px + env(safe-area-inset-bottom, 0px));
+  -webkit-user-select: text; user-select: text;
 }
-button.dots:hover { color: var(--ink); }
-button.dots:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 6px; }
-
-#demo {
-  top: calc(22px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%);
-  z-index: 60;
-  font: 500 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase;
-  background: var(--ink); color: var(--paper);
-  padding: 8px 12px; border-radius: 99px;
-  display: flex; align-items: center; gap: 8px;
-  pointer-events: none;
+#index .lead { font: 400 15px/1.45 var(--mono); margin: 0 0 14px; max-width: 110ch; }
+#index .lead button { background: none; border: 0; padding: 0; cursor: pointer; font: inherit; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--faint); }
+#index .lead button:hover { color: var(--red); text-decoration-color: var(--red); }
+#index .lead .c { color: var(--soft); }
+.grid { display: flex; flex-wrap: wrap; gap: 6px; }
+.grid button { position: relative; padding: 0; border: 0; background: none; cursor: pointer; height: 220px; }
+.grid img { display: block; height: 100%; width: auto; }
+.grid .tag {
+  position: absolute; left: 6px; bottom: 6px;
+  font: 400 12px/1.2 var(--mono); background: var(--paper); color: var(--ink); padding: 2px 5px;
+  opacity: 0; transition: opacity .15s;
 }
-#demo::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #FF5A4A; animation: blink 1.2s infinite; }
-@keyframes blink { 50% { opacity: .2; } }
-
-/* Curseur en points (souris uniquement) */
-#cursor {
-  position: fixed; left: 0; top: 0; z-index: 30;
-  pointer-events: none;
-  color: var(--ink);
-  opacity: 0;
-  transition: opacity .2s;
-}
-@media (pointer: fine) { body.has-cursor #cursor { opacity: 1; } }
+.grid button:hover .tag, .grid button:focus-visible .tag { opacity: 1; }
+.grid .dim { display: none; }
+.grid.photos button { height: 120px; cursor: zoom-in; }
+#index h3 { font: 400 15px/1.4 var(--mono); margin: 28px 0 10px; }
 
 /* ---------- Fiche projet : la vague ---------- */
 #focus { position: fixed; inset: 0; z-index: 40; pointer-events: none; }
@@ -276,129 +203,110 @@ button.dots:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; 
 #focus:not(.on) .side, #focus:not(.on) .count { visibility: hidden; }
 .flood {
   position: absolute; left: -5%; right: -5%; top: 0; height: 100%;
-  background: var(--c, #A6E06A);
+  background: var(--c, #F2F2F0);
   transform: translateY(115%);
   transition: transform .9s cubic-bezier(.7,0,.2,1);
 }
 .flood svg { position: absolute; left: 0; bottom: 100%; width: 100%; height: 140px; display: block; }
-.flood svg path { fill: var(--c, #A6E06A); }
+.flood svg path { fill: var(--c, #F2F2F0); }
 #focus.on .flood { transform: translateY(0); }
-
 .inner {
-  position: absolute; inset: 0;
+  position: absolute; inset: 0; overflow-y: auto;
   display: grid; place-items: center;
   padding-inline: 20px;
-  padding-block: calc(56px + env(safe-area-inset-top, 0px)) calc(56px + env(safe-area-inset-bottom, 0px));
-  opacity: 0;
-  transition: opacity .3s;
-  overflow-y: auto;
+  padding-block: calc(64px + env(safe-area-inset-top, 0px)) calc(64px + env(safe-area-inset-bottom, 0px));
+  opacity: 0; transition: opacity .3s;
 }
 #focus.on .inner { opacity: 1; transition: opacity .5s .55s; }
-
-.sheet {
-  display: grid;
-  grid-template-columns: auto minmax(0, 320px);
-  align-items: end;
-  gap: 36px;
-  max-width: 100%;
-}
+.sheet { display: grid; grid-template-columns: auto minmax(0, 380px); align-items: end; gap: 40px; max-width: 100%; }
 .big {
-  display: block; position: relative;
-  background: var(--frame);
-  padding: 8px; border: 0;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(30,34,29,.12), 0 30px 60px rgba(30,34,29,.22);
-  transform: translateY(24px) rotate(-1.2deg);
-  transition: transform .7s cubic-bezier(.2,.8,.2,1) .5s, box-shadow .3s;
+  display: block; position: relative; cursor: pointer; line-height: 0;
+  transform: translateY(24px); transition: transform .7s cubic-bezier(.2,.8,.2,1) .5s;
 }
 #focus.on .big { transform: none; }
-.big:hover { box-shadow: 0 2px 6px rgba(30,34,29,.12), 0 40px 70px rgba(30,34,29,.3); }
-.big:focus-visible { outline: 2px solid var(--ink); outline-offset: 5px; }
-.big canvas, .big img {
-  display: block;
-  max-width: min(56vw, 520px);
-  max-height: 62vh;
-  width: auto; height: auto;
-}
-.info { display: grid; gap: 14px; color: var(--ink); }
-.info .k {
-  font: 500 10px/1.4 var(--mono); letter-spacing: .14em; text-transform: uppercase;
-  color: rgba(30,34,29,.55);
-}
-.info h2 {
-  margin: 0;
-  font: 900 clamp(30px, 4.4vw, 52px)/.92 var(--title);
-  letter-spacing: -.025em;
-  text-transform: uppercase;
-  text-wrap: balance;
-}
-.info p { margin: 0; font-size: 16px; line-height: 1.5; max-width: 34ch; }
+.big img { display: block; max-width: min(54vw, 560px); max-height: 66vh; width: auto; height: auto; }
+.info { display: grid; gap: 14px; justify-items: start; }
+.info .k { font: 400 14px/1.3 var(--mono); }
+.info h2 { margin: 0; font: 800 clamp(36px, 5.2vw, 72px)/.88 var(--sans); letter-spacing: -.045em; text-transform: uppercase; text-wrap: balance; }
+.info p { margin: 0; font-size: 17px; line-height: 1.45; max-width: 36ch; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; }
-.tags span {
-  font: 400 10px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase;
-  border: 1px solid rgba(30,34,29,.3); border-radius: 99px; padding: 6px 9px;
-}
+.tags .pill { cursor: default; }
+.tags .pill:hover { background: transparent; color: var(--ink); }
 .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
-.go {
-  display: inline-flex; align-items: center; gap: 10px;
-  background: var(--ink); color: var(--paper);
-  border: 1px solid var(--ink);
-  text-decoration: none; cursor: pointer;
-  font: 700 14px/1 var(--title); letter-spacing: .02em;
-  padding: 14px 20px; border-radius: 99px;
-  transition: gap .2s;
-}
-.go.ghost { background: transparent; color: var(--ink); }
-.go:hover { gap: 16px; }
-.go:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-.pqr { display: flex; align-items: center; gap: 12px; margin-top: 6px; }
-.pqr .code { background: #fff; padding: 5px; line-height: 0; }
-.pqr .code canvas, .pqr .code img { display: block; width: 72px; height: 72px; }
-.pqr span { font: 400 10px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: rgba(30,34,29,.6); max-width: 22ch; }
+.process { display: flex; flex-wrap: wrap; gap: 4px; max-height: 150px; overflow-y: auto; }
+.process:empty { display: none; }
+.process button { padding: 0; border: 0; cursor: zoom-in; line-height: 0; }
+.process img { width: 50px; height: 50px; object-fit: cover; }
+.pqr { display: flex; align-items: center; gap: 12px; }
+.pqr .code canvas, .pqr .code img { width: 72px; height: 72px; }
+.pqr span { font: 400 12px/1.35 var(--mono); max-width: 22ch; }
+.side { position: absolute; top: calc(16px + env(safe-area-inset-top, 0px)); }
+#close { right: 20px; }
+#prev { left: 20px; }
+#next { left: 88px; }
+#focus .count { position: absolute; left: 20px; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); font: 400 13px/1 var(--mono); }
+.flyer { position: fixed; z-index: 45; margin: 0; pointer-events: none; transform-origin: 0 0; }
+#focus.flip .big { opacity: 0; transition: none; transform: none; }
 
-.side { position: absolute; top: 50%; transform: translateY(-50%); }
-#focus .side { color: rgba(30,34,29,.45); }
-#focus .side:hover { color: var(--ink); }
-#close { left: 24px; }
-#next { right: 24px; }
-#prev { left: 64px; }
-#focus .count {
-  position: absolute; left: 20px; bottom: calc(18px + env(safe-area-inset-bottom, 0px));
-  font: 400 11px/1.4 var(--mono); letter-spacing: .1em; text-transform: uppercase;
-  color: rgba(30,34,29,.55);
-}
+/* ---------- Agrandissement ---------- */
+#zoom { position: fixed; inset: 0; z-index: 50; background: rgba(255,255,255,.97); display: grid; place-items: center; padding: 60px 20px; cursor: zoom-out; }
+#zoom img, #zoom video { max-width: 100%; max-height: calc(100vh - 120px); display: block; }
+#zoom img.nav { cursor: e-resize; }
+#zoom video { cursor: default; background: #000; }
+#zoomClose { position: absolute; top: calc(16px + env(safe-area-inset-top, 0px)); right: 20px; }
+#zoomCount { position: absolute; left: 20px; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); font: 400 13px/1 var(--mono); }
 
-/* ---------- Agrandissement (affiche, teaser) ---------- */
-#zoom {
-  position: fixed; inset: 0; z-index: 50;
-  background: rgba(14,16,13,.92);
-  display: grid; place-items: center;
-  padding: 24px;
-  cursor: zoom-out;
+/* ---------- À propos ---------- */
+#about { position: fixed; z-index: 55; inset: 0; display: flex; justify-content: flex-end; background: rgba(17,17,17,.2); }
+#about .panel {
+  width: min(480px, 100%); height: 100%; overflow-y: auto;
+  background: var(--paper);
+  padding-inline: 28px;
+  padding-block: calc(20px + env(safe-area-inset-top, 0px)) calc(28px + env(safe-area-inset-bottom, 0px));
+  display: grid; align-content: start; gap: 20px;
+  animation: slide .45s cubic-bezier(.2,.8,.2,1);
+  -webkit-user-select: text; user-select: text;
 }
-#zoom img, #zoom video { max-width: 100%; max-height: calc(100vh - 48px); display: block; box-shadow: 0 30px 80px rgba(0,0,0,.5); }
-#zoom video { cursor: default; }
-#zoomClose { position: absolute; top: calc(18px + env(safe-area-inset-top, 0px)); right: 20px; color: #9A9C97; }
-#zoomClose:hover { color: #fff; }
+@keyframes slide { from { transform: translateX(40px); opacity: 0; } }
+#about .top { display: flex; justify-content: space-between; align-items: center; }
+#about .portrait { width: 56%; aspect-ratio: 4 / 5; background: var(--ink); color: var(--paper); display: grid; place-items: center; font: 800 96px/1 var(--sans); letter-spacing: -.05em; overflow: hidden; }
+#about .portrait img { width: 100%; height: 100%; object-fit: cover; }
+#about h2 { margin: 0; font: 800 52px/.88 var(--sans); letter-spacing: -.045em; text-transform: uppercase; }
+#about p { margin: 0; font-size: 17px; line-height: 1.5; max-width: 38ch; }
+#about dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 8px 14px; font: 400 14px/1.4 var(--mono); }
+#about dt { color: var(--soft); }
+#about dd { margin: 0; overflow-wrap: anywhere; }
+#about a { color: var(--ink); }
 
-@media (max-width: 720px) {
-  #mark canvas { width: 118px; }
+/* ---------- Mode démo ---------- */
+#demo {
+  position: fixed; z-index: 60; left: 50%; transform: translateX(-50%);
+  bottom: calc(70px + env(safe-area-inset-bottom, 0px));
+  pointer-events: none;
+}
+#demo::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--red); animation: blink 1.2s infinite; }
+@keyframes blink { 50% { opacity: .2; } }
+
+@media (max-width: 760px) {
+  .bar { grid-template-columns: 1fr auto; }
+  #top nav { grid-column: 1 / -1; grid-row: 2; justify-self: start; }
+  #bottom { grid-template-columns: 1fr auto; }
+  #hint { display: none; }
+  #filters { justify-content: start; gap: 4px 12px; }
+  #filters button { font-size: 14px; }
   .qr span { display: none; }
-  .qr .code canvas, .qr .code img { width: 52px; height: 52px; }
-  #foot > span:first-child { max-width: 24ch; }
+  .qr .code canvas, .qr .code img { width: 50px; height: 50px; }
+  #intro { padding: 16px; }
   .sheet { grid-template-columns: 1fr; gap: 22px; justify-items: start; }
-  .big canvas, .big img { max-width: calc(100vw - 72px); max-height: 40vh; }
+  .big img { max-width: calc(100vw - 40px); max-height: 40vh; }
   .pqr { display: none; }
-  .side { top: auto; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); transform: none; }
-  #close { left: auto; right: 20px; top: calc(16px + env(safe-area-inset-top, 0px)); bottom: auto; }
-  #prev { left: auto; right: 64px; }
-  #next { right: 20px; }
-  #focus .count { bottom: calc(22px + env(safe-area-inset-bottom, 0px)); }
+  .grid button { height: 130px; }
+  .grid.photos button { height: 84px; }
+  #index { padding-top: calc(118px + env(safe-area-inset-top, 0px)); }
 }
-
 @media (prefers-reduced-motion: reduce) {
-  .flood, .inner, .big, .frame { transition-duration: .01s !important; transition-delay: 0s !important; }
-  #demo::before { animation: none; }
+  .flood, .inner, .big { transition-duration: .01s !important; transition-delay: 0s !important; }
+  #demo::before, .card.pulse .shot { animation: none; }
 }
 </style>
 </head>
@@ -406,33 +314,40 @@ button.dots:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; 
 
 <main id="stage"></main>
 
-<div class="chrome" id="mark">
-  <canvas id="wordmark" aria-label="Léa Tramati"></canvas>
-  <p><b>Léa Tramati</b><br><span data-t="context"></span></p>
-</div>
-<div id="intro" aria-live="polite">
-  <p class="hello" data-t="hello"></p>
-  <p class="sub" data-t="sub"></p>
-  <div class="hint"><span class="swipe" id="swipeIcon"></span><span data-t="hint"></span></div>
-</div>
-<div class="chrome" id="tools">
-  <button class="about-btn" id="aboutBtn" type="button" data-t="about"></button>
-  <div class="langs" role="group" aria-label="Langue / Language / Sprache">
-    <button type="button" data-lang="fr" id="lang-fr">FR</button>
-    <button type="button" data-lang="en" id="lang-en">EN</button>
-    <button type="button" data-lang="de" id="lang-de">DE</button>
+<header class="bar" id="top">
+  <div id="name">Léa Tramati<small data-t="context"></small></div>
+  <nav aria-label="Navigation">
+    <button class="pill" type="button" id="navField" data-t="explore"></button>
+    <button class="pill" type="button" id="navIndex" data-t="index"></button>
+    <button class="pill" type="button" id="navAbout" data-t="about"></button>
+  </nav>
+  <div id="right">
+    <div class="langs" role="group" aria-label="Langue / Language / Sprache">
+      <button type="button" data-lang="fr" id="lang-fr">FR</button>
+      <button type="button" data-lang="en" id="lang-en">EN</button>
+      <button type="button" data-lang="de" id="lang-de">DE</button>
+    </div>
+    <button id="full" type="button">[ ]</button>
   </div>
-  <button class="dots" id="full" type="button"></button>
-</div>
-<div class="chrome" id="foot">
-  <span><b id="total">00</b> <span data-t="foot"></span></span>
+</header>
+
+<footer class="bar" id="bottom">
+  <div id="hint"></div>
+  <div id="filters" role="group"></div>
   <div class="qr" aria-hidden="true">
     <span data-t="scanSite"></span>
     <div class="code" id="siteQr"></div>
   </div>
+</footer>
+
+<div id="intro" aria-live="polite">
+  <h1 class="hl" id="hl"></h1>
+  <p class="tip" id="tip"></p>
 </div>
-<div class="chrome" id="demo" hidden><span data-t="demo"></span></div>
-<div id="cursor" aria-hidden="true"></div>
+
+<section id="index" hidden></section>
+
+<span class="pill solid" id="demo" hidden><span data-t="demo"></span></span>
 
 <section id="focus" aria-hidden="true">
   <div class="flood">
@@ -450,100 +365,97 @@ button.dots:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; 
         <div class="tags" id="fTags"></div>
         <div class="actions" id="fActions"></div>
         <div class="process" id="fProcess"></div>
-        <div class="pqr" aria-hidden="true">
-          <div class="code" id="projQr"></div>
-          <span id="fScan"></span>
-        </div>
+        <div class="pqr" aria-hidden="true"><div class="code" id="projQr"></div><span id="fScan"></span></div>
       </div>
     </div>
   </div>
-  <button class="dots side" id="close" type="button"></button>
-  <button class="dots side" id="prev" type="button"></button>
-  <button class="dots side" id="next" type="button"></button>
+  <button class="pill side" id="prev" type="button">←</button>
+  <button class="pill side" id="next" type="button">→</button>
+  <button class="pill side" id="close" type="button"></button>
   <span class="count" id="fCount"></span>
 </section>
 
 <div id="about" hidden>
   <aside class="panel" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
-    <div class="top"><span class="k" data-t="about"></span><button class="dots" id="aboutClose" type="button"></button></div>
+    <div class="top"><span class="pill" data-t="about"></span><button class="pill" id="aboutClose" type="button"></button></div>
     <div class="portrait" id="portrait"></div>
-    <h2 id="aboutTitle">Léa Tramati</h2>
+    <h2 id="aboutTitle">Léa<br>Tramati</h2>
     <p data-t="bio1"></p>
     <p data-t="bio2"></p>
     <dl>
       <dt data-t="where"></dt><dd>KISD — Köln International School of Design</dd>
       <dt data-t="what"></dt><dd data-t="fields"></dd>
+      <dt data-t="contact"></dt><dd id="contact"></dd>
       <dt>GitHub</dt><dd><a href="https://github.com/lea-tramati" target="_blank" rel="noopener">github.com/lea-tramati</a></dd>
     </dl>
   </aside>
 </div>
+
 <div id="zoom" hidden>
-  <button class="dots" id="zoomClose" type="button"></button>
-  <span id="zoomCount"></span>
+  <button class="pill" id="zoomClose" type="button"></button>
   <div id="zoomBody"></div>
+  <span id="zoomCount"></span>
 </div>
 
 <script>
 /* ═══════════════ RÉGLAGES ═══════════════
-   SITE_URL : adresse publique du site (pour le QR code en bas à droite).
-   Mode expo : ajouter #expo à la fin de l'adresse
-     → démo automatique après 30 s sans activité,
-     → les projets s'ouvrent dans le même onglet (le bouton retour revient ici). */
+   SITE_URL : adresse publique (QR codes).
+   Mode expo : ajouter #expo à l'adresse → démo automatique après IDLE_SECONDS sans activité,
+   les projets s'ouvrent dans le même onglet. */
 const SITE_URL = "https://lea-tramati.github.io/portfolio/";
 const IDLE_SECONDS = 30;
 const DEMO_STEP_SECONDS = 8;
-/* Photo pour « À propos » : par ex. "vignettes/portrait.jpg" (vide : vos initiales en trame). */
+/* Photo pour « À propos » : par ex. "vignettes/portrait.jpg" (vide : initiales). */
 const PORTRAIT = "";
-/* Images de processus : ajouter process: ["vignettes/croquis.jpg", …] à un projet. */
+/* Contact affiché dans « À propos » : par ex. { label: "@lea.tramati", href: "https://instagram.com/lea.tramati" } */
+const CONTACT = null;
 
-/* ═══════════════ PROJETS ═══════════════
-   type    : "lien" (ouvre une adresse) ou "affiche" (s'agrandit sur place)
-   lien    : adresse ouverte (type "lien")
-   image   : vignette ; video : (facultatif) teaser
-   couleur : couleur de la vague ; format : "paysage", "portrait", "carre", "affiche" */
-/* Photos d'ambiance : soirée « potluck! » (dossier Google Drive). Elles remplissent l'espace et ne sont pas cliquables. */
+/* Photos d'ambiance : soirée « potluck! ». Non cliquables dans le champ, en galerie dans le projet Potluck. */
 const PHOTOS = ["photos/IMG_1411.jpg","photos/IMG_1412.jpg","photos/IMG_1413.jpg","photos/IMG_1414.jpg","photos/IMG_1415.jpg","photos/IMG_1416.jpg","photos/IMG_1417.jpg","photos/IMG_1418.jpg","photos/IMG_1419.jpg","photos/IMG_1420.jpg","photos/IMG_1421.jpg","photos/IMG_1422.jpg","photos/IMG_1423.jpg","photos/IMG_1424.jpg","photos/IMG_1425.jpg","photos/IMG_1426.jpg","photos/IMG_1427.jpg","photos/IMG_1428.jpg","photos/IMG_1429.jpg","photos/IMG_1430.jpg","photos/IMG_1431.jpg","photos/IMG_1432.jpg","photos/IMG_1434.jpg","photos/IMG_1435.jpg","photos/IMG_1436.jpg","photos/IMG_1437.jpg","photos/IMG_1438.jpg","photos/IMG_1439.jpg","photos/IMG_1440.jpg","photos/IMG_1443.jpg","photos/IMG_1444.jpg"];
 
+/* ═══════════════ PROJETS ═══════════════
+   type : "lien" (ouvre une adresse), "affiche" (s'agrandit), "galerie" (photos)
+   groupes : pour les filtres en bas de page */
 const PROJETS = [
-  { id: "intrusion", titre: "Intrusion", type: "lien", format: "paysage", couleur: "#FF8A6B",
+  { id: "intrusion", titre: "Intrusion", type: "lien", format: "paysage", couleur: "#FF8A6B", groupes: ["jeu"],
     image: "vignettes/intrusion.jpg", lien: "https://lea-tramati.github.io/intrusion/",
     tags: ["Unity", "WebGL"],
-    cat:  { fr: "Jeu", en: "Game", de: "Spiel" },
+    cat:  { fr: "jeu", en: "game", de: "Spiel" },
     desc: { fr: "Un jeu sur les pensées qui ne vous quittent pas : sept niveaux pour esquiver, puis accepter. À jouer dans le navigateur.",
             en: "A game about thoughts that won't leave you: seven levels to dodge, then accept. Playable in the browser.",
             de: "Ein Spiel über Gedanken, die einen nicht loslassen: sieben Level zum Ausweichen und dann Annehmen. Direkt im Browser spielbar." } },
-  { id: "feed-your-head", titre: "Feed your head", type: "affiche", format: "affiche", couleur: "#FF8FC7",
+  { id: "feed-your-head", titre: "Feed your head", type: "affiche", format: "affiche", couleur: "#FF8FC7", groupes: ["affiche"],
     image: "vignettes/feed-your-head.jpg",
     tags: ["Photoshop", "Typographie"],
-    cat:  { fr: "Affiche", en: "Poster", de: "Plakat" },
+    cat:  { fr: "affiche", en: "poster", de: "Plakat" },
     desc: { fr: "Affiche typographique en noir et blanc : le titre se déforme et coule autour d'un visage, sur un grain de papier imprimé.",
             en: "A black-and-white typographic poster: the title warps and flows around a face, on a printed paper grain.",
             de: "Typografisches Schwarz-Weiß-Plakat: Der Titel verzerrt sich und fließt um ein Gesicht, auf gedrucktem Papierkorn." } },
-  { id: "robert-wun", titre: "Robert Wun", type: "lien", format: "portrait", couleur: "#C7A6FF",
+  { id: "robert-wun", titre: "Robert Wun", type: "lien", format: "portrait", couleur: "#C7A6FF", groupes: ["web"],
     image: "vignettes/robert-wun.jpg", lien: "https://lea-tramati.github.io/robert-wun-site/",
     tags: ["HTML", "CSS"],
-    cat:  { fr: "Site web", en: "Website", de: "Website" },
+    cat:  { fr: "site web", en: "website", de: "Website" },
     desc: { fr: "Site pour la maison de haute couture de Robert Wun, où la mode devient architecture et sculpte la forme humaine.",
             en: "A website for Robert Wun's haute couture house, where fashion becomes architecture that sculpts the human form.",
             de: "Website für das Haute-Couture-Haus von Robert Wun, in dem Mode zur Architektur wird und den menschlichen Körper formt." } },
-  { id: "apperture", titre: "Apperture", type: "affiche", format: "affiche", couleur: "#E0A458",
+  { id: "apperture", titre: "Apperture", type: "affiche", format: "affiche", couleur: "#E0A458", groupes: ["app", "affiche"],
     image: "vignettes/aperture.jpg", video: "vignettes/aperture-teaser.mp4",
     tags: ["App", "Flutter", "Teaser"],
-    cat:  { fr: "App · Affiche", en: "App · Poster", de: "App · Plakat" },
+    cat:  { fr: "app, affiche", en: "app, poster", de: "App, Plakat" },
     desc: { fr: "Where memories meet place : une application qui relie les souvenirs aux lieux. On crée un « spot », on le filme, on le retrouve sur place.",
             en: "Where memories meet place: an app that ties memories to locations. Create a spot, film it, find it again on site.",
             de: "Where memories meet place: eine App, die Erinnerungen mit Orten verbindet. Einen Spot anlegen, filmen und vor Ort wiederfinden." } },
-  { id: "kisd-spaces", titre: "KISD Spaces", type: "lien", format: "paysage", couleur: "#A6E06A",
+  { id: "kisd-spaces", titre: "KISD Spaces", type: "lien", format: "paysage", couleur: "#A6E06A", groupes: ["web"],
     image: "vignettes/kisd-spaces.jpg", lien: "https://spaces.kisd.de/home/",
     tags: ["Plateforme", "KISD"],
-    cat:  { fr: "Site web", en: "Website", de: "Website" },
+    cat:  { fr: "site web", en: "website", de: "Website" },
     desc: { fr: "Spaces, l'environnement d'apprentissage social de la KISD à Cologne : partager ses travaux, discuter et s'entraider.",
             en: "Spaces, KISD's social learning environment in Cologne: share work, discuss online and help each other.",
             de: "Spaces, die soziale Lernumgebung der KISD in Köln: Arbeiten teilen, online diskutieren und sich gegenseitig unterstützen." } },
-  { id: "potluck", titre: "Potluck!", type: "galerie", format: "paysage", couleur: "#FFC93C",
+  { id: "potluck", titre: "Potluck!", type: "galerie", format: "paysage", couleur: "#FFC93C", groupes: ["photo"],
     image: "vignettes/potluck.jpg", galerie: PHOTOS,
     tags: ["Photo", "Erasmus", "Köln"],
-    cat:  { fr: "Photographie", en: "Photography", de: "Fotografie" },
+    cat:  { fr: "photographie", en: "photography", de: "Fotografie" },
     desc: { fr: "Un potluck entre étudiants Erasmus à Cologne : chacun apporte un plat, on partage la table. La soirée en photos.",
             en: "A potluck with fellow Erasmus students in Cologne: everyone brings a dish and we share the table. The evening in photos.",
             de: "Ein Potluck mit Erasmus-Studierenden in Köln: Alle bringen ein Gericht mit, wir teilen den Tisch. Der Abend in Fotos." } },
@@ -551,38 +463,44 @@ const PROJETS = [
 
 /* ═══════════════ TEXTES ═══════════════ */
 const T = {
-  fr: { context: "Portfolio · Erasmus · KISD Köln", foot: "projets — glisser, défiler ou flèches ← →",
-        scanSite: "Scanner pour voir le site sur votre téléphone", scanProject: "Scanner pour ouvrir ce projet sur votre téléphone",
-        open: "Ouvrir le projet", poster: "Voir l'affiche en grand", teaser: "Voir le teaser",
-        close: "Fermer", prev: "Projet précédent", next: "Projet suivant",
-        full: "Plein écran", demo: "Démo — touchez l'écran pour explorer",
-        stage: "Projets. Glissez ou faites défiler pour parcourir.", cardHint: "Ouvrir la fiche du projet.",
-        hello: "Bonjour, je suis Léa.", sub: "Voici ce que j'ai créé pendant mon Erasmus à la KISD, à Cologne : un jeu, des sites, des affiches, une application et des photos.",
-        hint: "Suivez le fil rouge et cliquez un projet", cta: "Voir le projet", photos: "Voir les photos", about: "À propos", where: "École", what: "Domaines",
-        fields: "Jeu, web, affiche, application",
-        bio1: "Je suis Léa Tramati. Pendant mon semestre Erasmus à la Köln International School of Design, j'ai travaillé entre le jeu vidéo, le web, l'affiche et l'application mobile.",
-        bio2: "Ce site rassemble ces projets. Cliquez une miniature pour découvrir chacun d'eux, ou scannez le QR code pour les retrouver sur votre téléphone." },
-  en: { context: "Portfolio · Erasmus · KISD Cologne", foot: "projects — drag, scroll or use ← → keys",
-        scanSite: "Scan to view the site on your phone", scanProject: "Scan to open this project on your phone",
-        open: "Open project", poster: "View poster full size", teaser: "Watch the teaser",
-        close: "Close", prev: "Previous project", next: "Next project",
-        full: "Full screen", demo: "Demo — touch the screen to explore",
-        stage: "Projects. Drag or scroll to browse.", cardHint: "Open the project page.",
-        hello: "Hi, I'm Léa.", sub: "Here is what I made during my Erasmus at KISD in Cologne: a game, websites, posters, an app and photos.",
-        hint: "Follow the red thread and click a project", cta: "View project", photos: "See the photos", about: "About", where: "School", what: "Fields",
-        fields: "Games, web, posters, apps",
-        bio1: "I'm Léa Tramati. During my Erasmus semester at the Köln International School of Design, I worked across video games, the web, posters and mobile apps.",
-        bio2: "This site brings those projects together. Click a thumbnail to explore each one, or scan the QR code to find them on your phone." },
-  de: { context: "Portfolio · Erasmus · KISD Köln", foot: "Projekte — ziehen, scrollen oder Pfeiltasten ← →",
-        scanSite: "Scannen, um die Seite auf dem Handy zu öffnen", scanProject: "Scannen, um das Projekt auf dem Handy zu öffnen",
-        open: "Projekt öffnen", poster: "Plakat groß ansehen", teaser: "Teaser ansehen",
-        close: "Schließen", prev: "Vorheriges Projekt", next: "Nächstes Projekt",
-        full: "Vollbild", demo: "Demo — Bildschirm berühren zum Erkunden",
-        stage: "Projekte. Ziehen oder scrollen zum Durchblättern.", cardHint: "Projektseite öffnen.",
-        hello: "Hallo, ich bin Léa.", sub: "Das habe ich während meines Erasmus an der KISD in Köln gemacht: ein Spiel, Websites, Plakate, eine App und Fotos.",
-        hint: "Folge dem roten Faden und klicke ein Projekt an", cta: "Projekt ansehen", photos: "Fotos ansehen", about: "Über mich", where: "Hochschule", what: "Bereiche",
-        fields: "Spiele, Web, Plakate, Apps",
-        bio1: "Ich bin Léa Tramati. In meinem Erasmus-Semester an der Köln International School of Design habe ich zwischen Videospiel, Web, Plakat und mobiler App gearbeitet.",
+  fr: { context: "Portfolio — Erasmus, KISD Köln", explore: "Explorer", index: "Index", about: "À propos",
+        hl: [["Bonjour", "tout le monde", "je suis Léa!"], ["Portfolio", "img:0"], ["img:1", "à la KISD, Köln", "Erasmus"]],
+        tip: "[ Suivez le <b>fil rouge</b> et cliquez un projet pour l'ouvrir ]",
+        hint: "<b>Cliquez</b> une image reliée par le fil rouge pour ouvrir le projet. Glissez pour parcourir.",
+        all: "Tous", groups: { web: "Web", affiche: "Affiches", app: "App", jeu: "Jeu", photo: "Photo" },
+        presents: "Léa Tramati présente :", photosTitle: "Potluck! — la soirée en photos",
+        scanSite: "Scanner pour emporter le portfolio", scanProject: "Scanner pour ouvrir ce projet sur votre téléphone",
+        open: "Ouvrir le projet", poster: "Voir l'affiche en grand", teaser: "Voir le teaser", photos: "Voir les photos",
+        close: "Fermer ×", prev: "Projet précédent", next: "Projet suivant", full: "Plein écran",
+        demo: "Démo — touchez l'écran pour explorer", stage: "Projets. Glissez ou faites défiler pour parcourir.", cardHint: "Ouvrir la fiche du projet.",
+        where: "[école]", what: "[domaines]", contact: "[contact]", fields: "Jeu, web, affiche, application, photo", noContact: "à venir",
+        bio1: "Je suis Léa Tramati. Pendant mon semestre Erasmus à la Köln International School of Design, j'ai travaillé entre le jeu vidéo, le web, l'affiche, l'application mobile et la photo.",
+        bio2: "Ce site rassemble ces projets. Cliquez une image pour découvrir chacun d'eux, ou scannez le QR code pour les retrouver sur votre téléphone." },
+  en: { context: "Portfolio — Erasmus, KISD Cologne", explore: "Explore", index: "Index", about: "About",
+        hl: [["Hi", "everyone", "I'm Léa!"], ["Portfolio", "img:0"], ["img:1", "at KISD, Cologne", "Erasmus"]],
+        tip: "[ Follow the <b>red thread</b> and click a project to open it ]",
+        hint: "<b>Click</b> an image on the red thread to open the project. Drag to browse.",
+        all: "All", groups: { web: "Web", affiche: "Posters", app: "App", jeu: "Game", photo: "Photo" },
+        presents: "Léa Tramati presents:", photosTitle: "Potluck! — the evening in photos",
+        scanSite: "Scan to take the portfolio with you", scanProject: "Scan to open this project on your phone",
+        open: "Open project", poster: "View poster full size", teaser: "Watch the teaser", photos: "See the photos",
+        close: "Close ×", prev: "Previous project", next: "Next project", full: "Full screen",
+        demo: "Demo — touch the screen to explore", stage: "Projects. Drag or scroll to browse.", cardHint: "Open the project page.",
+        where: "[school]", what: "[fields]", contact: "[contact]", fields: "Games, web, posters, apps, photography", noContact: "coming soon",
+        bio1: "I'm Léa Tramati. During my Erasmus semester at the Köln International School of Design, I worked across video games, the web, posters, mobile apps and photography.",
+        bio2: "This site brings those projects together. Click an image to explore each one, or scan the QR code to find them on your phone." },
+  de: { context: "Portfolio — Erasmus, KISD Köln", explore: "Entdecken", index: "Index", about: "Über mich",
+        hl: [["Hallo", "alle zusammen", "ich bin Léa!"], ["Portfolio", "img:0"], ["img:1", "an der KISD, Köln", "Erasmus"]],
+        tip: "[ Folge dem <b>roten Faden</b> und klicke ein Projekt an ]",
+        hint: "<b>Klicke</b> ein Bild am roten Faden an, um das Projekt zu öffnen. Ziehen zum Durchblättern.",
+        all: "Alle", groups: { web: "Web", affiche: "Plakate", app: "App", jeu: "Spiel", photo: "Foto" },
+        presents: "Léa Tramati präsentiert:", photosTitle: "Potluck! — der Abend in Fotos",
+        scanSite: "Scannen und das Portfolio mitnehmen", scanProject: "Scannen, um das Projekt auf dem Handy zu öffnen",
+        open: "Projekt öffnen", poster: "Plakat groß ansehen", teaser: "Teaser ansehen", photos: "Fotos ansehen",
+        close: "Schließen ×", prev: "Vorheriges Projekt", next: "Nächstes Projekt", full: "Vollbild",
+        demo: "Demo — Bildschirm berühren zum Erkunden", stage: "Projekte. Ziehen oder scrollen zum Durchblättern.", cardHint: "Projektseite öffnen.",
+        where: "[Hochschule]", what: "[Bereiche]", contact: "[Kontakt]", fields: "Spiel, Web, Plakat, App, Fotografie", noContact: "folgt",
+        bio1: "Ich bin Léa Tramati. In meinem Erasmus-Semester an der Köln International School of Design habe ich zwischen Videospiel, Web, Plakat, mobiler App und Fotografie gearbeitet.",
         bio2: "Diese Seite versammelt diese Projekte. Klicke auf ein Bild, um jedes zu entdecken, oder scanne den QR-Code, um sie auf dem Handy zu öffnen." },
 };
 let lang = (() => {
@@ -598,6 +516,8 @@ const pad = n => String(n).padStart(2, "0");
 const mod = (a, n) => ((a % n) + n) % n;
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const EXPO = location.hash === "#expo";
+const RATIOS = { paysage: 4 / 3, portrait: 3 / 4, carre: 1, affiche: 1 / 1.414 };
+const RED = "#E3261C";
 
 function rng(seed) {
   let h = 2166136261 >>> 0;
@@ -610,74 +530,6 @@ function rng(seed) {
     return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
   };
 }
-
-/* Icônes en points : chaque "#" devient un point. */
-function dotIcon(rows, cell = 5, r = 1.35) {
-  const h = rows.length, w = rows[0].length;
-  let s = `<svg class="icon" width="${w * cell}" height="${h * cell}" viewBox="0 0 ${w * cell} ${h * cell}" aria-hidden="true">`;
-  rows.forEach((row, y) => [...row].forEach((c, x) => {
-    if (c === "#") s += `<circle cx="${x * cell + cell / 2}" cy="${y * cell + cell / 2}" r="${r}"/>`;
-  }));
-  return s + "</svg>";
-}
-const ICONS = {
-  full:  dotIcon(["###.###", "#.....#", "#.....#", ".......", "#.....#", "#.....#", "###.###"]),
-  close: dotIcon(["#.....#", ".#...#.", "..#.#..", "...#...", "..#.#..", ".#...#.", "#.....#"]),
-  next:  dotIcon(["#....", ".#...", "..#..", "...#.", "..#..", ".#...", "#...."]),
-  prev:  dotIcon(["....#", "...#.", "..#..", ".#...", "..#..", "...#.", "....#"]),
-  drag:  dotIcon([".#.......#.", "#..#####..#", ".#.......#."], 4, 1.2),
-};
-
-/* ═══════════════ Trame de points (logo) ═══════════════ */
-function halftone(word, w, h, { bg, ink, seed }) {
-  const r = rng(seed);
-  const src = document.createElement("canvas");
-  src.width = w; src.height = h;
-  const g = src.getContext("2d", { willReadFrequently: true });
-  g.fillStyle = "#000"; g.fillRect(0, 0, w, h);
-  g.fillStyle = "#fff";
-  let size = h * 0.5;
-  g.font = `900 ${size}px Gabarito, "Arial Black", sans-serif`;
-  const m = g.measureText(word).width;
-  if (m > w * 0.9) size *= (w * 0.9) / m;
-  g.font = `900 ${size}px Gabarito, "Arial Black", sans-serif`;
-  g.filter = `blur(${(size * 0.05).toFixed(1)}px)`;
-  for (let i = 0; i < 2; i++) {
-    g.beginPath();
-    g.arc(w * (0.15 + r() * 0.7), h * (0.22 + r() * 0.56), size * 0.09, 0, 7);
-    g.fill();
-  }
-  g.textAlign = "center"; g.textBaseline = "middle";
-  g.save();
-  g.translate(w / 2, h / 2);
-  g.rotate((r() - 0.5) * 0.08);
-  g.lineJoin = "round"; g.lineWidth = size * 0.07; g.strokeStyle = "#fff";
-  g.strokeText(word, 0, 0);
-  g.fillText(word, 0, 0);
-  g.restore();
-  g.filter = "none";
-  const data = g.getImageData(0, 0, w, h).data;
-
-  const out = document.createElement("canvas");
-  out.width = w; out.height = h;
-  const o = out.getContext("2d");
-  o.fillStyle = bg; o.fillRect(0, 0, w, h);
-  o.fillStyle = ink;
-  const cell = Math.max(4, Math.round(Math.min(w, h) / 40));
-  const rowH = cell * 0.866;
-  for (let y = 0, row = 0; y < h + cell; y += rowH, row++) {
-    for (let x = (row % 2) * cell / 2; x < w + cell; x += cell) {
-      const ix = Math.min(w - 1, Math.max(0, Math.round(x))), iy = Math.min(h - 1, Math.max(0, Math.round(y)));
-      const v = data[(iy * w + ix) * 4] / 255;
-      const k = Math.min(1, Math.max(0, (v - 0.28) / 0.5));
-      const rad = cell * 0.62 * (k * k * (3 - 2 * k));
-      if (rad > 0.35) { o.beginPath(); o.arc(x, y, rad, 0, 7); o.fill(); }
-    }
-  }
-  return out;
-}
-
-const RATIOS = { paysage: 4 / 3, portrait: 3 / 4, carre: 1, affiche: 1 / 1.414 };
 function thumb(p, width) {
   const ratio = RATIOS[p.format] || 4 / 3;
   const img = new Image();
@@ -687,23 +539,21 @@ function thumb(p, width) {
   img.draggable = false;
   return img;
 }
-
 function qr(el, text, size) {
   el.replaceChildren();
   if (!window.QRCode) return;
-  new QRCode(el, { text, width: size, height: size, colorDark: "#1E221D", colorLight: "#FFFFFF", correctLevel: QRCode.CorrectLevel.M });
+  new QRCode(el, { text, width: size, height: size, colorDark: "#111111", colorLight: "#FFFFFF", correctLevel: QRCode.CorrectLevel.M });
 }
 const projectUrl = p => p.type === "lien" ? p.lien : SITE_URL + "#" + p.id;
+let filtre = "all";
+const visible = p => filtre === "all" || p.groupes.includes(filtre);
 
-/* ═══════════════ Carrousel flottant ═══════════════ */
+/* ═══════════════ Champ d'images relié par le fil rouge ═══════════════ */
 const stage = $("stage");
-let items = [], world = 0, offset = 0, vel = 0;
-const DRIFT = reduce ? 0 : 0.28;
-
 const web = document.createElement("canvas");
 web.id = "web";
-let photoItems = [];
-const RED = "#D7261E";
+let items = [], photoItems = [], world = 0, offset = 0, vel = 0;
+const DRIFT = reduce ? 0 : 0.3;
 
 function build() {
   const vw = stage.clientWidth, vh = stage.clientHeight;
@@ -712,39 +562,40 @@ function build() {
   const copies = Math.ceil((small ? 5 : 9) / PROJETS.length);
   const liste = Array.from({ length: PROJETS.length * copies }, (_, k) => k % PROJETS.length);
   const n = liste.length;
-  const step = small ? 210 : 280;
+  const step = small ? 220 : 300;
   world = Math.max(n * step, vw + 520);
   const gap = world / n;
   stage.replaceChildren(web);
 
-  /* Projets, en zigzag pour que le fil rouge se voie */
   items = liste.map((i, k) => {
     const p = PROJETS[i];
     const ratio = RATIOS[p.format] || 4 / 3;
-    const base = (small ? 110 : 160) + r() * (small ? 40 : 60);
-    const w = Math.round(base * (ratio < 1 ? 0.8 : 1));
-    const h = w / ratio + 10;
-    const y = k % 2 ? vh * (small ? 0.46 : 0.48) + r() * vh * 0.06 : vh * (small ? 0.18 : 0.17) + r() * vh * 0.06;
+    const base = (small ? 120 : 175) + r() * (small ? 40 : 70);
+    const w = Math.round(base * (ratio < 1 ? 0.78 : 1));
+    const h = w / ratio;
+    const y = k % 2 ? vh * (small ? 0.47 : 0.5) + r() * vh * 0.05 : vh * (small ? 0.2 : 0.16) + r() * vh * 0.05;
 
     const b = document.createElement("button");
     b.className = "card"; b.type = "button";
     if (k >= PROJETS.length) { b.tabIndex = -1; b.setAttribute("aria-hidden", "true"); }
-    b.style.width = w + 10 + "px";
+    b.style.width = w + "px";
     b.setAttribute("aria-label", `${p.titre}, ${p.cat[lang]}. ${t("cardHint")}`);
     const f = document.createElement("span");
-    f.className = "frame";
+    f.className = "shot";
     f.append(thumb(p, w * 2));
-    const l = document.createElement("span");
-    l.className = "label";
-    l.innerHTML = '<span class="num"></span> <span></span><br><span></span>';
-    l.children[0].textContent = pad(i + 1);
-    l.children[1].textContent = p.titre;
-    l.children[3].textContent = p.cat[lang];
+    const over = document.createElement("span");
+    over.className = "over"; over.textContent = t("open").replace(/^./, c => c) + " →";
+    f.append(over);
+    const cap = document.createElement("span");
+    cap.className = "cap";
+    cap.innerHTML = '<span class="n"></span> <span class="t"></span> <span class="c"></span>';
+    cap.querySelector(".n").textContent = pad(i + 1);
+    cap.querySelector(".t").textContent = p.titre;
+    cap.querySelector(".c").textContent = `[${p.cat[lang]}]`;
     const cta = document.createElement("span");
-    cta.className = "cta";
-    cta.innerHTML = '<span></span><span aria-hidden="true">→</span>';
-    cta.firstChild.textContent = t("cta");
-    b.append(f, l, cta);
+    cta.className = "pill"; cta.innerHTML = '<span></span><span aria-hidden="true">→</span>';
+    cta.firstChild.textContent = t("open");
+    b.append(f, cap, cta);
     b.addEventListener("click", e => { if (moved > 6) { e.preventDefault(); return; } openFocus(i, false, f); });
     if (p.video) {
       b.addEventListener("pointerenter", e => {
@@ -752,28 +603,29 @@ function build() {
         const v = document.createElement("video");
         v.src = p.video; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true;
         v.style.setProperty("--r", String(ratio));
-        f.replaceChildren(v);
+        f.firstChild.replaceWith(v);
         v.play().catch(() => {});
       });
-      b.addEventListener("pointerleave", () => { if (f.querySelector("video")) f.replaceChildren(thumb(p, w * 2)); });
+      b.addEventListener("pointerleave", () => { const v = f.querySelector("video"); if (v) v.replaceWith(thumb(p, w * 2)); });
     }
     b.addEventListener("focus", () => ensureVisible(item));
     stage.append(b);
-    const item = { el: b, base: k * gap + r() * gap * 0.3, y, depth: 1, w: w + 10, h, phase: r() * 6.28 };
+    const item = { el: b, p, base: k * gap + r() * gap * 0.3, y, w, h: h + 70, phase: r() * 6.28 };
     return item;
   });
-  /* Photos d'ambiance : placées dans les espaces libres, sans recouvrir les projets ni l'en-tête */
-  const boxes = items.map(it => ({ x: it.base - 14, y: it.y - 16, w: it.w + 28, h: it.h + 78 }));
-  const top = vh * 0.15, bottom = vh * 0.84;
+
+  /* Photos dans les espaces libres, sans recouvrir projets, en-tête et pied de page */
+  const boxes = items.map(it => ({ x: it.base - 16, y: it.y - 16, w: it.w + 32, h: it.h + 24 }));
+  const top = vh * (small ? 0.2 : 0.14), bottom = vh * 0.82;
   photoItems = [];
   PHOTOS.forEach((src, j) => {
-    const w = Math.round((small ? 54 : 70) + r() * (small ? 24 : 40));
-    const h = w * 0.75 + 18;
+    const w = Math.round((small ? 56 : 74) + r() * (small ? 30 : 56));
+    const h = w * 0.75;
     for (let tries = 0; tries < 40; tries++) {
       const x = ((j + r()) / PHOTOS.length) * world + (tries ? (r() - 0.5) * gap * 1.4 : 0);
       const y = top + r() * Math.max(10, bottom - top - h);
-      const box = { x: x - 10, y: y - 10, w: w + 20, h: h + 20 };
-      const hit = [...boxes].some(o => {
+      const box = { x: x - 12, y: y - 12, w: w + 24, h: h + 24 };
+      const hit = boxes.some(o => {
         const dx = mod(box.x - o.x + world / 2, world) - world / 2;
         return dx < o.w && -dx < box.w && box.y < o.y + o.h && o.y < box.y + box.h;
       });
@@ -785,10 +637,11 @@ function build() {
       const img = new Image(); img.src = src; img.alt = ""; img.draggable = false; img.decoding = "async";
       el.append(img);
       stage.append(el);
-      photoItems.push({ el, base: x, y, depth: 1, w, h, phase: r() * 6.28, rot: (r() - 0.5) * 12 });
+      photoItems.push({ el, base: x, y, w, h, phase: r() * 6.28 });
       break;
     }
   });
+  applyFilter();
   sizeWeb();
   place();
 }
@@ -803,23 +656,22 @@ function sizeWeb() {
 }
 
 let mx = 0, my = 0, tmx = 0, tmy = 0;
-function position(it, now, rot) {
-  const x = mod(it.base - offset * it.depth, world) - 260;
+function position(it, now) {
+  const x = mod(it.base - offset, world) - 280;
   it.x = x;
-  const bob = reduce ? 0 : Math.sin(now * 0.0007 + it.phase) * 7;
+  const bob = reduce ? 0 : Math.sin(now * 0.0007 + it.phase) * 6;
   it.sx = x + mx * 16;
   it.sy = it.y + bob + my * 10;
-  it.el.style.transform = `translate3d(${it.sx.toFixed(1)}px, ${it.sy.toFixed(1)}px, 0)` + (rot ? ` rotate(${rot}deg)` : "");
-  it.px = it.sx + it.w / 2;      // point d'attache (épingle)
+  it.el.style.transform = `translate3d(${it.sx.toFixed(1)}px, ${it.sy.toFixed(1)}px, 0)`;
+  it.px = it.sx + it.w / 2;
   it.py = it.sy;
 }
 function place() {
   const now = performance.now();
-  for (const it of photoItems) position(it, now, it.rot);
+  for (const it of photoItems) position(it, now);
   for (const it of items) position(it, now);
   drawWeb();
 }
-
 function thread(ctx, a, b, sag) {
   const d = Math.hypot(b.px - a.px, b.py - a.py);
   ctx.beginPath();
@@ -831,29 +683,27 @@ function drawWeb() {
   const ctx = web.getContext("2d");
   const vw = stage.clientWidth, vh = stage.clientHeight;
   ctx.clearRect(0, 0, vw, vh);
-  const vis = items.filter(it => it.px > -320 && it.px < vw + 320);
   ctx.lineCap = "round";
-  /* fils entre photos voisines : la toile en arrière-plan */
-  ctx.strokeStyle = "rgba(215,38,30,.22)"; ctx.lineWidth = 0.8;
+  const vis = items.filter(it => it.px > -340 && it.px < vw + 340 && visible(it.p));
   const pv = photoItems.filter(it => it.px > -200 && it.px < vw + 200);
+  const faded = document.body.classList.contains("filtered");
+  ctx.strokeStyle = `rgba(227,38,28,${faded ? .08 : .18})`; ctx.lineWidth = .75;
   for (const p of pv) {
     let best = null, bd = 260;
     for (const q of pv) if (q !== p && q.px > p.px) { const d = Math.hypot(q.px - p.px, q.py - p.py); if (d < bd) { bd = d; best = q; } }
     if (best) thread(ctx, p, best, 0.1);
   }
-  /* chaque photo est reliée au projet le plus proche */
-  ctx.strokeStyle = "rgba(215,38,30,.45)"; ctx.lineWidth = 1;
+  ctx.strokeStyle = `rgba(227,38,28,${faded ? .12 : .4})`; ctx.lineWidth = .9;
   for (const p of pv) {
-    let best = null, bd = 420;
+    let best = null, bd = 440;
     for (const q of vis) { const d = Math.hypot(q.px - p.px, q.py - p.py); if (d < bd) { bd = d; best = q; } }
     if (best) thread(ctx, p, best, 0.08);
   }
-  /* le fil rouge principal : chaque projet relié à ses deux voisins */
-  ctx.strokeStyle = RED; ctx.lineWidth = 2;
+  ctx.strokeStyle = RED; ctx.lineWidth = 1.6;
   const done = new Set();
   vis.forEach((a, ia) => {
     vis.map((b, ib) => [ib, Math.hypot(b.px - a.px, b.py - a.py)])
-      .filter(([ib, d]) => ib !== ia && d < 760)
+      .filter(([ib, d]) => ib !== ia && d < (faded ? 1400 : 800))
       .sort((x, y) => x[1] - y[1]).slice(0, 2)
       .forEach(([ib]) => {
         const key = Math.min(ia, ib) + "-" + Math.max(ia, ib);
@@ -863,28 +713,12 @@ function drawWeb() {
       });
   });
 }
-
-/* Un projet visible « pulse » de temps en temps pour inviter au clic */
-setInterval(() => {
-  if (paused || reduce) return;
-  const vw = stage.clientWidth;
-  const vis = items.filter(it => it.sx > 40 && it.sx + it.w < vw - 40);
-  if (!vis.length) return;
-  const it = vis[Math.floor(Math.random() * vis.length)];
-  it.el.classList.remove("pulse"); void it.el.offsetWidth; it.el.classList.add("pulse");
-  setTimeout(() => it.el.classList.remove("pulse"), 1700);
-}, 2600);
-
 function ensureVisible(it) {
   const vw = stage.clientWidth;
-  if (it.x < 40 || it.x + it.w > vw - 40) {
-    offset += (it.x - vw / 2 + it.w / 2) / it.depth;
-    vel = 0;
-    place();
-  }
+  if (it.x < 40 || it.x + it.w > vw - 40) { offset += it.x - vw / 2 + it.w / 2; vel = 0; place(); }
 }
 
-let paused = false;
+let paused = false, hover = false;
 function tick() {
   if (!paused) {
     vel *= 0.92;
@@ -895,13 +729,22 @@ function tick() {
   requestAnimationFrame(tick);
 }
 
-/* Glisser, molette, clavier */
-let down = false, lastX = 0, moved = 0, hover = false;
+/* Une image « pulse » régulièrement pour inviter au clic */
+setInterval(() => {
+  if (paused || reduce) return;
+  const vw = stage.clientWidth;
+  const vis = items.filter(it => it.sx > 40 && it.sx + it.w < vw - 40 && visible(it.p));
+  if (!vis.length) return;
+  const it = vis[Math.floor(Math.random() * vis.length)];
+  it.el.classList.remove("pulse"); void it.el.offsetWidth; it.el.classList.add("pulse");
+  setTimeout(() => it.el.classList.remove("pulse"), 1700);
+}, 2600);
+
+/* Glisser, molette, souris */
+let down = false, lastX = 0, moved = 0;
 stage.addEventListener("pointerdown", e => { down = true; moved = 0; lastX = e.clientX; vel = 0; });
 addEventListener("pointermove", e => {
-  cursor.style.transform = `translate(${e.clientX - 22}px, ${e.clientY - 6}px)`;
   if (e.pointerType === "mouse" && !reduce) { tmx = e.clientX / innerWidth - 0.5; tmy = e.clientY / innerHeight - 0.5; }
-  document.body.classList.toggle("has-cursor", e.pointerType === "mouse" && !focusEl.classList.contains("on") && !!e.target.closest("#stage"));
   if (!down) return;
   const dx = e.clientX - lastX;
   lastX = e.clientX;
@@ -915,64 +758,155 @@ stage.addEventListener("wheel", e => {
   vel += (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY) * 0.06;
 }, { passive: false });
 stage.addEventListener("pointerover", e => { hover = !!e.target.closest(".card"); });
-stage.addEventListener("pointerleave", () => { hover = false; document.body.classList.remove("has-cursor"); });
+stage.addEventListener("pointerleave", () => { hover = false; });
 
-const cursor = $("cursor");
-cursor.innerHTML = ICONS.drag;
+/* ═══════════════ Filtres ═══════════════ */
+const GROUPS = ["web", "affiche", "app", "jeu", "photo"];
+function renderFilters() {
+  const el = $("filters");
+  el.setAttribute("aria-label", t("all"));
+  const opts = [["all", t("all"), PROJETS.length], ...GROUPS.map(g => [g, t("groups")[g], PROJETS.filter(p => p.groupes.includes(g)).length])];
+  el.replaceChildren(...opts.filter(o => o[2] > 0).map(([g, label, n]) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.id = "filter-" + g;
+    b.setAttribute("aria-pressed", String(filtre === g));
+    b.innerHTML = "<span></span><sup></sup>";
+    b.firstChild.textContent = label; b.lastChild.textContent = n;
+    b.addEventListener("click", () => { filtre = g; renderFilters(); applyFilter(); renderIndex(); hideIntro(); });
+    return b;
+  }));
+}
+function applyFilter() {
+  document.body.classList.toggle("filtered", filtre !== "all");
+  for (const it of items) it.el.classList.toggle("dim", !visible(it.p));
+}
+
+/* ═══════════════ Accueil (titre façon affiche) ═══════════════ */
+function renderIntro() {
+  const insets = ["vignettes/intrusion.jpg", "vignettes/robert-wun.jpg"];
+  $("hl").replaceChildren(...t("hl").map(row => {
+    const d = document.createElement("span");
+    d.className = "row";
+    row.forEach((part, k) => {
+      if (part.startsWith("img:")) {
+        const img = new Image(); img.src = insets[+part.slice(4)]; img.alt = ""; img.className = "inset";
+        d.append(img);
+      } else if (k === 1 && row.length === 3) {
+        const s = document.createElement("span"); s.className = "pill"; s.textContent = part; d.append(s);
+      } else {
+        const s = document.createElement("span"); s.textContent = part; d.append(s);
+      }
+    });
+    return d;
+  }));
+  $("tip").innerHTML = t("tip");
+}
+function showIntro() { document.body.classList.add("intro"); }
+function hideIntro() { document.body.classList.remove("intro"); }
+stage.addEventListener("pointerdown", hideIntro);
+stage.addEventListener("wheel", hideIntro, { passive: true });
+stage.addEventListener("pointerover", e => { if (e.target.closest(".card")) hideIntro(); });
+addEventListener("keydown", hideIntro);
+
+/* ═══════════════ Index (grille) ═══════════════ */
+const indexEl = $("index");
+function renderIndex() {
+  const lead = document.createElement("p");
+  lead.className = "lead";
+  lead.append(t("presents") + " ");
+  PROJETS.forEach((p, i) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.textContent = p.titre;
+    b.addEventListener("click", () => openFocus(i));
+    const c = document.createElement("span"); c.className = "c"; c.textContent = ` [${p.cat[lang]}]`;
+    lead.append(b, c, i < PROJETS.length - 1 ? ", " : ".");
+  });
+  const grid = document.createElement("div");
+  grid.className = "grid";
+  PROJETS.forEach((p, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    if (!visible(p)) b.className = "dim";
+    b.setAttribute("aria-label", `${p.titre}, ${p.cat[lang]}`);
+    const img = new Image(); img.src = p.image; img.alt = ""; img.loading = "lazy";
+    const tag = document.createElement("span"); tag.className = "tag"; tag.textContent = `${pad(i + 1)} ${p.titre} [${p.cat[lang]}]`;
+    b.append(img, tag);
+    b.addEventListener("click", () => openFocus(i));
+    grid.append(b);
+  });
+  const h = document.createElement("h3"); h.textContent = t("photosTitle");
+  const pg = document.createElement("div"); pg.className = "grid photos";
+  PHOTOS.forEach(src => {
+    const b = document.createElement("button"); b.type = "button";
+    const img = new Image(); img.src = src; img.alt = ""; img.loading = "lazy";
+    b.append(img);
+    b.addEventListener("click", () => zoom("img", src, PHOTOS));
+    pg.append(b);
+  });
+  indexEl.replaceChildren(lead, grid, h, pg);
+}
+function setView(v) {
+  indexEl.hidden = v !== "index";
+  document.body.classList.toggle("indexview", v === "index");
+  $("navField").setAttribute("aria-pressed", String(v === "field"));
+  $("navIndex").setAttribute("aria-pressed", String(v === "index"));
+  if (v === "index") { hideIntro(); paused = true; } else if (current < 0) paused = false;
+}
+$("navField").addEventListener("click", () => { closeAbout(); setView("field"); });
+$("navIndex").addEventListener("click", () => { closeAbout(); setView("index"); });
 
 /* ═══════════════ Fiche projet ═══════════════ */
 const focusEl = $("focus");
 let current = -1, lastFocus = null;
 
-function action(label, onClick, ghost) {
+function pillButton(label, onClick, solid) {
   const b = document.createElement("button");
-  b.type = "button"; b.className = "go" + (ghost ? " ghost" : "");
+  b.type = "button"; b.className = "pill big" + (solid ? " solid" : "");
   b.innerHTML = `<span></span><span aria-hidden="true">→</span>`;
   b.firstChild.textContent = label;
   b.addEventListener("click", onClick);
   return b;
 }
-function linkAction(p) {
+function linkPill(p) {
   const a = document.createElement("a");
-  a.className = "go"; a.href = p.lien;
+  a.className = "pill big solid"; a.href = p.lien;
   if (!EXPO) { a.target = "_blank"; a.rel = "noopener"; }
   a.innerHTML = `<span></span><span aria-hidden="true">↗</span>`;
   a.firstChild.textContent = t("open");
   return a;
 }
-
 function fill(i) {
   const p = PROJETS[i];
   focusEl.style.setProperty("--c", p.couleur);
   const big = $("big");
   big.replaceChildren(thumb(p, 900));
-  big.onclick = null;
+  big.onclick = null; big.onkeydown = null;
   if (p.type === "lien") {
-    big.href = p.lien;
+    big.href = p.lien; big.removeAttribute("role"); big.removeAttribute("tabindex");
     if (EXPO) big.removeAttribute("target"); else { big.target = "_blank"; big.rel = "noopener"; }
     big.setAttribute("aria-label", `${t("open")} : ${p.titre}`);
   } else {
+    const go = () => p.galerie ? zoom("img", p.galerie[0], p.galerie) : zoom("img", p.image);
     big.removeAttribute("href"); big.removeAttribute("target");
     big.setAttribute("role", "button"); big.tabIndex = 0;
-    big.setAttribute("aria-label", `${t("poster")} : ${p.titre}`);
-    big.onclick = () => p.galerie ? zoom("img", p.galerie[0], p.galerie) : zoom("img", p.image);
-    big.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); zoom("img", p.image); } };
+    big.setAttribute("aria-label", `${p.galerie ? t("photos") : t("poster")} : ${p.titre}`);
+    big.onclick = go;
+    big.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } };
   }
-  $("fKind").textContent = p.cat[lang];
+  $("fKind").textContent = `${pad(i + 1)} [${p.cat[lang]}]`;
   $("fTitle").textContent = p.titre;
   $("fDesc").textContent = p.desc[lang];
-  $("fTags").replaceChildren(...(p.tags || []).map(x => { const s = document.createElement("span"); s.textContent = x; return s; }));
+  $("fTags").replaceChildren(...(p.tags || []).map(x => { const s = document.createElement("span"); s.className = "pill"; s.textContent = x; return s; }));
   const acts = [];
-  if (p.type === "lien") acts.push(linkAction(p));
-  else if (p.type === "galerie") acts.push(action(t("photos"), () => zoom("img", p.galerie[0], p.galerie)));
-  else acts.push(action(t("poster"), () => zoom("img", p.image)));
-  if (p.video) acts.push(action(t("teaser"), () => zoom("video", p.video), true));
+  if (p.type === "lien") acts.push(linkPill(p));
+  else if (p.type === "galerie") acts.push(pillButton(t("photos"), () => zoom("img", p.galerie[0], p.galerie), true));
+  else acts.push(pillButton(t("poster"), () => zoom("img", p.image), true));
+  if (p.video) acts.push(pillButton(t("teaser"), () => zoom("video", p.video)));
   $("fActions").replaceChildren(...acts);
   const list = p.galerie || p.process || [];
-  $("fProcess").classList.toggle("gallery", !!p.galerie);
   $("fProcess").replaceChildren(...list.map(src => {
     const b = document.createElement("button"); b.type = "button";
-    const img = new Image(); img.src = src; img.alt = ""; b.append(img);
+    const img = new Image(); img.src = src; img.alt = ""; img.loading = "lazy"; b.append(img);
     b.addEventListener("click", () => zoom("img", src, list));
     return b;
   }));
@@ -989,8 +923,7 @@ function openFocus(i, quiet, fromEl) {
   paused = true;
   focusEl.classList.add("on");
   focusEl.setAttribute("aria-hidden", "false");
-  stage.inert = true;
-  document.body.classList.remove("has-cursor");
+  stage.inert = true; indexEl.inert = true;
   if (!quiet) setTimeout(() => $("fActions").firstChild?.focus({ preventScroll: true }), reduce ? 0 : 650);
 }
 function fly(fromEl) {
@@ -999,6 +932,7 @@ function fly(fromEl) {
   focusEl.classList.add("flip");
   const r1 = big.getBoundingClientRect();
   const c = fromEl.cloneNode(true);
+  c.querySelector(".over")?.remove();
   c.classList.add("flyer");
   Object.assign(c.style, { left: r0.left + "px", top: r0.top + "px", width: r0.width + "px" });
   document.body.append(c);
@@ -1013,8 +947,8 @@ function closeFocus() {
   if (current < 0) return;
   focusEl.classList.remove("on");
   focusEl.setAttribute("aria-hidden", "true");
-  stage.inert = false;
-  paused = false;
+  stage.inert = false; indexEl.inert = false;
+  paused = !indexEl.hidden;
   current = -1;
   if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
 }
@@ -1024,14 +958,9 @@ function shift(d) {
   fill(current);
 }
 
-/* Agrandissement */
+/* ═══════════════ Agrandissement (affiches, teaser, photos) ═══════════════ */
 const zoomEl = $("zoom");
 let zoomList = null, zoomAt = 0;
-function zoomShift(d) {
-  if (!zoomList) return;
-  zoomAt = mod(zoomAt + d, zoomList.length);
-  zoom("img", zoomList[zoomAt], zoomList);
-}
 function zoom(kind, src, list) {
   const body = $("zoomBody");
   zoomList = list || null;
@@ -1044,11 +973,16 @@ function zoom(kind, src, list) {
     body.replaceChildren(v);
   } else {
     const img = new Image(); img.src = src; img.alt = "";
-    if (list) img.addEventListener("click", e => { e.stopPropagation(); zoomShift(1); });
+    if (list) { img.className = "nav"; img.addEventListener("click", e => { e.stopPropagation(); zoomShift(1); }); }
     body.replaceChildren(img);
   }
   zoomEl.hidden = false;
   $("zoomClose").focus({ preventScroll: true });
+}
+function zoomShift(d) {
+  if (!zoomList) return;
+  zoomAt = mod(zoomAt + d, zoomList.length);
+  zoom("img", zoomList[zoomAt], zoomList);
 }
 function unzoom() {
   if (zoomEl.hidden) return false;
@@ -1058,14 +992,6 @@ function unzoom() {
 }
 zoomEl.addEventListener("click", unzoom);
 
-/* ═══════════════ Accueil ═══════════════ */
-function showIntro() { document.body.classList.add("intro"); }
-function hideIntro() { document.body.classList.remove("intro"); }
-stage.addEventListener("pointerdown", hideIntro);
-stage.addEventListener("wheel", hideIntro, { passive: true });
-stage.addEventListener("pointerover", e => { if (e.target.closest(".card")) hideIntro(); });
-addEventListener("keydown", hideIntro);
-
 /* ═══════════════ À propos ═══════════════ */
 const aboutEl = $("about");
 function openAbout() {
@@ -1073,18 +999,22 @@ function openAbout() {
   const box = $("portrait");
   if (!box.firstChild) {
     if (PORTRAIT) { const img = new Image(); img.src = PORTRAIT; img.alt = "Léa Tramati"; box.append(img); }
-    else box.append(halftone("LT", 420, 520, { bg: "#FF8FC7", ink: "#1E221D", seed: "portrait" }));
+    else box.textContent = "LT";
   }
+  const c = $("contact");
+  if (CONTACT) { const a = document.createElement("a"); a.href = CONTACT.href; a.target = "_blank"; a.rel = "noopener"; a.textContent = CONTACT.label; c.replaceChildren(a); }
+  else c.textContent = t("noContact");
   aboutEl.hidden = false;
+  $("navAbout").setAttribute("aria-pressed", "true");
   $("aboutClose").focus({ preventScroll: true });
 }
 function closeAbout() {
   if (aboutEl.hidden) return false;
   aboutEl.hidden = true;
-  $("aboutBtn").focus({ preventScroll: true });
+  $("navAbout").setAttribute("aria-pressed", "false");
   return true;
 }
-$("aboutBtn").addEventListener("click", openAbout);
+$("navAbout").addEventListener("click", () => aboutEl.hidden ? openAbout() : closeAbout());
 $("aboutClose").addEventListener("click", closeAbout);
 aboutEl.addEventListener("click", e => { if (e.target === aboutEl) closeAbout(); });
 
@@ -1094,14 +1024,12 @@ function startDemo() {
   demoOn = true;
   $("demo").hidden = false;
   demoIndex = -1;
-  closeAbout();
-  closeFocus();
+  unzoom(); closeAbout(); closeFocus(); setView("field"); filtre = "all"; renderFilters(); applyFilter();
   showIntro();
   demoTimer = setTimeout(demoStep, 7000);
 }
 function demoStep() {
-  unzoom();
-  hideIntro();
+  unzoom(); hideIntro();
   demoIndex = (demoIndex + 1) % PROJETS.length;
   if (current >= 0) {
     closeFocus();
@@ -1115,14 +1043,10 @@ function stopDemo() {
   clearTimeout(demoTimer);
   demoOn = false;
   $("demo").hidden = true;
-  closeFocus();
-  hideIntro();
+  closeFocus(); hideIntro();
 }
 function activity(e) {
-  if (demoOn) {
-    stopDemo();
-    if (e && e.type !== "pointermove") { e.preventDefault?.(); e.stopPropagation?.(); }
-  }
+  if (demoOn) { stopDemo(); if (e && e.cancelable) { e.preventDefault(); e.stopPropagation(); } }
   if (!EXPO) return;
   clearTimeout(idleTimer);
   idleTimer = setTimeout(startDemo, IDLE_SECONDS * 1000);
@@ -1138,14 +1062,15 @@ function applyLang() {
   document.querySelectorAll("[data-t]").forEach(el => { el.textContent = t(el.dataset.t); });
   document.querySelectorAll(".langs button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
   stage.setAttribute("aria-label", t("stage"));
-  $("close").setAttribute("aria-label", t("close"));
-  $("zoomClose").setAttribute("aria-label", t("close"));
-  $("aboutClose").setAttribute("aria-label", t("close"));
+  $("hint").innerHTML = t("hint");
+  $("close").textContent = t("close");
+  $("zoomClose").textContent = t("close");
+  $("aboutClose").textContent = t("close");
   $("prev").setAttribute("aria-label", t("prev"));
   $("next").setAttribute("aria-label", t("next"));
-  $("full").setAttribute("aria-label", t("full"));
-  $("full").title = t("full");
-  build();
+  $("full").setAttribute("aria-label", t("full")); $("full").title = t("full");
+  if (!aboutEl.hidden) openAbout();
+  renderIntro(); renderFilters(); renderIndex(); build();
   if (current >= 0) fill(current);
 }
 document.querySelectorAll(".langs button").forEach(b => b.addEventListener("click", () => {
@@ -1153,24 +1078,15 @@ document.querySelectorAll(".langs button").forEach(b => b.addEventListener("clic
   try { localStorage.setItem("lang", lang); } catch {}
   applyLang();
 }));
-
-$("full").innerHTML = ICONS.full;
 $("full").addEventListener("click", () => {
-  const d = document;
-  if (d.fullscreenElement) d.exitFullscreen?.().catch(() => {});
-  else d.documentElement.requestFullscreen?.().catch(() => {});
+  if (document.fullscreenElement) document.exitFullscreen?.().catch(() => {});
+  else document.documentElement.requestFullscreen?.().catch(() => {});
 });
 if (!document.fullscreenEnabled) $("full").hidden = true;
-
-$("close").innerHTML = ICONS.close;
-$("zoomClose").innerHTML = ICONS.close;
-$("aboutClose").innerHTML = ICONS.close;
-$("swipeIcon").innerHTML = ICONS.drag;
-$("prev").innerHTML = ICONS.prev;
-$("next").innerHTML = ICONS.next;
 $("close").addEventListener("click", closeFocus);
 $("prev").addEventListener("click", () => shift(-1));
 $("next").addEventListener("click", () => shift(1));
+$("zoomClose").addEventListener("click", unzoom);
 
 addEventListener("keydown", e => {
   if (e.key === "Escape" && (unzoom() || closeAbout())) return;
@@ -1185,28 +1101,17 @@ addEventListener("keydown", e => {
   if (e.key === "ArrowLeft") vel -= 6;
 });
 
-/* Logo en trame */
-function drawMark() {
-  const c = $("wordmark");
-  const m = halftone("léa tramati", 600, 150, { bg: "#EFECE6", ink: "#1E221D", seed: "logo" });
-  c.width = m.width; c.height = m.height;
-  c.getContext("2d").drawImage(m, 0, 0);
-}
-
-/* Démarrage */
-$("total").textContent = pad(PROJETS.length);
+/* ═══════════════ Démarrage ═══════════════ */
 qr($("siteQr"), SITE_URL, 128);
+setView("field");
 applyLang();
-drawMark();
 if (!location.hash || EXPO) { showIntro(); setTimeout(() => { if (!demoOn) hideIntro(); }, 7000); }
 let rs;
 addEventListener("resize", () => { clearTimeout(rs); rs = setTimeout(build, 150); });
-if (document.fonts) document.fonts.load("900 40px Gabarito").then(() => document.fonts.ready).then(() => { build(); drawMark(); });
 requestAnimationFrame(tick);
-
-/* Lien direct vers un projet : …/#feed-your-head */
 const deep = PROJETS.findIndex(p => "#" + p.id === location.hash);
 if (deep >= 0) openFocus(deep);
+if (location.hash === "#index") setView("index");
 </script>
 </body>
 </html>
