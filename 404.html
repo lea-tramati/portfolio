@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Page introuvable — Léa Tramati</title>
+<link rel="icon" type="image/png" href="/portfolio/vignettes/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500&display=swap">
+<style>
+/* Même univers que le portfolio : champ blanc, étiquettes encadrées. */
+:root { --paper: #FFFFFF; --ink: #111111; --soft: #5E5E5E; --focus: #1F4BFF; --sans: "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif; }
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; overflow: hidden; background: var(--paper); color: var(--ink); font: 400 15px/1.35 var(--sans); text-transform: uppercase; letter-spacing: .02em; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+#field { position: fixed; inset: 0; z-index: 0; }
+#field img { position: absolute; display: block; height: auto; opacity: .35; box-shadow: 0 0 0 1px rgba(0,0,0,.06); }
+main { position: fixed; z-index: 2; inset: 0; display: grid; place-content: center; justify-items: center; gap: 10px; padding: 16px; text-align: center; }
+.box { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--ink); background: var(--paper); color: var(--ink); padding: 6px 10px 5px; min-height: 34px; text-decoration: none; }
+a.box:hover { background: var(--ink); color: var(--paper); }
+h1 { margin: 0; font: 400 clamp(22px, 3vw, 34px)/1.1 var(--sans); padding: 10px 16px 9px; }
+h1::after { content: ""; display: inline-block; width: .5em; height: .95em; margin-left: 4px; background: currentColor; vertical-align: -3px; animation: caret 1s steps(1) infinite; }
+@keyframes caret { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { h1::after { animation: none; } }
+.lines { display: grid; gap: 6px; justify-items: center; }
+.lines span { font-size: 13px; color: var(--soft); background: var(--paper); padding: 2px 6px; text-transform: none; letter-spacing: 0; }
+.back { margin-top: 10px; font-size: 16px; padding: 10px 14px 9px; min-height: 44px; }
+.logo { position: fixed; z-index: 2; top: 14px; left: 16px; display: flex; gap: 8px; align-items: center; }
+.logo img { width: 34px; height: 34px; display: block; background: var(--paper); }
+</style>
+</head>
+<body>
+<div id="field" aria-hidden="true"></div>
+<a class="logo" href="/portfolio/"><img src="/portfolio/vignettes/logo.png" alt="Logo LT"><span class="box">Léa Tramati</span></a>
+<main>
+  <h1 class="box">404 — Page introuvable</h1>
+  <div class="lines">
+    <span lang="fr">Cette page n'existe pas, ou plus.</span>
+    <span lang="en">This page does not exist.</span>
+    <span lang="de">Diese Seite existiert nicht.</span>
+  </div>
+  <a class="box back" href="/portfolio/">← Retour au portfolio / Back to the portfolio</a>
+</main>
+<script>
+/* Quelques vignettes des projets en damier autour du message */
+const imgs = [["vignettes/intrusion.webp", 1.333], ["vignettes/feed-your-head.webp", 0.707], ["vignettes/robert-wun.webp", 0.75], ["vignettes/aperture.webp", 0.707],
+  ["vignettes/guide-tour-kisd.webp", 1.463], ["videos/nomadic-workspace.webp", 1.778], ["videos/tips-first-year.webp", 0.5625], ["vignettes/potluck.webp", 1.333]];
+const f = document.getElementById("field");
+const cw = innerWidth < 640 ? 110 : 168, ch = innerWidth < 640 ? 120 : 150;
+let k = 0, s = 3;
+const rnd = () => { s = (s * 9301 + 49297) % 233280; return s / 233280; };
+for (let y = 0; y < Math.ceil(innerHeight / ch) + 1; y++) for (let x = 0; x < Math.ceil(innerWidth / cw) + 1; x++) {
+  if ((x + y) % 2) continue;
+  const [src, r] = imgs[k++ % imgs.length];
+  const im = new Image();
+  im.src = "/portfolio/" + src; im.alt = "";
+  im.style.left = (x * cw + (rnd() - 0.3) * cw * 0.35) + "px";
+  im.style.top = (y * ch + (rnd() - 0.3) * ch * 0.3) + "px";
+  im.style.width = Math.round(cw * (r < 0.8 ? 0.42 : r > 1.6 ? 0.74 : 0.6)) + "px";
+  f.append(im);
+}
+</script>
+</body>
+</html>

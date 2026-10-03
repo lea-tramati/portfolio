@@ -97,11 +97,13 @@ body.still .caret::after { animation: none; opacity: 0; }
 .tile.pj img { box-shadow: 0 0 0 1px rgba(0,0,0,.06); }
 body.spot .tile { opacity: .14; }
 body.spot .tile.on { opacity: 1; z-index: 3; }
+body.spot #meta { visibility: hidden; }
 body.filtering .tile.ph { opacity: .3; }
 
 /* Étiquette centrale, tapée lettre par lettre */
 #center { position: fixed; z-index: 20; left: 50%; top: 50%; transform: translate(-50%, -50%); pointer-events: none; display: grid; gap: 8px; justify-items: center; max-width: calc(100vw - 32px); }
 #label { font-size: clamp(16px, 2vw, 26px); padding: 8px 14px 7px; white-space: normal; text-align: center; }
+#meta { font-size: 12px; padding: 4px 8px 3px; min-height: 0; color: var(--soft); border-color: var(--soft); }
 #sub { font-size: 13px; color: var(--soft); background: var(--paper); padding: 2px 6px; text-align: center; }
 
 /* ---------- Fiche projet ---------- */
@@ -214,6 +216,7 @@ body.still #focus.on .stack .under, body.still #focus.on #big { animation: none;
 <div id="center" aria-hidden="true">
   <span class="box caret" id="label"></span>
   <span id="sub"></span>
+  <span class="box" id="meta"></span>
 </div>
 
 <footer class="bar" id="bottom">
@@ -289,6 +292,8 @@ const DEMO_STEP_SECONDS = 7;
 const PORTRAIT = "";
 /* Contact : par ex. { label: "@lea.tramati", href: "https://instagram.com/lea.tramati" } */
 const CONTACT = null;
+/* Date de l'expo affichée à l'accueil, par ex. "12.10.2026" (vide : rien n'est affiché). */
+const EXPO_DATE = "";
 
 const PHOTOS = ["photos/IMG_1411.webp","photos/IMG_1412.webp","photos/IMG_1413.webp","photos/IMG_1414.webp","photos/IMG_1415.webp","photos/IMG_1416.webp","photos/IMG_1417.webp","photos/IMG_1418.webp","photos/IMG_1419.webp","photos/IMG_1420.webp","photos/IMG_1421.webp","photos/IMG_1422.webp","photos/IMG_1423.webp","photos/IMG_1424.webp","photos/IMG_1425.webp","photos/IMG_1426.webp","photos/IMG_1427.webp","photos/IMG_1428.webp","photos/IMG_1429.webp","photos/IMG_1430.webp","photos/IMG_1431.webp","photos/IMG_1432.webp","photos/IMG_1434.webp","photos/IMG_1435.webp","photos/IMG_1436.webp","photos/IMG_1437.webp","photos/IMG_1438.webp","photos/IMG_1439.webp","photos/IMG_1440.webp","photos/IMG_1443.webp","photos/IMG_1444.webp"];
 
@@ -378,7 +383,8 @@ const RATIO_OF = { "vignettes/guide-tour-kisd.webp": 1.463, "videos/nomadic-work
 
 /* ═══════════════ TEXTES ═══════════════ */
 const T = {
-  fr: { list: "Projets", context: "Portfolio — Erasmus, KISD Köln", tagline: "Survolez ou choisissez un projet en bas pour l'ouvrir", taglineTouch: "Touchez une image ou un projet en bas pour l'ouvrir",
+  fr: { list: "Projets", context: "Portfolio — Erasmus, KISD Köln", count: n => `${pad3(n)} projets`, expo: d => `Expo ${d}`,
+        tagline: "Survolez ou choisissez un projet en bas pour l'ouvrir", taglineTouch: "Touchez une image ou un projet en bas pour l'ouvrir",
         info: "Info", pause: "‖ Pause", play: "▶ Animer", pauseLabel: "Mettre en pause les animations et vidéos", playLabel: "Relancer les animations et vidéos",
         skip: "Aller à la liste des projets", full: "Plein écran", langs: "Langue",
         scanSite: "Scanner pour emporter le portfolio", scanProject: "Scanner pour ouvrir ce projet sur votre téléphone",
@@ -392,7 +398,8 @@ const T = {
         guideVideo: "Voir la visite guidée",
         bio1: "Je suis Léa Tramati. Pendant mon semestre Erasmus à la Köln International School of Design, j'ai travaillé entre le jeu vidéo, le web, l'affiche, l'application mobile, la vidéo et la photo.",
         bio2: "Ce site rassemble ces projets. Choisissez-en un pour le découvrir, ou scannez le QR code pour les retrouver sur votre téléphone." },
-  en: { list: "Projects", context: "Portfolio — Erasmus, KISD Cologne", tagline: "Hover or pick a project below to open it", taglineTouch: "Tap an image or a project below to open it",
+  en: { list: "Projects", context: "Portfolio — Erasmus, KISD Cologne", count: n => `${pad3(n)} projects`, expo: d => `Exhibition ${d}`,
+        tagline: "Hover or pick a project below to open it", taglineTouch: "Tap an image or a project below to open it",
         info: "Info", pause: "‖ Pause", play: "▶ Play", pauseLabel: "Pause animations and videos", playLabel: "Resume animations and videos",
         skip: "Skip to the project list", full: "Full screen", langs: "Language",
         scanSite: "Scan to take the portfolio with you", scanProject: "Scan to open this project on your phone",
@@ -406,7 +413,8 @@ const T = {
         guideVideo: "Watch the guided tour",
         bio1: "I'm Léa Tramati. During my Erasmus semester at the Köln International School of Design, I worked across video games, the web, posters, mobile apps, video and photography.",
         bio2: "This site brings those projects together. Pick one to explore it, or scan the QR code to find them on your phone." },
-  de: { list: "Projekte", context: "Portfolio — Erasmus, KISD Köln", tagline: "Bild mit der Maus berühren oder unten ein Projekt wählen", taglineTouch: "Bild antippen oder unten ein Projekt wählen",
+  de: { list: "Projekte", context: "Portfolio — Erasmus, KISD Köln", count: n => `${pad3(n)} Projekte`, expo: d => `Ausstellung ${d}`,
+        tagline: "Bild mit der Maus berühren oder unten ein Projekt wählen", taglineTouch: "Bild antippen oder unten ein Projekt wählen",
         info: "Info", pause: "‖ Pause", play: "▶ Abspielen", pauseLabel: "Animationen und Videos pausieren", playLabel: "Animationen und Videos fortsetzen",
         skip: "Zur Projektliste springen", full: "Vollbild", langs: "Sprache",
         scanSite: "Scannen und das Portfolio mitnehmen", scanProject: "Scannen, um das Projekt auf dem Handy zu öffnen",
@@ -422,6 +430,7 @@ const T = {
         bio2: "Diese Seite versammelt diese Projekte. Wähle eines aus, oder scanne den QR-Code, um sie auf dem Handy zu öffnen." },
 };
 let lang = (() => {
+  if (location.hash === "#expo") return "en";  /* écran de l'expo : anglais par défaut, public international */
   try { const s = localStorage.getItem("lang"); if (T[s]) return s; } catch {}
   const n = (navigator.language || "en").slice(0, 2);
   return T[n] ? n : "en";
@@ -891,6 +900,7 @@ function demoStep() {
 function startDemo() {
   if (demoOn) return;
   demoOn = true;
+  if (lang !== "en") { lang = "en"; applyLang(); }  /* le visiteur suivant retrouve l'anglais */
   unzoom(); closeAbout(); closeFocus();
   demoIndex = -1;
   $("reelCta").textContent = t("demo");
@@ -934,6 +944,7 @@ function applyLang() {
   $("full").setAttribute("aria-label", t("full")); $("full").title = t("full");
   $("name").title = t("context");
   qr($("siteQr"), SITE_URL, 128, t("qrSite"));
+  $("meta").textContent = T[lang].count(N) + (EXPO_DATE ? " · " + T[lang].expo(EXPO_DATE) : "");
   applyStill(); renderList();
   const s = spot; spot = -2; setSpot(s);
   if (current >= 0) fill(current);

@@ -15,6 +15,9 @@
 - Avant l'arrivée du public : activer « Ne pas déranger » dans Windows (notifications), ouvrir Intrusion une fois, brancher un casque pour le son.
 - Imprimer `../carte-qr-portfolio.pdf` (A5) et `../cartels-portfolio.pdf` (A4, 4 cartels A6 par page, à découper).
 
+## Date de l'expo
+- En haut du script dans index.html : `const EXPO_DATE = "12.10.2026";` (par exemple). Elle s'affiche alors sous « 008 projets » à l'accueil.
+
 ## Lien direct vers un projet
 …/portfolio/#intrusion, #feed-your-head, #robert-wun, #apperture, #kisd-spaces
 
