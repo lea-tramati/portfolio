@@ -337,7 +337,6 @@ body.still .card.pulse .pill { animation: none; }
   <nav aria-label="Menu">
     <button class="pill" type="button" id="pause" aria-pressed="false"></button>
     <button class="pill" type="button" id="navAbout" aria-haspopup="dialog"></button>
-    <a class="pill" id="navMain" target="_blank" rel="noopener"></a>
   </nav>
   <div id="right">
     <div class="langs" role="group" id="langs">
@@ -416,7 +415,6 @@ body.still .card.pulse .pill { animation: none; }
       <dt data-t="where"></dt><dd>KISD — Köln International School of Design</dd>
       <dt data-t="what"></dt><dd data-t="fields"></dd>
       <dt data-t="contact"></dt><dd id="contact"></dd>
-      <dt data-t="mainLabel"></dt><dd><a id="aboutMain" target="_blank" rel="noopener"></a></dd>
       <dt>GitHub</dt><dd><a href="https://github.com/lea-tramati" target="_blank" rel="noopener">github.com/lea-tramati</a></dd>
     </dl>
   </aside>
@@ -441,8 +439,6 @@ const DEMO_STEP_SECONDS = 8;
 const PORTRAIT = "";
 /* Contact : par ex. { label: "@lea.tramati", href: "https://instagram.com/lea.tramati" } */
 const CONTACT = null;
-/* Portfolio principal */
-const MAIN_SITE = "https://lea-tramati.github.io/Lea_tramati_2026/";
 
 /* Photos d'ambiance : soirée « potluck! ». Décoratives dans le carrousel, en galerie dans le projet Potluck. */
 const PHOTOS = ["photos/IMG_1411.webp","photos/IMG_1412.webp","photos/IMG_1413.webp","photos/IMG_1414.webp","photos/IMG_1415.webp","photos/IMG_1416.webp","photos/IMG_1417.webp","photos/IMG_1418.webp","photos/IMG_1419.webp","photos/IMG_1420.webp","photos/IMG_1421.webp","photos/IMG_1422.webp","photos/IMG_1423.webp","photos/IMG_1424.webp","photos/IMG_1425.webp","photos/IMG_1426.webp","photos/IMG_1427.webp","photos/IMG_1428.webp","photos/IMG_1429.webp","photos/IMG_1430.webp","photos/IMG_1431.webp","photos/IMG_1432.webp","photos/IMG_1434.webp","photos/IMG_1435.webp","photos/IMG_1436.webp","photos/IMG_1437.webp","photos/IMG_1438.webp","photos/IMG_1439.webp","photos/IMG_1440.webp","photos/IMG_1443.webp","photos/IMG_1444.webp"];
@@ -538,7 +534,7 @@ const T = {
         now: (i, n, p) => `Projet ${i} sur ${n} : ${p.titre}`,
         photoOf: (i, n) => `Photo ${i} sur ${n} — soirée Potluck`, videoOf: (i, n, t) => `Vidéo ${i} sur ${n} — ${t}`,
         prevItem: "Élément précédent", nextItem: "Élément suivant", langs: "Langue",
-        where: "[école]", what: "[domaines]", contact: "[contact]", fields: "Jeu, web, affiche, application, vidéo, photo", noContact: "à venir", main: "Portfolio complet ↗", mainLabel: "[portfolio]",
+        where: "[école]", what: "[domaines]", contact: "[contact]", fields: "Jeu, web, affiche, application, vidéo, photo", noContact: "à venir",
         bio1: "Je suis Léa Tramati. Pendant mon semestre Erasmus à la Köln International School of Design, j'ai travaillé entre le jeu vidéo, le web, l'affiche, l'application mobile, la vidéo et la photo.",
         bio2: "Ce site rassemble ces projets. Cliquez une image pour découvrir chacun d'eux, ou scannez le QR code pour les retrouver sur votre téléphone." },
   en: { context: "Portfolio — Erasmus, KISD Cologne", about: "About", skip: "Skip to projects",
@@ -558,7 +554,7 @@ const T = {
         now: (i, n, p) => `Project ${i} of ${n}: ${p.titre}`,
         photoOf: (i, n) => `Photo ${i} of ${n} — Potluck evening`, videoOf: (i, n, t) => `Video ${i} of ${n} — ${t}`,
         prevItem: "Previous item", nextItem: "Next item", langs: "Language",
-        where: "[school]", what: "[fields]", contact: "[contact]", fields: "Games, web, posters, apps, video, photography", noContact: "coming soon", main: "Full portfolio ↗", mainLabel: "[portfolio]",
+        where: "[school]", what: "[fields]", contact: "[contact]", fields: "Games, web, posters, apps, video, photography", noContact: "coming soon",
         bio1: "I'm Léa Tramati. During my Erasmus semester at the Köln International School of Design, I worked across video games, the web, posters, mobile apps, video and photography.",
         bio2: "This site brings those projects together. Click an image to explore each one, or scan the QR code to find them on your phone." },
   de: { context: "Portfolio — Erasmus, KISD Köln", about: "Über mich", skip: "Zu den Projekten springen",
@@ -578,7 +574,7 @@ const T = {
         now: (i, n, p) => `Projekt ${i} von ${n}: ${p.titre}`,
         photoOf: (i, n) => `Foto ${i} von ${n} — Potluck-Abend`, videoOf: (i, n, t) => `Video ${i} von ${n} — ${t}`,
         prevItem: "Vorheriges Element", nextItem: "Nächstes Element", langs: "Sprache",
-        where: "[Hochschule]", what: "[Bereiche]", contact: "[Kontakt]", fields: "Spiel, Web, Plakat, App, Video, Fotografie", noContact: "folgt", main: "Ganzes Portfolio ↗", mainLabel: "[Portfolio]",
+        where: "[Hochschule]", what: "[Bereiche]", contact: "[Kontakt]", fields: "Spiel, Web, Plakat, App, Video, Fotografie", noContact: "folgt",
         bio1: "Ich bin Léa Tramati. In meinem Erasmus-Semester an der Köln International School of Design habe ich zwischen Videospiel, Web, Plakat, mobiler App, Video und Fotografie gearbeitet.",
         bio2: "Diese Seite versammelt diese Projekte. Klicke auf ein Bild, um jedes zu entdecken, oder scanne den QR-Code, um sie auf dem Handy zu öffnen." },
 };
@@ -1176,12 +1172,6 @@ function applyLang() {
   stage.setAttribute("aria-roledescription", t("stage"));
   $("hint").innerHTML = t("hint");
   $("navAbout").textContent = t("about");
-  const nm = $("navMain");
-  nm.href = MAIN_SITE; nm.hidden = EXPO;  /* en expo, on ne quitte pas le portfolio depuis l'écran */
-  nm.innerHTML = "<span></span><span class=\"sr\"></span>";
-  nm.firstChild.textContent = t("main"); nm.lastChild.textContent = " " + t("newTab");
-  const am = $("aboutMain");
-  am.href = MAIN_SITE; am.textContent = MAIN_SITE.replace(/^https:\/\//, "").replace(/\/$/, "");
   $("close").textContent = t("close");
   $("zoomClose").textContent = t("close");
   $("aboutClose").textContent = t("close");
