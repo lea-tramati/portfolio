@@ -130,7 +130,7 @@ body.still #focus.on .stack .under, body.still #focus.on #big { animation: none;
 .info { display: grid; gap: 16px; justify-items: start; }
 .info .k { color: var(--soft); }
 .info h2 { margin: 0; font: 500 clamp(30px, 4vw, 58px)/1 var(--sans); letter-spacing: -.01em; }
-.info p { margin: 0; text-transform: none; letter-spacing: 0; font-size: 17px; line-height: 1.55; max-width: 44ch; }
+.info p { margin: 0; text-transform: none; letter-spacing: 0; font-size: 17px; line-height: 1.55; max-width: 44ch; white-space: pre-line; }
 .tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
 .tags li { border: 1px solid var(--soft); color: var(--soft); padding: 3px 8px 2px; font-size: 13px; }
 .actions { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -347,9 +347,9 @@ const PROJETS = [
     tags: ["Vidéo", "Scan 3D", "KISD"],
     cat:  { fr: "vidéo", en: "video", de: "Video" },
     alt:  { fr: "Image de la vidéo : collage en noir et blanc d'un espace de travail scanné en 3D.", en: "Video still: black-and-white collage of a 3D-scanned workspace.", de: "Standbild: Schwarz-Weiß-Collage eines 3D-gescannten Arbeitsraums." },
-    desc: { fr: "Une vidéo sur les espaces de travail de la KISD, où l'on travaille un peu partout : scans 3D, collages en noir et blanc et typographie.",
-            en: "A video about KISD's workspaces, where people work just about anywhere: 3D scans, black-and-white collage and typography.",
-            de: "Ein Video über die Arbeitsorte der KISD, an der überall gearbeitet wird: 3D-Scans, Schwarz-Weiß-Collagen und Typografie." } },
+    desc: { fr: "Lors de mon séjour Erasmus à Cologne, en Allemagne, j'ai eu l'occasion de réaliser un premier projet de groupe autour de la thématique de l'espace de travail et de la manière dont chacun le définit.\n\nAprès une visite de la KISD, certaines salles et certains espaces ont particulièrement retenu notre attention. Nous les avons choisis comme points de repère pour raconter notre parcours et créer un lien avec la classe.\n\nNotre intention était de proposer une sorte de visite guidée sous forme de vidéo en mixed media, mêlant différentes approches visuelles et narratives.\n\nCe son a été créé en combinant des enregistrements audio que nous avons réalisés et montés avec un extrait musical.",
+            en: "During my Erasmus stay in Cologne, Germany, I had the chance to work on a first group project on the theme of the workspace and how each of us defines it.\n\nAfter a tour of KISD, certain rooms and spaces particularly caught our attention. We chose them as landmarks to tell the story of our journey and to create a connection with the class.\n\nOur intention was to offer a kind of guided tour in the form of a mixed-media video, blending different visual and narrative approaches.\n\nThe sound was created by combining audio recordings we made and edited ourselves with a musical excerpt.",
+            de: "Während meines Erasmus-Aufenthalts in Köln hatte ich die Gelegenheit, ein erstes Gruppenprojekt zum Thema Arbeitsraum umzusetzen – und dazu, wie jede und jeder ihn für sich definiert.\n\nNach einem Rundgang durch die KISD haben bestimmte Räume und Orte unsere Aufmerksamkeit besonders geweckt. Wir haben sie als Orientierungspunkte gewählt, um unseren Weg zu erzählen und eine Verbindung zur Klasse herzustellen.\n\nUnsere Absicht war, eine Art Führung in Form eines Mixed-Media-Videos anzubieten, das verschiedene visuelle und erzählerische Ansätze verbindet.\n\nDer Ton entstand aus selbst aufgenommenen und geschnittenen Audioaufnahmen, kombiniert mit einem Musikausschnitt." } },
   { id: "kisd-students", titre: "KISD Students", type: "videos", format: "story", couleur: "#7FC8F8", groupes: ["video"],
     image: "videos/tips-first-year.webp", preview: "videos/tips-first-year.mp4",
     videos: ["videos/tips-first-year.mp4", "videos/ask-a-student-1.mp4", "videos/ask-a-student-2.mp4", "videos/what-are-you-doing.mp4", "videos/which-designer.mp4"],
